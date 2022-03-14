@@ -6,14 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private $tableName = 'academic_staff';
+    private $userTable = 'users';
+    private $departmentTable = 'departments';
+    private $facultyTable = 'faculties';
+
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('academic_staff', function (Blueprint $table) {
+        Schema::create($tableName, function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
@@ -21,11 +25,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('academic_staff');
+        Schema::dropIfExists($tableName);
     }
 };
