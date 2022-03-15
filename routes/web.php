@@ -23,6 +23,9 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //forum routes
-Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index']);
+Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
 Route::get('/forum/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
 Route::get('/forum/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+
+//people routes
+Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');

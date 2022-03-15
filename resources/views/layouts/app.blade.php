@@ -42,10 +42,10 @@
                             <a class="nav-link" href="/" style="color: white;">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/catalogue" style="color: white;">People</a>
+                            <a class="nav-link" href="/people" style="color: white;">People</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/forum/" style="color: white;">Forum</a>
+                            <a class="nav-link" href="/forum" style="color: white;">Forum</a>
                         </li>
 
                         <!-- Authentication Links -->
