@@ -6,26 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private $tableName = 'batches';
+
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('batches', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) {
+                $table->integer('id')->primary();
+                $table->string('batch', env("DEPARTMENTS_NAME_MAX", 10))->unique();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('batches');
+        Schema::dropIfExists($tableName);
     }
 };

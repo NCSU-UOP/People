@@ -6,26 +6,39 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private $tableName = 'admins';
+    private $userTable = 'users';
+    private $facultyTable = 'faculties';
+
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) {
+                $table->integer('id');
+                $table->integer('faculty_id');
+                $table->string('name', env("ADMINS_NAME_MAX", 100));
+                $table->string('remark', env("ADMINS_REMARK_MAX", 100))->nullable();
+                $table->boolean('active')->default(false);
+                $table->boolean('is_admin')->default(false);
+                $table->string('last_online', env("ADMINS_LAST_ONLINE_MAX", 20))->nullable();
+                $table->timestamps();
+                
+                $table->foreign('id')->references('id')->on($userTable);
+                $table->foreign('faculty_id')->references('id')->on($facultyTable);
+            });
+        }
     }
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists($tableName);
     }
 };

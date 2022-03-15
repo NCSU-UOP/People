@@ -6,26 +6,34 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private $tableName = 'departments';
+    private $foreignTableName = 'faculties';
+
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) {
+                $table->id();
+                $table->integer('faculty_id');
+                $table->string('name', env("DEPARTMENTS_NAME_MAX", 100));
+                $table->timestamps();
+
+                $table->unique(['faculty_id', 'name']);
+                $table->foreign('faculty_id')->references('id')->on($foreignTableName);
+            });
+        }
     }
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists($tableName);
     }
 };
