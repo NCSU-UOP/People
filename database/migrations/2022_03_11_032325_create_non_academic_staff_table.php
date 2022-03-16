@@ -17,9 +17,9 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) {
-                $table->integer('id')->primary();
+        if (! Schema::hasTable($this->tableName)) {
+            Schema::create($this->tableName, function (Blueprint $table) {
+                $table->unsignedBigInteger('id')->primary();
                 $table->string('employee_id', env("NON_ACADEMIC_STAFF_EMPLOYEE_ID_MAX", 20))->unique();
                 $table->string('fname', env("NON_ACADEMIC_STAFF_FNAME_MAX", 20));
                 $table->string('lname', env("NON_ACADEMIC_STAFF_LNAME_MAX", 20));
@@ -28,18 +28,14 @@ return new class extends Migration
                 $table->string('city', env("NON_ACADEMIC_STAFF_CITY_MAX", 50));
                 $table->string('address', env("NON_ACADEMIC_STAFF_ADDRESS_MAX", 200));            
                 $table->string('image', env("NON_ACADEMIC_STAFF_IMAGE_PATH_MAX", 200))->unique();          
-                $table->integer('department_id');
-                $table->integer('faculty_id');
+                $table->unsignedBigInteger('department_id');
+                $table->unsignedBigInteger('faculty_id');
                 $table->boolean('is_rejected')->default(false);
                 $table->timestamps();
 
-                $table->foreign('id')->references('id')->on($userTable);
-                $table->foreign('department_id')->references('id')->on($departmentTable);
-                $table->foreign('faculty_id')->references('id')->on($facultyTable);
-
-
-                $table->id();
-                $table->timestamps();
+                $table->foreign('id')->references('id')->on($this->userTable);
+                $table->foreign('department_id')->references('id')->on($this->departmentTable);
+                $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });
         }
     }
@@ -50,6 +46,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     private $tableName = 'departments';
-    private $foreignTableName = 'faculties';
+    private $facultyTable = 'faculties';
 
     /**
      * Run the migrations.
@@ -15,15 +15,15 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) {
+        if (! Schema::hasTable($this->tableName)) {
+            Schema::create($this->tableName, function (Blueprint $table) {
                 $table->id();
-                $table->integer('faculty_id');
+                $table->unsignedBigInteger('faculty_id');
                 $table->string('name', env("DEPARTMENTS_NAME_MAX", 100));
                 $table->timestamps();
 
                 $table->unique(['faculty_id', 'name']);
-                $table->foreign('faculty_id')->references('id')->on($foreignTableName);
+                $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });
         }
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };

@@ -17,8 +17,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create($tableName, function (Blueprint $table) {
-            $table->id();
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };

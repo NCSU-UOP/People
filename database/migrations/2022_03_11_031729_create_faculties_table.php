@@ -14,8 +14,8 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) {
+        if (! Schema::hasTable($this->tableName)) {
+            Schema::create($this->tableName, function (Blueprint $table) {
                 $table->id();
                 $table->string('name', env("FACULTIES_NAME_MAX", 100))->unique();
                 $table->string('code', env("FACULTIES_CODE_MAX", 10))->unique();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };

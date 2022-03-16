@@ -18,9 +18,9 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) {
-                $table->integer('id')->primary();
+        if (! Schema::hasTable($this->tableName)) {
+            Schema::create($this->tableName, function (Blueprint $table) {
+                $table->unsignedBigInteger('id')->primary();
                 $table->string('regNo', env("STUDENTS_REGNO_MAX", 10))->unique();
                 $table->string('fname', env("STUDENTS_FNAME_MAX", 20));
                 $table->string('lname', env("STUDENTS_LNAME_MAX", 20));
@@ -30,15 +30,15 @@ return new class extends Migration
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
                 $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          
                 $table->integer('batch_id');
-                $table->integer('department_id');
-                $table->integer('faculty_id');
+                $table->unsignedBigInteger('department_id');
+                $table->unsignedBigInteger('faculty_id');
                 $table->boolean('is_rejected')->default(false);
                 $table->timestamps();
 
-                $table->foreign('id')->references('id')->on($userTable);
-                $table->foreign('batch_id')->references('id')->on($batchTable);
-                $table->foreign('department_id')->references('id')->on($departmentTable);
-                $table->foreign('faculty_id')->references('id')->on($facultyTable);
+                $table->foreign('id')->references('id')->on($this->userTable);
+                $table->foreign('batch_id')->references('id')->on($this->batchTable);
+                $table->foreign('department_id')->references('id')->on($this->departmentTable);
+                $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });
         }
     }
@@ -49,6 +49,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };

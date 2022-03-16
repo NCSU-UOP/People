@@ -16,10 +16,10 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) {
-                $table->integer('id');
-                $table->integer('faculty_id');
+        if (! Schema::hasTable($this->tableName)) {
+            Schema::create($this->tableName, function (Blueprint $table) {
+                $table->unsignedBigInteger('id')->primary();
+                $table->unsignedBigInteger('faculty_id');
                 $table->string('name', env("ADMINS_NAME_MAX", 100));
                 $table->string('remark', env("ADMINS_REMARK_MAX", 100))->nullable();
                 $table->boolean('active')->default(false);
@@ -27,8 +27,8 @@ return new class extends Migration
                 $table->string('last_online', env("ADMINS_LAST_ONLINE_MAX", 20))->nullable();
                 $table->timestamps();
                 
-                $table->foreign('id')->references('id')->on($userTable);
-                $table->foreign('faculty_id')->references('id')->on($facultyTable);
+                $table->foreign('id')->references('id')->on($this->userTable);
+                $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });
         }
     }
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists($this->tableName);
     }
 };
