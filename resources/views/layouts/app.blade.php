@@ -19,11 +19,13 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+    
+<body class="d-flex flex-column min-vh-100">
+    
     <div id="preloader">
         <i class="circle-preloader"></i>
     </div>
-    
+
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="background-image: linear-gradient(to right, #4e0000, #8b0008);">
             <div class="container">
@@ -93,18 +95,16 @@
             @yield('content')
         </main>
     </div>
-    @yield('footer')
-    <!-- <div id="footer">
-        <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    
+    <div class="block mt-auto">
+    <div class="container" >
+      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
         <p class="col-md-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
 
-        <ul class="nav col-md-4 justify-content-end">
-            <p class="col-md-6 mb-0 text-muted">All rightes reserved</p>
-        </ul>
+        <p class="col-md-0 mb-0 text-muted">All rights reserved.</p>
 
-        </footer>
-        </div>
-    </div> -->
+      </footer>
+    </div>
+  </div>
 </body>
 </html>
