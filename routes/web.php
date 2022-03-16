@@ -29,3 +29,5 @@ Route::get('/forum/staff', [App\Http\Controllers\ForumController::class, 'staffF
 
 //people routes
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
+Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
+Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
