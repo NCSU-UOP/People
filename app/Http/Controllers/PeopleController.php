@@ -11,4 +11,10 @@ class PeopleController extends Controller
     {
         return view('people.view');
     }
+
+    //people-student selection method
+    public function getStudent()
+    {
+        return view('people.student');
+    }
 }
