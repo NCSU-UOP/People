@@ -19,6 +19,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('landing-page-css')
+
 </head>
     
 <body class="d-flex flex-column min-vh-100">
@@ -106,8 +108,9 @@
 
         <p class="col-md-0 mb-0 text-muted">All rights reserved.</p>
 
-      </footer>
-    </div>
-  </div>
+        </footer>
+        </div>
+    </div> -->
+@yield('landing-page-scripts')
 </body>
 </html>
