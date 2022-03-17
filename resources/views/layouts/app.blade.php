@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('landing-page-css')
+
 </head>
 <body>
     <div id="preloader">
@@ -106,5 +108,6 @@
         </footer>
         </div>
     </div> -->
+@yield('landing-page-scripts')
 </body>
 </html>
