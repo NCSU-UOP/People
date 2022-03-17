@@ -18,9 +18,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'usertype',
     ];
 
     /**
@@ -30,6 +31,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'usertype',
         'remember_token',
     ];
 
@@ -41,4 +43,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get all of the admins, students, non-academic staff and academic staff for the User
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function admins(): HasMany
+    {
+        return $this->hasMany(Admin::class, 'id', 'id');
+    }
+
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class, 'id', 'id');
+    }
+
+    public function academicStaff(): HasMany
+    {
+        return $this->hasMany(AcademicStaff::class, 'id', 'id');
+    }
+
+    public function nonAcademicStaff(): HasMany
+    {
+        return $this->hasMany(NonAcademicStaff::class, 'id', 'id');
+    }
 }
