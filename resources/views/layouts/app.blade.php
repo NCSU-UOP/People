@@ -110,7 +110,7 @@
 
         </footer>
         </div>
-    </div> -->
+    </div>
 @yield('landing-page-scripts')
 </body>
 </html>
