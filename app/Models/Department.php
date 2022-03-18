@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,28 +19,26 @@ class Department extends Model
 
     /**
      * Get the faculty that owns the Department
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function faculty(): BelongsTo
+    public function faculty()
     {
         return $this->belongsTo(Faculty::class, 'faculty_id', 'id');
     }
 
     /**
      * Get all of the students, non-academic staff and academic staff for the Department
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function students(): HasMany
+    public function students()
     {
         return $this->hasMany(Student::class, 'department_id', 'id');
     }
 
-    public function academicStaff(): HasMany
+    public function academicStaff()
     {
         return $this->hasMany(AcademicStaff::class, 'department_id', 'id');
     }
     
-    public function nonAcademicStaff(): HasMany
+    public function nonAcademicStaff()
     {
         return $this->hasMany(NonAcademicStaff::class, 'department_id', 'id');
     }    

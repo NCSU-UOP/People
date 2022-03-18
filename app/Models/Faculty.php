@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+
+// use App\Models\Department;
 
 class Faculty extends Model
 {
@@ -22,14 +24,13 @@ class Faculty extends Model
 
     /**
      * Get all of the departments and admins for the Faculty
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function departments(): HasMany
+    public function departments()
     {
         return $this->hasMany(Department::class, 'faculty_id', 'id');
     }
 
-    public function admins(): HasMany
+    public function admins()
     {
         return $this->hasMany(Admin::class, 'faculty_id', 'id');
     }
@@ -37,19 +38,18 @@ class Faculty extends Model
 
     /**
      * Get all of the students, non-academic staff and academic staff for the Faculty
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function students(): HasManyThrough
+    public function students()
     {
         return $this->hasManyThrough(Student::class, Department::class);
     }
 
-    public function academicStaff(): HasManyThrough
+    public function academicStaff()
     {
         return $this->hasManyThrough(AcademicStaff::class, Department::class);
     }
 
-    public function nonAcademicStaff(): HasManyThrough
+    public function nonAcademicStaff()
     {
         return $this->hasManyThrough(NonAcademicStaff::class, Department::class);
     }

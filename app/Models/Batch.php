@@ -15,14 +15,21 @@ class Batch extends Model
      */
     protected $fillable = [
         'id',
-        'batch'
+        'expire_date'
+    ];
+
+    /**
+     * The attributes that should be cast.
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'expire_date' => 'date',
     ];
 
     /**
      * Get all of the students for the Batch
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function students(): HasMany
+    public function students()
     {
         return $this->hasMany(Student::class, 'batch_id', 'id');
     }
