@@ -17,4 +17,10 @@ class PeopleController extends Controller
     {
         return view('people.student');
     }
+
+    //profile view method(tempory)
+    public function getProfile()
+    {
+        return view('people.profile');
+    }
 }
