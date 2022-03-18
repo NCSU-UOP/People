@@ -21,7 +21,7 @@
         <div class="row justify-content-center">
           <div class="col-xl-7 col-lg-9 text-center">
             <h1>Data Aquisition Project</h1>
-            <h2>University-wide Verified Data Collection of Unversity Personnel</h2>
+            <h2>University-wide Verified Data Collection of University Personnel</h2>
           </div>
         </div>
         <div class="text-center">
