@@ -46,24 +46,23 @@ class User extends Authenticatable
 
     /**
      * Get all of the admins, students, non-academic staff and academic staff for the User
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function admins(): HasMany
+    public function admins()
     {
         return $this->hasMany(Admin::class, 'id', 'id');
     }
 
-    public function students(): HasMany
+    public function students()
     {
         return $this->hasMany(Student::class, 'id', 'id');
     }
 
-    public function academicStaff(): HasMany
+    public function academicStaff()
     {
         return $this->hasMany(AcademicStaff::class, 'id', 'id');
     }
 
-    public function nonAcademicStaff(): HasMany
+    public function nonAcademicStaff()
     {
         return $this->hasMany(NonAcademicStaff::class, 'id', 'id');
     }

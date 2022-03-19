@@ -38,19 +38,18 @@ class NonAcademicStaff extends Model
 
     /**
      * Get the user, department and faculty that owns the NonAcademicStaff
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class, 'id', 'id');
     }
 
-    public function department(): BelongsTo
+    public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 
-    public function faculty(): BelongsTo
+    public function faculty()
     {
         return $this->belongsTo(Faculty::class, 'faculty_id', 'id');
     }
