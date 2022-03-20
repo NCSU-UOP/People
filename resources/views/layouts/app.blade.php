@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
+    <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -19,19 +20,26 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/preloader.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet" />
     @yield('landing-page-css')
 
+    <!-- favicon -->
+    <link rel="icon" href="img/favicon.png">
+    <!-- apple touch icon -->
+    <link rel="apple-touch-icon" href="img/favicon.png">
 </head>
     
 <body class="d-flex flex-column min-vh-100">
 
-    <div id="preloader">
-        <i class="circle-preloader"></i>
+    <div class="cssload-loader" id='preloader'>
+	<div class="cssload-inner cssload-one"></div>
+	<div class="cssload-inner cssload-two"></div>
+	<div class="cssload-inner cssload-three"></div>
     </div>
 
-    <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top" style="position: fixed; bottom: 10px; right: 20px; display: none;"><i class="bi bi-arrow-bar-up"></i></button>
-
     <div id="app">
+        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top" style="position: fixed; bottom: 10px; right: 20px; display: none;"><i class="bi bi-arrow-bar-up"></i></button>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="background-image: linear-gradient(to right, #4e0000, #8b0008);">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -111,6 +119,20 @@
         </footer>
         </div>
     </div>
+    <script>
+    /**
+     * Preloader
+     */
+    let preloader = select('#preloader');
+    let app = select('#app');
+    if (preloader) {
+        app.remove();
+        window.addEventListener('load', () => {
+        preloader.remove();
+        app.show();
+        });
+    }
+    </script>
 @yield('landing-page-scripts')
 </body>
 </html>
