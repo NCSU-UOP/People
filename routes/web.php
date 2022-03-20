@@ -29,3 +29,25 @@ Route::get('/forum/staff', [App\Http\Controllers\ForumController::class, 'staffF
 
 //people routes
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
+Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
+Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
+
+//tempory route
+Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+
+// Routes for the site activity logging
+Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
+
+    // Dashboards
+    Route::get('/', 'LaravelLoggerController@showAccessLog')->name('activity');
+    Route::get('/cleared', ['uses' => 'LaravelLoggerController@showClearedActivityLog'])->name('cleared');
+
+    // Drill Downs
+    Route::get('/log/{id}', 'LaravelLoggerController@showAccessLogEntry');
+    Route::get('/cleared/log/{id}', 'LaravelLoggerController@showClearedAccessLogEntry');
+
+    // Forms
+    Route::delete('/clear-activity', ['uses' => 'LaravelLoggerController@clearActivityLog'])->name('clear-activity');
+    Route::delete('/destroy-activity', ['uses' => 'LaravelLoggerController@destroyActivityLog'])->name('destroy-activity');
+    Route::post('/restore-log', ['uses' => 'LaravelLoggerController@restoreClearedActivityLog'])->name('restore-activity');
+});

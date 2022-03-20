@@ -11,4 +11,16 @@ class PeopleController extends Controller
     {
         return view('people.view');
     }
+
+    //people-student selection method
+    public function getStudent()
+    {
+        return view('people.student');
+    }
+
+    //profile view method(tempory)
+    public function getProfile()
+    {
+        return view('people.profile');
+    }
 }
