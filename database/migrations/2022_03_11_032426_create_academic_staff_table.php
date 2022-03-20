@@ -19,7 +19,15 @@ return new class extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('faculty_id');
+            $table->boolean('is_verified')->default(false);
+            $table->boolean('is_rejected')->default(false);
             $table->timestamps();
+
+            $table->foreign('id')->references('id')->on($this->userTable);
+            $table->foreign('department_id')->references('id')->on($this->departmentTable);
+            $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
         });
     }
 

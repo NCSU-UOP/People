@@ -17,7 +17,8 @@ class FacultyFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => 'Faculty of '.$this->faker->unique()->state(),
+            'code' => strtoupper($this->faker->unique()->lexify('???'))
         ];
     }
 }
