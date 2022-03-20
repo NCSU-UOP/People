@@ -146,7 +146,6 @@
 @endsection
 
 @section('landing-page-scripts')
-    <div id="preloader"></div>
     <a
       href="#"
       class="back-to-top d-flex align-items-center justify-content-center"
@@ -160,9 +159,6 @@
 
     <!-- Template Main JS File -->
     <script src="{{ asset('js/main.js') }}"></script>
-    <script>
-        new PureCounter();
-    </script>
 @endsection
 
 @section('footer')
