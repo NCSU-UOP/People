@@ -28,10 +28,12 @@ return new class extends Migration
                 $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100));
                 $table->string('city', env("STUDENTS_CITY_MAX", 50));
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
-                $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          
+                $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200));
+                // $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          
                 $table->integer('batch_id');
                 $table->unsignedBigInteger('department_id');
                 $table->unsignedBigInteger('faculty_id');
+                $table->boolean('is_verified')->default(false);
                 $table->boolean('is_rejected')->default(false);
                 $table->timestamps();
 

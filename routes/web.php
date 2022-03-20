@@ -32,6 +32,9 @@ Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->
 Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
 Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
 
+//tempory route
+Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+
 // Routes for the site activity logging
 Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
 

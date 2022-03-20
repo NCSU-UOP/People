@@ -133,7 +133,6 @@
         });
     }
     </script>
-
 @yield('landing-page-scripts')
 </body>
 </html>

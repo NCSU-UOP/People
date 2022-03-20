@@ -17,7 +17,8 @@ return new class extends Migration
         if (! Schema::hasTable($this->tableName)) {
             Schema::create($this->tableName, function (Blueprint $table) {
                 $table->integer('id')->primary();
-                $table->string('batch', env("DEPARTMENTS_NAME_MAX", 10))->unique();
+                $table->timestamp('expire_date');
+                // $table->string('batch', env("BATCHES_BATCH_MAX", 10))->unique();
                 $table->timestamps();
             });
         }
