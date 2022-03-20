@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('faculty_id');
+            $table->boolean('is_verified')->default(false);
             $table->boolean('is_rejected')->default(false);
             $table->timestamps();
 
