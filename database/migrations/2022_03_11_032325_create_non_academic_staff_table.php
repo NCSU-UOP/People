@@ -35,7 +35,7 @@ return new class extends Migration
                 $table->boolean('is_rejected')->default(false);
                 $table->timestamps();
 
-                $table->foreign('id')->references('id')->on($this->userTable);
+                $table->foreign('id')->references('id')->on($this->userTable)->onDelete('cascade');
                 $table->foreign('department_id')->references('id')->on($this->departmentTable);
                 $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });

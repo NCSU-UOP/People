@@ -27,7 +27,7 @@ return new class extends Migration
                 $table->string('last_online', env("ADMINS_LAST_ONLINE_MAX", 20))->nullable();
                 $table->timestamps();
                 
-                $table->foreign('id')->references('id')->on($this->userTable);
+                $table->foreign('id')->references('id')->on($this->userTable)->onDelete('cascade');
                 $table->foreign('faculty_id')->references('id')->on($this->facultyTable);
             });
         }
