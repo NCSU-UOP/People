@@ -32,6 +32,26 @@ Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->
 Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
 Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
 
+//Route for admin users( only super admin and admins can access these routes )
+Route::group(['middleware' => ['admin.users']], function () {
+
+    Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard');
+
+    //Routes that can be only access by the super admins
+    Route::group(['middleware' => ['super.admin']], function() {
+
+    });
+
+    //Routes that can be only access by the admin
+    Route::group(['middleware' => ['admin']], function() {
+
+    });
+});
+
+//Route for non admin users( only students, academic staff and non academic staff can access these routes )
+Route::group(['middleware' => ['non.admin.users']], function () {
+});
+
 //tempory route
 Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
