@@ -19,11 +19,11 @@
         <div class="row">
     @php $count = 0; @endphp
     @foreach($fac as $data)
-            <button type="button" class="btn btn-outline-primary btn-block mb-3" data-bs-toggle="collapse" data-bs-target="#collapse{{$data->code}}" aria-expanded="false" aria-controls="collapse{{$data->code}}">{{$data->name}}</button>
-            <div class="collapse mb-3" id="collapse{{$data->code}}" data-bs-parent="#parent">
+            <button type="button" class="btn btn-outline-primary btn-block mb-3" data-bs-toggle="collapse" data-bs-target="#collapse{{$data['code']}}" aria-expanded="false" aria-controls="collapse{{$data['code']}}">{{$data['name']}}</button>
+            <div class="collapse mb-3" id="collapse{{$data['code']}}" data-bs-parent="#parent">
                 <div class="card card-body">
                 @foreach($batches as $batch)
-                    <a href="/people/student/{{$data->code}}/{{$batch->id}}" type="button" class="btn btn-outline-secondary mb-2">{{$batch->id}} batch</a>
+                    <a href="/people/student/{{$data['code']}}/{{$batch['id']}}" type="button" class="btn btn-outline-secondary mb-2">{{$batch['id']}} batch</a>
                 @endforeach
                 </div>
             </div>
