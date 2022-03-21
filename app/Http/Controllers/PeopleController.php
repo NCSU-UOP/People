@@ -18,10 +18,10 @@ class PeopleController extends Controller
     public function getStudent()
     {
         $faculty = new faculty();
-        $faculties = $faculty::all();
+        $faculties = $faculty::all()->toArray();
         $batch = new Batch();
-        $batches = $batch::all();
-        //dd($faculties);
+        $batches = $batch::all()->toArray();
+        // dd($faculties);
         return view('people.student')->with('fac', $faculties)->with('batches', $batches);
     }
 
