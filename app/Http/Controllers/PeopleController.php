@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\faculty;
+use App\Models\Batch;
 
 class PeopleController extends Controller
 {
@@ -15,7 +17,12 @@ class PeopleController extends Controller
     //people-student selection method
     public function getStudent()
     {
-        return view('people.student');
+        $faculty = new faculty();
+        $faculties = $faculty::all();
+        $batch = new Batch();
+        $batches = $batch::all();
+        //dd($faculties);
+        return view('people.student')->with('fac', $faculties)->with('batches', $batches);
     }
 
     //profile view method(tempory)
