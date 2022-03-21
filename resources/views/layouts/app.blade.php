@@ -123,15 +123,11 @@
     /**
      * Preloader
      */
-    let preloader = select('#preloader');
-    let app = select('#app');
-    if (preloader) {
-        app.remove();
-        window.addEventListener('load', () => {
-        preloader.remove();
-        app.show();
-        });
-    }
+    window.addEventListener("load", function() {
+    var load_screen = document.getElementById("preloader");
+    document.body.removeChild(load_screen);
+    document.getElementById('app').classList.add('ready');
+    });
     </script>
 @yield('landing-page-scripts')
 </body>
