@@ -200,3 +200,11 @@
         -moz-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
     }
 }
+
+#app {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+#app.ready {
+    opacity: 1;
+}
