@@ -109,16 +109,15 @@
         </main>
     </div>
     
-    <div class="block mt-auto">
-    <div class="container" >
-      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
-        <p class="col-md-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
-
-        <p class="col-md-0 mb-0 text-muted">All rights reserved.</p>
-
-        </footer>
+    <div class="block mt-auto" id='app-footer'>
+        <div class="container" >
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
+            <p class="col-md-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
+            <p class="col-md-0 mb-0 text-muted">All rights reserved.</p>
+            </footer>
         </div>
     </div>
+
     <script>
     /**
      * Preloader
@@ -127,6 +126,7 @@
     var load_screen = document.getElementById("preloader");
     document.body.removeChild(load_screen);
     document.getElementById('app').classList.add('ready');
+    document.getElementById('app-footer').classList.add('ready');
     });
     </script>
 @yield('landing-page-scripts')
