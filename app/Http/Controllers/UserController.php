@@ -21,9 +21,32 @@ class UserController extends Controller
 
         if($admin->is_admin == 1){
             $admin_list = Admin::all();
-            return view('admin.dashboard', compact('admin_list', 'admin'));
+
+            foreach($admin_list as $admin) {
+                $admin->username = $admin->user()->first()->username;
+                $admin->email = $admin->user()->first()->email;
+                $admin->faculty = $admin->faculty()->first()->name;
+                $admin->valid = $admin->active;
+                $admin->admin = $admin->is_admin;
+                $admin->online = $admin->last_online;
+            }
+
+            $admin_list = $admin_list->toJson();
+            return view('admin.dashboard', compact('admin_list'));
         }
 
-        return view('admin.dashboard', compact('admin'));
+        return view('admin.dashboard');
+    }
+
+    //deleting a entry from a users table
+    public function delete(User $user)
+    {
+        $message = "Error";
+
+        $user = User::find($user->id)->delete();
+        if($user) {
+            $message = "User deleted sucessfully..";
+        }
+        return redirect('/dashboard')->with('message', $message);
     }
 }

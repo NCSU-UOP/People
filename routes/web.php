@@ -39,7 +39,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 
     //Routes that can be only access by the super admins
     Route::group(['middleware' => ['super.admin']], function() {
-
+        Route::get('/dashboard/delete/{user}', [App\Http\Controllers\UserController::class, 'delete']);
     });
 
     //Routes that can be only access by the admin

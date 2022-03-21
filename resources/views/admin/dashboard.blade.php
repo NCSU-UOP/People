@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-    @if($admin->is_admin === 1)
+    @if(Auth::user()->admins()->first()->is_admin === 1)
         @section('navbar-item')
             <a href="#" class="dropdown-item">Add new user</a>
             <a href="#" class="dropdown-item">Add/Edit faculty details</a>
@@ -30,30 +36,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach($admin_list as $admin)
-                    @if($admin->is_admin === 1)
+                @foreach(json_decode($admin_list) as $admin)
+                    @if($admin->admin === 1)
                         @php $is_admin = "Super admin"; @endphp
-                    @elseif($admin->is_admin === 0)
+                    @elseif($admin->admin === 0)
                         @php $is_admin = "admin"; @endphp
                     @endif
 
-                    @if($admin->active === 1)
+                    @if($admin->valid === 1)
                         @php $active = "Yes"; @endphp
-                    @elseif($admin->active === 0)
+                    @elseif($admin->vaild === 0)
                         @php $active = "No"; @endphp
                     @endif
 
                     <tr>
                         <th scope="row">{{$admin->id}}</th>
                         <td>{{$admin->name}}</td>
-                        <td>{{$admin->user()->first()->username}}</td>
-                        <td>{{$admin->user()->first()->email}}</td>
-                        <td>{{$admin->faculty()->first()->name}}</td>
+                        <td>{{$admin->username}}</td>
+                        <td>{{$admin->email}}</td>
+                        <td>{{$admin->faculty}}</td>
                         <td>{{$active}}</td>
                         <td>{{$is_admin}}</td>
-                        <td>{{$admin->lastOnline}}</td>
-                        <td><a type="button" class="btn btn-danger btn-sm" role="button" href="#">Remove</a></td>
-                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="#">Edit</a></td>
+                        <td>{{$admin->online}}</td>
+                        <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
+                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Edit</a></td>
                     </tr>
                 @endforeach
                 </tbody>
