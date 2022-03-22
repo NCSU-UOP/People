@@ -22,13 +22,13 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         // \RenatoMarinho\LaravelPageSpeed\Middleware\InlineCss::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\ElideAttributes::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\InsertDNSPrefetch::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveComments::class,
-        //\RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls::class, 
-        \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveQuotes::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class, // Note: This middleware invokes "RemoveComments::class" before it runs.
-        \RenatoMarinho\LaravelPageSpeed\Middleware\DeferJavascript::class,
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\ElideAttributes::class,
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\InsertDNSPrefetch::class,
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveComments::class,
+        // //\RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls::class, 
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveQuotes::class,
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class, // Note: This middleware invokes "RemoveComments::class" before it runs.
+        // \RenatoMarinho\LaravelPageSpeed\Middleware\DeferJavascript::class,
     ];
 
     /**
@@ -71,5 +71,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'admin.users' => \App\Http\Middleware\AdminUserAuthentication::class,
+        'non.admin.users' => \App\Http\Middleware\NonAdminUserAuthentication::class,
+        'super.admin' => \App\Http\Middleware\SuperAdminAuthentication::class,
+        'admin' => \App\Http\Middleware\AdminAuthentication::class,
     ];
 }
