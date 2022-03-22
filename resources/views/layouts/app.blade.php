@@ -13,6 +13,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
+    @yield('profile-page-js')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -130,5 +131,6 @@
     });
     </script>
 @yield('landing-page-scripts')
+@yield('profile-page-scripts')
 </body>
 </html>
