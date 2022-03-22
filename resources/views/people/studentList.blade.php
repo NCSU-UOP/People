@@ -19,7 +19,7 @@
 
     <!-- student cards -->
     
-   <div class="row justify-content-center pb-5">
+   <div class="row justify-content-center pt-3 pb-5">
        @if ($studentlist)
        @foreach($studentlist as $data)
        <div class="card text-center p-2 m-1 border-primary" style="width: 11rem;">
@@ -30,7 +30,7 @@
                    </h6>
                <p class="card-text">{{$data['regNo']}}</p>
                <div class="d-flex flex-row justify-content-center mt-auto">
-                    <a class="btn btn-outline-primary w-100" href="/uop/{{Str::afterLast($data->username,'/')}}">View</a>
+                    <a class="btn btn-outline-primary w-100" href="/people/student/{{$facultyName}} / {{$batch}}/ {{$data['id']}}">View</a>
                </div>
            </div>
        </div>
