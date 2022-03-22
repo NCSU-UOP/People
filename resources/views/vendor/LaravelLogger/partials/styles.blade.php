@@ -1,5 +1,5 @@
 
-
+@section('styles')
 @if(config('LaravelLogger.enableBootstrapCssCDN'))
     <link rel="stylesheet" type="text/css" href="{{config('LaravelLogger.bootstrapCssCDN')}}">
 @endif
@@ -288,3 +288,5 @@
     }
 
 </style>
+
+@endsection

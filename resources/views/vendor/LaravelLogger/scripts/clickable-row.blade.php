@@ -1,3 +1,4 @@
+@section('clickablerow-script')
 <script type="text/javascript">
     $(function() {
         $(".clickable-row").click(function() {
@@ -5,3 +6,4 @@
         });
     });
 </script>
+@endsection

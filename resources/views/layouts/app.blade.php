@@ -13,7 +13,15 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
+    <script src="https://kit.fontawesome.com/1c62222909.js" crossorigin="anonymous"></script>
     @yield('profile-page-js')
+    @yield('clickablerow-script')
+    @yield('addtitle-script')
+    @yield('confirmmodal-script')
+    @yield('datatable-script')
+    @yield('tooltip-script')
+    @yield('styles')
+    @yield('loggerscripts')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

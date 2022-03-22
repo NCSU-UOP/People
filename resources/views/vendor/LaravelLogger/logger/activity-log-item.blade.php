@@ -38,6 +38,11 @@
 
 @php
     switch (config('LaravelLogger.bootstapVersion')) {
+        case '5':
+        $containerClass = 'card';
+        $containerHeaderClass = 'card-header';
+        $containerBodyClass = 'card-body';
+        break;
         case '4':
             $containerClass = 'card';
             $containerHeaderClass = 'card-header';
@@ -277,7 +282,7 @@
                                     <dl class="dl-horizontal">
                                         <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userType') !!}</dt>
                                         <dd>
-                                            <span class="badge badge-{{$userTypeClass}}">
+                                            <span class="badge bg-{{$userTypeClass}}">
                                                 {{$activity->userType}}
                                             </span>
                                         </dd>
@@ -297,7 +302,7 @@
                                                       @php $labelClass = 'default' @endphp
                                                     @endif
                                                     <dd>
-                                                        <span class="badge badge-{{$labelClass}}">
+                                                        <span class="badge bg-{{$labelClass}}">
                                                             {{ $user_role->name }} - {!! trans('LaravelLogger::laravel-logger.drilldown.labels.userLevel') !!} {{ $user_role->level }}
                                                         </span>
                                                     </dd>

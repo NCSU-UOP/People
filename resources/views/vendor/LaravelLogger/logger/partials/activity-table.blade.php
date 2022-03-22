@@ -65,8 +65,8 @@ if (Request::is('activity/cleared')) {
         </thead>
         <tbody>
             @foreach($activities as $activity)
-                <tr @if($drilldownStatus && $hoverable) class="clickable-row" data-href="{{ url($prependUrl . $activity->id) }}" data-toggle="tooltip" title="{{trans('LaravelLogger::laravel-logger.tooltips.viewRecord')}}" @endif >
-                    <td>
+                <tr @if($drilldownStatus && $hoverable) class="clickable-row" data-href="{{ url($prependUrl . $activity->id) }}" data-bs-toggle="tooltip" title="{{trans('LaravelLogger::laravel-logger.tooltips.viewRecord')}}" @endif >
+                    <td>   
                         <small>
                             @if($hoverable)
                                 {{ $activity->id }}
@@ -104,7 +104,7 @@ if (Request::is('activity/cleared')) {
                             }
 
                         @endphp
-                        <span class="badge badge-{{$userTypeClass}}">
+                        <span class="badge bg-{{$userTypeClass}}">
                             {{$userLabel}}
                         </span>
                     </td>
@@ -132,7 +132,7 @@ if (Request::is('activity/cleared')) {
                                     break;
                             }
                         @endphp
-                        <span class="badge badge-{{ $methodClass }}">
+                        <span class="badge bg-{{ $methodClass }}">
                             {{ $activity->methodType }}
                         </span>
                     </td>

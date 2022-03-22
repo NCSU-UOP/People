@@ -2,13 +2,15 @@
 
 @if(config('LaravelLogger.bladePlacement') == 'yield')
 @section(config('LaravelLogger.bladePlacementCss'))
-@elseif (config('LaravelLogger.bladePlacement') == 'stack')
-@push(config('LaravelLogger.bladePlacementCss'))
-@endif
 
-@include('LaravelLogger::partials.styles')
+    @elseif (config('LaravelLogger.bladePlacement') == 'stack')
+    @push(config('LaravelLogger.bladePlacementCss'))
+    @endif
 
-@if(config('LaravelLogger.bladePlacement') == 'yield')
+    @include('LaravelLogger::partials.styles')
+
+    @if(config('LaravelLogger.bladePlacement') == 'yield')
+
 @endsection
 @elseif (config('LaravelLogger.bladePlacement') == 'stack')
 @endpush
@@ -21,7 +23,7 @@
 @endif
 
 @include('LaravelLogger::partials.scripts', ['activities' => $activities])
-@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => '#confirmDelete'])
+@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => 'confirmDelete'])   // Modal: used to confirm deleting an item.
 
 @if(config('LaravelLogger.enableDrillDown'))
 @include('LaravelLogger::scripts.clickable-row')
@@ -40,6 +42,11 @@
 
 @php
     switch (config('LaravelLogger.bootstapVersion')) {
+        case '5':
+        $containerClass = 'card';
+        $containerHeaderClass = 'card-header';
+        $containerBodyClass = 'card-body';
+        break;
         case '4':
         $containerClass = 'card';
         $containerHeaderClass = 'card-header';
@@ -55,8 +62,11 @@
 @endphp
 
 @section('content')
+<div class="p-3 pb-1 rounded">
+            <h1 class="text-center font-weight-bold">Site Activity</h1>
+    </div>
 
-    <div class="container-fluid">
+<div class="container-fluid">
        @if(config('LaravelLogger.enableSearch'))
        @include('LaravelLogger::partials.form-search')
        @endif
@@ -82,11 +92,9 @@
                             </span>
 
                             <div class="btn-group pull-right btn-group-xs">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
-                                    <span class="sr-only">
                                         {!! trans('LaravelLogger::laravel-logger.dashboard.menu.alt') !!}
-                                    </span>
                                 </button>
                                 @if(config('LaravelLogger.bootstapVersion') == '4')
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -129,8 +137,9 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
 @include('LaravelLogger::modals.confirm-modal', ['formTrigger' => 'confirmDelete', 'modalClass' => 'danger', 'actionBtnIcon' => 'fa-trash-o'])
 
 @endsection
+
