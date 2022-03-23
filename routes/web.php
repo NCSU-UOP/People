@@ -23,9 +23,12 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //forum routes
-Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
-Route::get('/forum/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
-Route::get('/forum/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+Route::prefix('forum')->group(function () {
+    Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
+    Route::get('/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
+    Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+    Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
+});
 
 //people routes
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
