@@ -172,11 +172,13 @@
 <!-- ------------------------ Profile view --------------------------------------------- -->
 <div class="container">
     <div class="bg-primary p-3 pb-1 rounded" style="--bs-bg-opacity: .1;">
+        <h1>Student Details</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item"><a href="/people">People</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Student</li>
+                <li class="breadcrumb-item"><a href="/people/student">Student</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{$student['facultyName']}} / {{$student['batch_id']}} / {{$student['username']}}</li>
             </ol>
         </nav>
     </div>
@@ -188,9 +190,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center text-center">
-                        <img src="/img/default.png" alt="image" style="border-radius: 10%" width="200">
-                        <div class="mt-2"><h4>Chandula J.P.D.M.</h4></div>
-                        <h5 class="text-muted"> @chandula</h5>
+                        <img src="{{$student['image']}}" alt="image" style="border-radius: 10%" width="200">
+                        <div class="mt-2"><h4>{{$student['fullname']}}</h4></div>
+                        <h5 class="text-muted"> @ {{$student['username']}}</h5>
                     </div>
                     <div class="d-flex flex-column border border-3 mt-3 p-3">
                         <div class="container p-0">
@@ -228,7 +230,7 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-fill"></i> Profile</div>
-                    <div class="float-end"><a href="#" style="text-decoration: none;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                    <div class="float-end badge bg-success text-wrap" style="width: 4rem;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Information on this palette is verified by a faculty official on {{$student['date']}}">verified <i class="bi bi-check-circle-fill"></i></div>
                 </div>
                 
                 <div class="card-body">
@@ -237,16 +239,16 @@
                             <span class="mb-0" style="font-weight: 500">Full Name</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            Madushan Chandula
+                            {{$student['fullname']}}
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-3">
-                            <span class="mb-0" style="font-weight: 500">Preferred Name</span>
+                            <span class="mb-0" style="font-weight: 500">Name with Initials</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            J.P.D.M. Chandula
+                            {{$student['initial']}}
                         </div>
                     </div>
                     <hr>
@@ -255,7 +257,7 @@
                             <span class="mb-0" style="font-weight: 500">Faculty</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            Faculty of Engineering
+                            {{$student['facultyName']}}
                         </div>
                     </div>
                     <hr>
@@ -264,7 +266,7 @@
                             <span class="mb-0" style="font-weight: 500">Registration Number</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            E/16/061
+                            {{$student['regNo']}}
                         </div>
                     </div>
                     <hr>
@@ -273,7 +275,7 @@
                             <span class="mb-0" style="font-weight: 500">Department</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            Department of Computer Engineering
+                            {{$student['departmentName']}}
                         </div>
                     </div>
                 </div>    
@@ -281,7 +283,7 @@
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i>  Contact details</div>
+                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i> Contact details</div>
                     <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#contactstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
                 </div>
             <div class="card-body">
@@ -289,21 +291,21 @@
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">Email</span>
                     </div>
-                    <div class="col-sm-9 text-secondary">e16061@eng.pdn.ac.lk</div>
+                    <div class="col-sm-9 text-secondary">{{$student['email']}}</div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">Address</span>
                     </div>
-                    <div class="col-sm-9 text-secondary">158/c, 1st Lane, Neelammahara, Boralesgamuwa</div>
+                    <div class="col-sm-9 text-secondary">{{$student['address']}}</div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">City</span>
                     </div>
-                    <div class="col-sm-9 text-secondary">Boralesgamuwa</div>
+                    <div class="col-sm-9 text-secondary">{{$student['city']}}</div>
                 </div>
                 <hr>
                 <div class="row">
@@ -325,4 +327,18 @@
         </div>
     </div>
 </div>
+@endsection
+
+
+@section('profile-page-scripts')
+<script>
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
+@endsection
+
+@section('profile-page-js')
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 @endsection
