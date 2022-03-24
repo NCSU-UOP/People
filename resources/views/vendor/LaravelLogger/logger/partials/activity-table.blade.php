@@ -88,7 +88,7 @@ if (Request::is('activity/cleared')) {
                             switch ($activity->userType) {
                                 case trans('LaravelLogger::laravel-logger.userTypes.registered'):
                                     $userTypeClass = 'success';
-                                    $userLabel = $activity->userDetails['name'];
+                                    $userLabel = isset($activity->userDetails['username']) ? $activity->userDetails['username'] : 'notfound';
                                     break;
 
                                 case trans('LaravelLogger::laravel-logger.userTypes.crawler'):

@@ -309,7 +309,7 @@
                                                   @endforeach
                                             @endif
                                             <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userName') !!}</dt>
-                                            <dd>{{$userDetails->name}}</dd>
+                                            <dd>{{$userDetails->username}}</dd>
                                             <dt>{!! trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.userEmail') !!}</dt>
                                             <dd>
                                                 <a href="mailto:{{$userDetails->email}}">
