@@ -76,6 +76,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Laravel Default User type Field (Admin/Student/Academic/Non-Academic)
+    |--------------------------------------------------------------------------
+    */
+
+    'defaultUsertypeField' => env('LARAVEL_LOGGER_USER_TYPE_FIELD', 'usertype'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Disable automatic Laravel Logger routes
     | If you want to customise the routes the package uses, set this to true.
     | For more information, see the README.
@@ -138,12 +146,12 @@ return [
     'loggerBladeExtended'       => env('LARAVEL_LOGGER_LAYOUT', 'layouts.app'),
 
     // Switch Between bootstrap 3 `panel` and bootstrap 4 `card` classes
-    'bootstapVersion'           => env('LARAVEL_LOGGER_BOOTSTRAP_VERSION', '4'),
+    'bootstapVersion'           => env('LARAVEL_LOGGER_BOOTSTRAP_VERSION', '5'),
 
     // Additional Card classes for styling -
     // See: https://getbootstrap.com/docs/4.0/components/card/#background-and-color
     // Example classes: 'text-white bg-primary mb-3'
-    'bootstrapCardClasses'      => '',
+    'bootstrapCardClasses'      => 'border-primary mb-3',
 
     // Blade Extension Placement
     'bladePlacement'            => env('LARAVEL_LOGGER_BLADE_PLACEMENT', 'yield'),
