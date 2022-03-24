@@ -22,11 +22,11 @@ return new class extends Migration
             Schema::create($this->tableName, function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('regNo', env("STUDENTS_REGNO_MAX", 10))->unique();
-                $table->string('fname', env("STUDENTS_FNAME_MAX", 20));
-                $table->string('lname', env("STUDENTS_LNAME_MAX", 20));
+                $table->string('preferedname', env("STUDENTS_PREFEREDNAME_MAX", 60));
                 $table->string('initial', env("STUDENTS_INITIAL_MAX", 30));
                 $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100));
                 $table->string('city', env("STUDENTS_CITY_MAX", 50));
+                $table->string('province', env("STUDENTS_CITY_MAX", 50));
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
                 $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200));
                 // $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          

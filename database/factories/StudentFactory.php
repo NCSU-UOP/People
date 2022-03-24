@@ -22,15 +22,15 @@ class StudentFactory extends Factory
         $city = $this->faker->city($maxNbChars = 80);
 
         return [
-            'fname' => $firstName,
-
-            'lname' => $lastName,
+            'preferedname' => $firstName.' '.$lastName,
 
             'initial' => $firstName[0].'.'.$middleName[0].'. '.$lastName,
 
             'fullname' => $firstName.' '.$middleName.' '.$lastName,
 
             'city' => $city,
+
+            'province' => $this->faker->state(),
 
             'address' => $this->faker->streetAddress().', '.$city.', '.$this->faker->state().' '.$this->faker->postcode(),
 

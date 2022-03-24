@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         $academic = env('ACADEMIN_STAFF', 2);
         $nonAcademic = env('NON_ACADEMIC_STAFF', 3);
 
-        $password = Hash::make(env('TEMP_PASSWORD', 'admin12345'));
+        $password = Hash::make(env('DEFAULT_PASSWORD', 'admin12345'));
         $token = Str::random(10);
         $facultyCodes = Faculty::orderBy('code')->select('code')->get();
         $departmentCount = Department::count();
