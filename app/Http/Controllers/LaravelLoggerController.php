@@ -70,6 +70,8 @@ class LaravelLoggerController extends BaseController
         if (config('LaravelLogger.loggerPaginationEnabled')) {
             $activities = config('laravel-logger.defaultActivityModel')::orderBy('created_at', 'desc');
             if (config('LaravelLogger.enableSearch')) {
+                // dd($request);
+                // dd($activities);
                 $activities = $this->searchActivityLog($activities, $request);
             }
             $activities = $activities->paginate(config('LaravelLogger.loggerPaginationPerPage'));
@@ -290,6 +292,15 @@ class LaravelLoggerController extends BaseController
 
         if (in_array('user', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('user')) {
             $query->where('userId', '=', $requeset->get('user'));
+        }
+
+        if (in_array('usertype', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('usertype')) {
+            // dd($requeset->get('usertype'));
+            if($requeset->get('usertype') == '4'){  //check this(usertype is not received as 0 but 1,2,3 is received ok)
+                $query->where('type', '=', 0);
+            }else{
+            $query->where('type', '=', $requeset->get('usertype'));
+            }
         }
 
         if (in_array('method', explode(',', config('LaravelLogger.searchFields'))) && $requeset->get('method')) {
