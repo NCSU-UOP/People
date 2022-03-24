@@ -3,13 +3,13 @@
 @if(config('LaravelLogger.bladePlacement') == 'yield')
 @section(config('LaravelLogger.bladePlacementCss'))
 
-    @elseif (config('LaravelLogger.bladePlacement') == 'stack')
-    @push(config('LaravelLogger.bladePlacementCss'))
-    @endif
+@elseif (config('LaravelLogger.bladePlacement') == 'stack')
+@push(config('LaravelLogger.bladePlacementCss'))
+@endif
 
-    @include('LaravelLogger::partials.styles')
+@include('LaravelLogger::partials.styles')
 
-    @if(config('LaravelLogger.bladePlacement') == 'yield')
+@if(config('LaravelLogger.bladePlacement') == 'yield')
 
 @endsection
 @elseif (config('LaravelLogger.bladePlacement') == 'stack')
@@ -23,7 +23,7 @@
 @endif
 
 @include('LaravelLogger::partials.scripts', ['activities' => $activities])
-@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => 'confirmDelete'])   // Modal: used to confirm deleting an item.
+@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => 'confirmDelete'])
 
 @if(config('LaravelLogger.enableDrillDown'))
 @include('LaravelLogger::scripts.clickable-row')
