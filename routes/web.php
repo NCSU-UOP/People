@@ -64,7 +64,7 @@ Route::group(['middleware' => ['non.admin.users']], function () {
 Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
 // Routes for the site activity logging
-Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
+Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'super.admin', 'activity']], function () {
 
     // Dashboards
     Route::get('/', 'LaravelLoggerController@showAccessLog')->name('activity');

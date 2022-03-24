@@ -22,6 +22,7 @@ trait ActivityLogger
     {
         $userType = trans('LaravelLogger::laravel-logger.userTypes.guest');
         $userId = null;
+        $type = null;
 
         if (Auth::check()) {
             $userType = trans('LaravelLogger::laravel-logger.userTypes.registered');
