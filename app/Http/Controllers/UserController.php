@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\User;
+use App\Models\User; 
+use App\Models\Batch; 
+use App\Models\Faculty;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -36,6 +38,16 @@ class UserController extends Controller
         }
 
         return view('admin.dashboard');
+    }
+
+    public function get_batches()
+    {
+        $faculty = new faculty();
+        $faculties = $faculty::all()->toArray();
+        $batch = new Batch();
+        $batches = $batch::all()->toArray();
+        // dd($faculties);
+        return view('admin.dashboard')->with('fac', $faculties)->with('batches', $batches);
     }
 
     //deleting a entry from a users table

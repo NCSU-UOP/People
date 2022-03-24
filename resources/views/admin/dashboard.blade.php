@@ -67,10 +67,31 @@
         </div>
         </div>
 
-    @else
+    @elseif(Auth::user()->admins()->first()->is_admin === 0)
         <div class="p-3 pb-3 rounded">
             <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
+
+            <div class="container pt-4" style="display: flex; justify-content:center;">
+                <div class="row" style="justify-content:center;">
+                    @foreach($batches as $batch && $faculties as $fac)
+                        <div class="card bg-light m-3" style="max-width: 18rem;">
+                            <div class="card-header text-center">{{$fac['code']}}/{{$batch['id']}}</div>
+                            <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$batch['id']}}</h5>
+                                <p class="card-text">{{$batch['id']}}</p>
+                            </div>
+                            <a href="people/academic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
+                        </div>
+                        
+                    @endforeach
+                    
+                    
+                </div>
+            </div>
         </div>
+    @else
+        
     @endif
 
 @endsection
