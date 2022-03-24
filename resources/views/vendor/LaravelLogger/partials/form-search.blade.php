@@ -9,13 +9,14 @@
                 <input type="text" name="description" value="{{request()->get('description') ? request()->get('description'):null}}" class="form-control" placeholder="{{ trans('LaravelLogger::laravel-logger.dashboard.labels.description') }}">
             </div>
         @endif
-        @if(in_array('user',explode(',', config('LaravelLogger.searchFields'))))
+        @if(in_array('usertype',explode(',', config('LaravelLogger.searchFields'))))
             <div class="col-12 col-sm-4 col-lg-2 mb-2">
-                <select class="form-control" name="user">
-                    <option value="">{{ trans('LaravelLogger::laravel-logger.dashboard.search.all') }}</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->$userIdField }}"{{ request()->get('user') && request()->get('user') == $user->$userIdField ? ' selected':'' }}>{{ $user->name }}</option>
-                    @endforeach
+                <select class="form-control" name="usertype">
+                    <option value="ALL">{{ trans('LaravelLogger::laravel-logger.dashboard.search.all') }}</option>
+                    <option value="4">Admin</option>
+                    <option value="1">Student</option>
+                    <option value="2">Academic Staff</option>
+                    <option value="3">Non-academic Staff</option>
                 </select>
             </div>
         @endif
@@ -39,7 +40,7 @@
                 <input type="text" name="ip_address" class="form-control" value="{{request()->get('ip_address') ? request()->get('ip_address'):null}}" placeholder="{{ trans('LaravelLogger::laravel-logger.drilldown.list-group.labels.ip') }}">
             </div>
         @endif
-        @if(in_array('description',explode(',', config('LaravelLogger.searchFields')))||in_array('user',explode(',', config('LaravelLogger.searchFields'))) ||in_array('method',explode(',', config('LaravelLogger.searchFields'))) || in_array('route',explode(',', config('LaravelLogger.searchFields'))) || in_array('ip',explode(',', config('LaravelLogger.searchFields'))))
+        @if(in_array('description',explode(',', config('LaravelLogger.searchFields')))||in_array('usertype',explode(',', config('LaravelLogger.searchFields'))) ||in_array('method',explode(',', config('LaravelLogger.searchFields'))) || in_array('route',explode(',', config('LaravelLogger.searchFields'))) || in_array('ip',explode(',', config('LaravelLogger.searchFields'))))
             <div class="col-12 col-sm-4 col-lg-2 mb-2">
                 <input type="submit" class="btn btn-primary btn-block" value="{{ trans('LaravelLogger::laravel-logger.dashboard.search.search') }}">
             </div>
