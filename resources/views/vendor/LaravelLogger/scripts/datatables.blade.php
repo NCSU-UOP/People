@@ -1,4 +1,3 @@
-@section('datatable-script')
 <script type="text/javascript" src="{{config('LaravelLogger.loggerDatatablesJScdn')}}"></script>
 <script type="text/javascript" src="{{config('LaravelLogger.loggerDatatablesJSVendorCdn')}}"></script>
 <script type="text/javascript">
@@ -27,4 +26,3 @@
         });
     });
 </script>
-@endsection

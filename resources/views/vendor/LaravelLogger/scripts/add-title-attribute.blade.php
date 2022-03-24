@@ -1,4 +1,3 @@
-@section('addtitle-script')
 <script type="text/javascript">
     $(document).on('mouseenter', "div.activity-table table > tbody > tr > td ", function () {
         var $this = $(this);
@@ -7,4 +6,3 @@
         }
     });
 </script>
-@endsection

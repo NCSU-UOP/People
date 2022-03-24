@@ -1,4 +1,3 @@
-@section('confirmmodal-script')
 <script type="text/javascript">
 
     // Confirm Form Submit Modal
@@ -16,6 +15,5 @@
     });
 
 </script>
-@endsection
 
 

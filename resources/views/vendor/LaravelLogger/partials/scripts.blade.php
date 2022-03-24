@@ -1,5 +1,3 @@
-
-@section('loggerscripts')
 @if(config('LaravelLogger.enablejQueryCDN'))
     <script type="text/javascript" src="{{ config('LaravelLogger.JQueryCDN') }}"></script>
 @endif
@@ -19,4 +17,3 @@
 @endif
 
 @include('LaravelLogger::scripts.add-title-attribute')
-@endsection

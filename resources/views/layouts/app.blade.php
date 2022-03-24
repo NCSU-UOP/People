@@ -13,15 +13,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
-    <script src="https://kit.fontawesome.com/1c62222909.js" crossorigin="anonymous"></script>
     @yield('profile-page-js')
-    @yield('clickablerow-script')
-    @yield('addtitle-script')
-    @yield('confirmmodal-script')
-    @yield('datatable-script')
-    @yield('tooltip-script')
-    @yield('styles')
-    @yield('loggerscripts')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -32,6 +24,7 @@
     <link href="{{ asset('css/preloader.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet" />
     @yield('landing-page-css')
+    @yield('css-header')
 
     <!-- favicon -->
     <link rel="icon" href="img/favicon.png">
@@ -146,5 +139,6 @@
     </script>
 @yield('landing-page-scripts')
 @yield('profile-page-scripts')
+@yield('scripts-footer')
 </body>
 </html>
