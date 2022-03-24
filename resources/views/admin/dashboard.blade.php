@@ -13,6 +13,7 @@
             <a href="#" class="dropdown-item">Add new user</a>
             <a href="#" class="dropdown-item">Add/Edit faculty details</a>
             <a href="#" class="dropdown-item">Add/Edit batch details</a>
+            <a href="/activity" class="dropdown-item">View site activity</a>
         @endsection
 
         <div class="p-3 pb-3 rounded">
