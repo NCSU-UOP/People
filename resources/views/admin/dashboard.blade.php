@@ -79,7 +79,7 @@
                             <div class="card-header text-center">{{$facultyCode}}/{{$batch['id']}}</div>
                             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
                             <div class="card-body">
-                                <h6 class="card-title">Unverified Students:</h6>
+                                <h6 class="card-title">Unverified Students:{{$count[$batch['id']]}}</h6>
                             </div>
                             <a href="people/academic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
                         </div>
