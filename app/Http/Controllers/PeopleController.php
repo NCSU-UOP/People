@@ -29,6 +29,21 @@ class PeopleController extends Controller
         return view('people.student')->with('fac', $faculties)->with('batches', $batches);
     }
 
+    public function getAcademic()
+    {
+        return redirect('/comingsoon');
+    }
+
+    public function getNonAcademic()
+    {
+        return redirect('/comingsoon');
+    }
+
+    public function comingsoon()
+    {
+        return view('comingsoon.comingsoon');
+    }
+
     //redirect to profile view route method
     public function getProfile($facultyName,$batch,$id)
     {
