@@ -54,7 +54,7 @@
                 <h5 class="card-title">Non-academic Catalogue</h5>
                 <p class="card-text">Click Explore button to view Non-academic staff details</p>
             </div>
-            <a href="#" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
+            <a href="people/nonacademic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
         </div>
     </div>
     </div>

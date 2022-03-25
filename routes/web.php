@@ -37,6 +37,7 @@ Route::get('/people/student/{facultycode}/{batch}', [App\Http\Controllers\People
 Route::get('/people/student/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 Route::get('uop/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
 Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
+Route::get('/people/nonacademic', [App\Http\Controllers\PeopleController::class, 'getNonAcademic'])->name('people.nonAcademic');
 
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
@@ -63,6 +64,9 @@ Route::group(['middleware' => ['non.admin.users']], function () {
 
 //tempory route
 Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+
+//coming soon route
+Route::get('/comingsoon', [App\Http\Controllers\PeopleController::class, 'comingsoon']);
 
 // Routes for the site activity logging
 Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'super.admin', 'activity']], function () {
