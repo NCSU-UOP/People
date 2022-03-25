@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Faculty;
+use App\Models\Batch;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -40,9 +43,28 @@ class UserController extends Controller
         return view('admin.dashboard');
     }
 
+    public function get_batches()
+    {
+        $admin_id = auth()->user()->id;
+        $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
+        $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
+        $batch = new Batch();
+        $batches = $batch::all()->toArray();
+
+        foreach($batches as $batch){
+            $unverified_count=Student::where('faculty_id','=',$facultyId)->where('is_verified','=','0')->where('regNo','like',$facultyCode.'%')->count();
+            //array_push($count,$unverified_count);
+            array_add($batch,'count',$unverified_count);
+        }
+       
+        //$array = array_merge($batches,$count);
+        //dd($batches);
+        return view('admin.dashboard', compact('facultyCode','batches'));
+    }
+
     //deleting a entry from a users table
     public function delete(User $user)
-    {
+    { 
         $message = "Error ❌";
 
         $user = User::find($user->id)->delete();
