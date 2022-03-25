@@ -24,6 +24,7 @@
     <link href="{{ asset('css/preloader.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet" />
     @yield('landing-page-css')
+    @yield('css-header')
 
     <!-- favicon -->
     <link rel="icon" href="img/favicon.png">
@@ -138,5 +139,6 @@
     </script>
 @yield('landing-page-scripts')
 @yield('profile-page-scripts')
+@yield('scripts-footer')
 </body>
 </html>

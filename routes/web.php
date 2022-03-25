@@ -23,9 +23,12 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //forum routes
-Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
-Route::get('/forum/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
-Route::get('/forum/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+Route::prefix('forum')->group(function () {
+    Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
+    Route::get('/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
+    Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+    Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
+});
 
 //people routes
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
@@ -44,6 +47,8 @@ Route::group(['middleware' => ['admin.users']], function () {
     //Routes that can be only access by the super admins
     Route::group(['middleware' => ['super.admin']], function() {
         Route::get('/dashboard/delete/{user}', [App\Http\Controllers\UserController::class, 'delete']);
+        Route::get('/dashboard/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
+        Route::put('/dashboard/{user}', [App\Http\Controllers\UserController::class, 'update']);
     });
 
     //Routes that can be only access by the admin
@@ -60,7 +65,7 @@ Route::group(['middleware' => ['non.admin.users']], function () {
 Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
 // Routes for the site activity logging
-Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'auth', 'activity']], function () {
+Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'super.admin', 'activity']], function () {
 
     // Dashboards
     Route::get('/', 'LaravelLoggerController@showAccessLog')->name('activity');

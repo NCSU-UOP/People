@@ -46,52 +46,32 @@ class PeopleController extends Controller
         $user = new User();
         $user = $user::select('id','email')->where('username',$username)->first()->toArray();
         // dd($userid);
-        $student = new Student();
-        $studentdata = $student::where('id',$user['id'])->first()->toArray();
-        $faculty = new Faculty();
-        $department = new Department();
-        $facultyName = $faculty::where('id',$studentdata['faculty_id'])->first()->toArray();
-        $departmentName = $department::where('id',$studentdata['department_id'])->first()->toArray();
-        $date = date('d-m-Y',strtotime($studentdata['updated_at']));
-
-        $studentdata = Arr::add($studentdata,'facultyName',$facultyName['name']);
-        $studentdata = Arr::add($studentdata,'departmentName',$departmentName['name']);
-        $studentdata = Arr::add($studentdata,'username',$username);
-        $studentdata = Arr::add($studentdata,'email',$user['email']);
-        $studentdata = Arr::add($studentdata,'date',$date);
-        // dd($studentdata);
-        return view('people.profile')->with('student',$studentdata);
+        $studentdata = Student::where('id',$user['id'])->first()->makeHidden(['department_id', 'faculty_id', 'is_verified', 'created_at', 'updated_at']);
+        
+        $studentdata->facultyName = $studentdata->faculty()->first()->name;
+        $studentdata->departmentName = $studentdata->department()->first()->name;
+        $studentdata->username = $studentdata->user()->first()->username;
+        $studentdata->email = $studentdata->user()->first()->email;
+        $studentdata->date = date('d-m-Y',strtotime($studentdata['updated_at']));
+        $studentdata->image = '/uploads/images/'.$studentdata->image;
+        // dd($studentdata->toArray());
+        return view('people.profile')->with('student',$studentdata->toArray());
     }
 
     //getting student list method
     public function getStudentList($facultycode,$batch)
     {
         //dd($fac);
-        $faculty = new faculty();
-        $facultyData = $faculty::select('id','name')->where('code', $facultycode)->firstorFail()->toArray();
+        $facultyData = Faculty::select('id','name')->where('code', $facultycode)->firstorFail();
+        $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
         // dd($facultyData);
 
-        // $person = new verifiedData();
-        // $people = $person::select('image', 'fullname', 'regNo', 'username')->where('faculty_id', $fac_id)->where('batch_id', $batch)->orderBy('regNo', 'asc')->get();
-
-        $student = new Student();
-        $studentList = $student::select('id','image', 'fullname', 'regNo')->where('faculty_id', $facultyData['id'])->where('batch_id', $batch)->where('is_verified', 1)->where('is_rejected', 0)->orderBy('regNo', 'asc')->get()->toArray();
-
         // Change the image url to pick its respective thumbnails
-        // foreach ($people as $key => $person) {
-        //     $image_link = explode('\\', $person->image);
-        //     $image_link[2] = 'thumbs';
-        //     $person->image = implode('/', $image_link);
-        // }
-
-        // Change the image url to pick its respective thumbnails
-        // foreach ($studentList as $key => $student) {
-        //     $image_link = explode('\\', $student->image);
-        //     $image_link[2] = 'thumbs';
-        //     $student->image = implode('/', $image_link);
-        // }
+        foreach ($studentList as $key => $student) {
+            $student->image = '/uploads/thumbs/'.$student->image;
+        }
 
         //dd($studentList);
-        return view('people.studentList')->with('facultyName', $facultyData['name'])->with('studentlist', $studentList)->with('batch', $batch);
+        return view('people.studentList')->with('facultyName', $facultyData->name)->with('studentlist', $studentList->toArray())->with('batch', $batch);
     }
 }

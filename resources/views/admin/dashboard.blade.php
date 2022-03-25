@@ -13,6 +13,7 @@
             <a href="#" class="dropdown-item">Add new user</a>
             <a href="#" class="dropdown-item">Add/Edit faculty details</a>
             <a href="#" class="dropdown-item">Add/Edit batch details</a>
+            <a href="/activity" class="dropdown-item">View site activity</a>
         @endsection
 
         <div class="p-3 pb-3 rounded">
@@ -73,13 +74,12 @@
 
             <div class="container pt-4" style="display: flex; justify-content:center;">
                 <div class="row" style="justify-content:center;">
-                    @foreach($batches as $batch && $faculties as $fac)
+                    @foreach($batches as $batch)
                         <div class="card bg-light m-3" style="max-width: 18rem;">
-                            <div class="card-header text-center">{{$fac['code']}}/{{$batch['id']}}</div>
+                            <div class="card-header text-center">{{$facultyCode}}/{{$batch['id']}}</div>
                             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title">{{$batch['id']}}</h5>
-                                <p class="card-text">{{$batch['id']}}</p>
+                                <h6 class="card-title">Unverified Students:</h6>
                             </div>
                             <a href="people/academic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
                         </div>

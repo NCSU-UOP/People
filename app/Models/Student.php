@@ -16,11 +16,11 @@ class Student extends Model
     protected $fillable = [
         'id',
         'regNo',
-        'fname',
-        'lname',
+        'preferedname',
         'initial',
         'fullname',
         'city',
+        'province',
         'address',
         'image',
         'batch_id',

@@ -20,6 +20,7 @@ return new class extends Migration
                 $table->id();
                 $table->unsignedBigInteger('faculty_id');
                 $table->string('name', env("DEPARTMENTS_NAME_MAX", 100));
+                $table->string('code', env("DEPARTMENTS_CODE_MAX", 4))->nullable();
                 $table->timestamps();
 
                 $table->unique(['faculty_id', 'name']);

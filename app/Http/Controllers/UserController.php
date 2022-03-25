@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\User; 
-use App\Models\Batch; 
 use App\Models\Faculty;
+use App\Models\Batch;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -42,23 +45,70 @@ class UserController extends Controller
 
     public function get_batches()
     {
-        $faculty = new faculty();
-        $faculties = $faculty::all()->toArray();
+        $admin_id = auth()->user()->id;
+        $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
+        $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
         $batch = new Batch();
         $batches = $batch::all()->toArray();
-        // dd($faculties);
-        return view('admin.dashboard')->with('fac', $faculties)->with('batches', $batches);
+
+        foreach($batches as $batch){
+            $unverified_count=Student::where('faculty_id','=',$facultyId)->where('is_verified','=','0')->where('regNo','like',$facultyCode.'%')->count();
+            //array_push($count,$unverified_count);
+            array_add($batch,'count',$unverified_count);
+        }
+       
+        //$array = array_merge($batches,$count);
+        //dd($batches);
+        return view('admin.dashboard', compact('facultyCode','batches'));
     }
 
     //deleting a entry from a users table
     public function delete(User $user)
-    {
-        $message = "Error";
+    { 
+        $message = "Error ❌";
 
         $user = User::find($user->id)->delete();
         if($user) {
-            $message = "User deleted sucessfully..";
+            $message = "User deleted sucessfully ✔";
         }
         return redirect('/dashboard')->with('message', $message);
+    }
+
+    //edit user details in the users, admins tables
+    public function edit(User $user)
+    {
+        //creating user json
+        $user->name = $user->admins()->first()->name;
+        $user->faculty_id = $user->admins()->first()->faculty_id;
+        $user->faculty_name = $user->admins()->first()->faculty()->first()->name;
+
+        $user = $user->toJson();
+        $faculty = Faculty::all()->toJson();
+
+        return view('admin.edit', compact('user', 'faculty'));
+    }
+
+    //updating the user details
+    public function update(User $user)
+    {
+        $data = request()->validate([
+            "name" => ['required', 'string', 'max:50'],
+            "username" =>['prohibited'],
+            "email" =>['prohibited'],
+            "faculty_id" =>['required', 'int','exists:faculties,id'],
+            "is_admin" => ['required' , 'int'],
+            "password" => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $adminUpdate['faculty_id'] = $data['faculty_id'];
+        $adminUpdate['is_admin'] = $data['is_admin'];
+        $adminUpdate['name'] = $data['name'];
+
+        $userUpdate['password'] = Hash::make($data['password']);
+
+        User::find($user->id)->update($userUpdate);
+        Admin::find($user->id)->update($adminUpdate);
+
+        return redirect('/dashboard')->with('message', 'User update sucessfully 👍');
     }
 }
