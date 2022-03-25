@@ -9,7 +9,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
@@ -51,15 +51,13 @@ class UserController extends Controller
         $batch = new Batch();
         $batches = $batch::all()->toArray();
 
+        $count = [];
         foreach($batches as $batch){
-            $unverified_count=Student::where('faculty_id','=',$facultyId)->where('is_verified','=','0')->where('regNo','like',$facultyCode.'%')->count();
-            //array_push($count,$unverified_count);
-            array_add($batch,'count',$unverified_count);
+            $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
+            $count = Arr::add($count, $batch['id'], $unverified_count);
         }
-       
-        //$array = array_merge($batches,$count);
-        //dd($batches);
-        return view('admin.dashboard', compact('facultyCode','batches'));
+        //dd($count);
+        return view('admin.dashboard', compact('facultyCode','batches','count'));
     }
 
     //deleting a entry from a users table
