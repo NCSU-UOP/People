@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" data-aos="fade-up">
     <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-9">
         <form class="card card-sm text-center">
@@ -29,7 +29,7 @@
 
 <div class="container pt-4" style="display: flex; justify-content:center;">
     <div class="row" style="justify-content:center;">
-        <div class="card bg-light m-3" style="max-width: 18rem;">
+        <div class="card bg-light m-3" data-aos="zoom-in" data-aos-delay=100 style="max-width: 18rem;">
             <div class="card-header text-center">Academic Staff</div>
             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
             <div class="card-body">
@@ -38,7 +38,7 @@
             </div>
             <a href="people/academic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
         </div>
-        <div class="card bg-light m-3" style="max-width: 18rem;">
+        <div class="card bg-light m-3" data-aos="zoom-in" data-aos-delay=200 style="max-width: 18rem;">
             <div class="card-header text-center">Students</div>
             <img class="card-img-top" src="/img/student.jpg" alt="Card image cap">
             <div class="card-body">
@@ -47,7 +47,7 @@
             </div>
             <a href="people/student" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
         </div>
-        <div class="card bg-light m-3" style="max-width: 18rem;">
+        <div class="card bg-light m-3" data-aos="zoom-in" data-aos-delay=300 style="max-width: 18rem;">
             <div class="card-header text-center">Non-Academic Staff</div>
             <img class="card-img-top" src="/img/non-academic.jpg" alt="Card image cap">
             <div class="card-body">
