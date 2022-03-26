@@ -15,7 +15,6 @@
                     <th scope="col">Registration Number</th>
                     <th scope="col">Name</th>
                     <th scope="col"></th>
-                    <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,8 +23,7 @@
                         <th scope="row">{{$stdlist['id']}}</th>
                         <td>{{$stdlist['regNo']}}</td>
                         <td>{{$stdlist['initial']}}</td>
-                        <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/">Remove</a></td>
-                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/">Edit</a></td>
+                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="#">View</a></td>
                     </tr>
                 @endforeach
                 </tbody>
