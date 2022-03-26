@@ -8,11 +8,11 @@
     </div>
 @endif
 
-<div class="container p-2 pb-2 rounded">
+<div class="container p-2 pb-2 rounded" data-aos="zoom-in" data-aos-delay=100>
             <h1 class="text-center font-weight-bold">Data Collection Form</h1>
 </div>
 
-<div class="container">
+<div class="container" data-aos="zoom-in" data-aos-delay=100>
   <form id="data_form" class="row g-3" method="POST" action="/forum/student" enctype="multipart/form-data">
     @csrf
 
