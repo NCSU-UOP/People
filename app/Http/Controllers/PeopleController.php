@@ -81,7 +81,7 @@ class PeopleController extends Controller
         $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
         // dd($facultyData);
 
-        // Change the image url to pick its respective thumbnails
+        // Change the image url to pick its respective thumbnails 
         foreach ($studentList as $key => $student) {
             $student->image = '/uploads/thumbs/'.$student->image;
         }

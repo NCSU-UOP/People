@@ -81,15 +81,14 @@
                             <div class="card-body">
                                 <h6 class="card-title">Unverified Students:{{$count[$batch['id']]}}</h6>
                             </div>
-                            <a href="people/academic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
+                            <a href="dashboard/admin/unverifiedStudent/{{$facultyCode}}/{{$batch['id']}}" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
                         </div>
                         
                     @endforeach
-                    
-                    
                 </div>
             </div>
         </div>
+
     @else
         
     @endif

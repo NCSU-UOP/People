@@ -43,7 +43,7 @@ class UserController extends Controller
         return view('admin.dashboard');
     }
 
-    public function get_batches()
+    public function get_batches() 
     {
         $admin_id = auth()->user()->id;
         $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
@@ -58,6 +58,13 @@ class UserController extends Controller
         }
         //dd($count);
         return view('admin.dashboard', compact('facultyCode','batches','count'));
+    }
+
+    public function get_studList($facultyCode,$batch){
+        $studentList = Student::select('id','regNo','initial')->where([['is_verified','=','0'],['regNo','like',$facultyCode.'/%'],['batch_id','=',$batch]])->get();
+        $studentList = $studentList->toArray();
+        //dd($studentList);        
+        return view('admin.unverifiedList')->with('studentList',$studentList);
     }
 
     //deleting a entry from a users table

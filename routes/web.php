@@ -29,7 +29,7 @@ Route::prefix('forum')->group(function () {
     Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
 });
-
+ 
 //people routes
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
 Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
@@ -44,6 +44,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard'); 
     Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'get_batches'])->name('dashboard'); 
+    
 
     //Routes that can be only access by the super admins
     Route::group(['middleware' => ['super.admin']], function() {
@@ -54,7 +55,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 
     //Routes that can be only access by the admin
     Route::group(['middleware' => ['admin']], function() {
-
+        Route::get('/dashboard/admin/unverifiedStudent/{facultyCode}/{id}', [App\Http\Controllers\UserController::class, 'get_studList']); 
     });
 });
 
