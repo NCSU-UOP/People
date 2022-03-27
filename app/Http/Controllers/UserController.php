@@ -38,26 +38,21 @@ class UserController extends Controller
 
             $admin_list = $admin_list->toJson();
             return view('admin.dashboard', compact('admin_list'));
-        }
+        }elseif($admin->is_admin == 0){
+            $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
+            $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
+            $batch = new Batch();
+            $batches = $batch::all()->toArray();
 
+            $count = [];
+            foreach($batches as $batch){
+                $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
+                $count = Arr::add($count, $batch['id'], $unverified_count);
+            }
+            return view('admin.dashboard', compact('facultyCode','batches','count'));
+        }
+        
         return view('admin.dashboard');
-    }
-
-    public function get_batches() 
-    {
-        $admin_id = auth()->user()->id;
-        $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
-        $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
-        $batch = new Batch();
-        $batches = $batch::all()->toArray();
-
-        $count = [];
-        foreach($batches as $batch){
-            $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
-            $count = Arr::add($count, $batch['id'], $unverified_count);
-        }
-        //dd($count);
-        return view('admin.dashboard', compact('facultyCode','batches','count'));
     }
 
     public function get_studList($facultyCode,$batch){

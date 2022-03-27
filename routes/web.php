@@ -43,8 +43,6 @@ Route::get('/people/nonacademic', [App\Http\Controllers\PeopleController::class,
 Route::group(['middleware' => ['admin.users']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard'); 
-    Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'get_batches'])->name('dashboard'); 
-    
 
     //Routes that can be only access by the super admins
     Route::group(['middleware' => ['super.admin']], function() {
