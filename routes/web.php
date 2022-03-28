@@ -38,15 +38,17 @@ Route::prefix('people')->group(function () {
 // Can select one of the three user profile categories
     Route::get('/', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
 
-// Students routes
-    // Can select the faculty and the batch of the student users
-    Route::get('/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
-    
-    // Shows all the verified student available in the respective batch of the selected faculty
-    Route::get('/student/{facultycode}/{batch}', [App\Http\Controllers\PeopleController::class, 'getStudentList'])->name('people.studentList');
-    
-    // Thie route is used to redirect outsider to the respective students's profile
-    Route::get('/student/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+    // Students routes
+    Route::prefix('student')->group(function () {
+        // Can select the faculty and the batch of the student users
+        Route::get('/', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
+        
+        // Shows all the verified student available in the respective batch of the selected faculty
+        Route::get('/{facultycode}/{batch}', [App\Http\Controllers\PeopleController::class, 'getStudentList'])->name('people.studentList');
+        
+        // Thie route is used to redirect outsider to the respective students's profile
+        Route::get('/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+    });
 
 // Academic staff  routes. Still in the development process
     Route::get('/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
@@ -83,7 +85,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
 Route::group(['middleware' => ['non.admin.users']], function () {
-    //Routes that can be only access by the students
+    //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
 

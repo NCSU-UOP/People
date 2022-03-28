@@ -51,11 +51,24 @@ class ForumController extends Controller
 
     // Recieve students' forum data
     public function storeStudent()
-    {        
+    {   
+        $messages = [
+            'required' => 'The :attribute field is required.',
+            'same' => 'The :attribute and :other must match.',
+            'size' => 'The :attribute must be exactly :size.',
+            'min' => 'The :attribute must be greater than :min characters.',
+            'max' => 'The :attribute must be less than :max characters.',
+            'between' => 'The :attribute value :input is not between :min - :max.',
+            'in' => 'The :attribute must be one of the following types: :values',
+            'unique' => 'The :attribute is already in use.',
+            'exists' => 'The :attribute is invalid.',
+            'regex' => 'The :attribute format is invalid.'
+        ];
+
         $user = request()->validate([
-            'username' => ['required','string', 'max:20', 'unique:users'],
+            'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN"), 'max:'.env("USERS_USERNAME_MAX"), 'unique:users'],
             'email' => ['required', 'email:rfc,dns', 'unique:users'],
-        ]);
+        ], $messages);
 
         $user['usertype'] = env('STUDENT');
 
@@ -65,18 +78,18 @@ class ForumController extends Controller
         // dd(request()->regNo);
 
         $student = request()->validate([
-            'preferedname' => ['required','string', 'max:60'],
-            'fullname' => ['required','string', 'max:100'],
-            'initial' => ['required','string', 'max:50'],
-            'address' => ['required','string', 'max:100'],
-            'city' => ['required','string', 'max:100'],
-            'province' => ['required','string', 'max:100'],
+            'preferedname' => ['required','string', 'max:'.env("STUDENTS_PREFEREDNAME_MAX")],
+            'fullname' => ['required','string', 'max:'.env("STUDENTS_FULLNAME_MAX")],
+            'initial' => ['required','string', 'max:'.env("STUDENTS_INITIAL_MAX")],
+            'address' => ['required','string', 'max:'.env("STUDENTS_ADDRESS_MAX")],
+            'city' => ['required','string', 'max:'.env("STUDENTS_CITY_MAX")],
+            'province' => ['required','string', 'max:'.env("STUDENTS_PROVINCE_MAX")],
             'faculty_id' => ['required','int','exists:faculties,id'],
             'department_id' => ['required','int', 'exists:departments,id'],
             'batch_id' => ['required','int','exists:batches,id'],
             'regNo' => ['required','string','unique:students', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
             'image' => ['required','image'],
-        ]);
+        ], $messages);
 
         
         // Create the student's registration number        
