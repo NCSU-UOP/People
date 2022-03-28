@@ -267,10 +267,6 @@
     var dcodeList = {!! $dcodes !!};
 
     // To adopt the registration number of management faculty
-    console.log(facultyIndex);
-    console.log(departmentIndex);
-
-
     var depCodeForManagement = "";
     if(facultyIndex != 0) {
       if(fcodeList[facultyIndex-1]['code'] == "AHS") {

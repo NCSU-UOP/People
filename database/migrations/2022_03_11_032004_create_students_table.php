@@ -26,7 +26,7 @@ return new class extends Migration
                 $table->string('initial', env("STUDENTS_INITIAL_MAX", 30));
                 $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100));
                 $table->string('city', env("STUDENTS_CITY_MAX", 50));
-                $table->string('province', env("STUDENTS_CITY_MAX", 50));
+                $table->string('province', env("STUDENTS_PROVINCE_MAX", 50));
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
                 $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200));
                 // $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          

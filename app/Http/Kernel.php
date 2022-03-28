@@ -75,5 +75,6 @@ class Kernel extends HttpKernel
         'non.admin.users' => \App\Http\Middleware\NonAdminUserAuthentication::class,
         'super.admin' => \App\Http\Middleware\SuperAdminAuthentication::class,
         'admin' => \App\Http\Middleware\AdminAuthentication::class,
+        'student' => \App\Http\Middleware\StudentAuthentication::class,
     ];
 }

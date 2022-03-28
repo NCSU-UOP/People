@@ -42,51 +42,58 @@ class ForumController extends Controller
         return view('forum.student')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
     }
 
-    //academic staff froum selection method
+    // Academic staff froum selection method. (TO BE DEVELOPED)
     public function staffForum()
     {
-        return view('forum.staff');
+        return view('comingsoon.comingsoon');
+        // return view('forum.staff');
     }
 
     // Recieve students' forum data
     public function storeStudent()
-    {        
+    {   
+        $messages = [
+            'required' => 'The :attribute field is required.',
+            'same' => 'The :attribute and :other must match.',
+            'size' => 'The :attribute must be exactly :size.',
+            'min' => 'The :attribute must be greater than :min characters.',
+            'max' => 'The :attribute must be less than :max characters.',
+            'between' => 'The :attribute value :input is not between :min - :max.',
+            'in' => 'The :attribute must be one of the following types: :values',
+            'unique' => 'The :attribute is already in use.',
+            'exists' => 'The :attribute is invalid.',
+            'regex' => 'The :attribute format is invalid.'
+        ];
+
         $user = request()->validate([
-            'username' => ['required','string', 'max:20', 'unique:users'],
+            'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN"), 'max:'.env("USERS_USERNAME_MAX"), 'unique:users'],
             'email' => ['required', 'email:rfc,dns', 'unique:users'],
-        ]);
+        ], $messages);
 
         $user['usertype'] = env('STUDENT');
 
         // Process the registration number
-        // if(request()->faculty_id && request()->batch_id && request()->department_id && request()->regNo) {
-            
-        // }
         request()['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
 
         // dd(request()->regNo);
 
         $student = request()->validate([
-            'preferedname' => ['required','string', 'max:60'],
-            'fullname' => ['required','string', 'max:100'],
-            'initial' => ['required','string', 'max:50'],
-            'address' => ['required','string', 'max:100'],
-            'city' => ['required','string', 'max:100'],
-            'province' => ['required','string', 'max:100'],
+            'preferedname' => ['required','string', 'max:'.env("STUDENTS_PREFEREDNAME_MAX")],
+            'fullname' => ['required','string', 'max:'.env("STUDENTS_FULLNAME_MAX")],
+            'initial' => ['required','string', 'max:'.env("STUDENTS_INITIAL_MAX")],
+            'address' => ['required','string', 'max:'.env("STUDENTS_ADDRESS_MAX")],
+            'city' => ['required','string', 'max:'.env("STUDENTS_CITY_MAX")],
+            'province' => ['required','string', 'max:'.env("STUDENTS_PROVINCE_MAX")],
             'faculty_id' => ['required','int','exists:faculties,id'],
             'department_id' => ['required','int', 'exists:departments,id'],
             'batch_id' => ['required','int','exists:batches,id'],
             'regNo' => ['required','string','unique:students', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
             'image' => ['required','image'],
-        ]);
+        ], $messages);
 
-        // dd($student['regNo']);
         
         // Create the student's registration number        
         $facultyCode = Faculty::where('id', $student['faculty_id'])->firstOrFail()->code;
-
-        // $registrationNumber = $facultyCode.'/'.$student['batch_id'].'/'.$student['regNo'];
-        // $student['regNo'] = $registrationNumber;
 
         // Create the user
         User::create($user);
