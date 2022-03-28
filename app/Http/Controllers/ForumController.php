@@ -42,10 +42,11 @@ class ForumController extends Controller
         return view('forum.student')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
     }
 
-    //academic staff froum selection method
+    // Academic staff froum selection method. (TO BE DEVELOPED)
     public function staffForum()
     {
-        return view('forum.staff');
+        return view('comingsoon.comingsoon');
+        // return view('forum.staff');
     }
 
     // Recieve students' forum data
@@ -59,9 +60,6 @@ class ForumController extends Controller
         $user['usertype'] = env('STUDENT');
 
         // Process the registration number
-        // if(request()->faculty_id && request()->batch_id && request()->department_id && request()->regNo) {
-            
-        // }
         request()['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
 
         // dd(request()->regNo);
@@ -80,13 +78,9 @@ class ForumController extends Controller
             'image' => ['required','image'],
         ]);
 
-        // dd($student['regNo']);
         
         // Create the student's registration number        
         $facultyCode = Faculty::where('id', $student['faculty_id'])->firstOrFail()->code;
-
-        // $registrationNumber = $facultyCode.'/'.$student['batch_id'].'/'.$student['regNo'];
-        // $student['regNo'] = $registrationNumber;
 
         // Create the user
         User::create($user);
