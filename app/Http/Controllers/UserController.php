@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\Faculty;
 use App\Models\Batch;
+use App\Models\Department;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -54,12 +55,22 @@ class UserController extends Controller
         
         return view('admin.dashboard');
     }
+    
+    public function view_student($id){
+        $list=0;
+        $student = Student::where('id','=',$id)->get();
+        $student = $student[0]->toArray();
+        $deptName = Department::where('id','=',$student['department_id'])->firstOrFail()->name;
+        //dd($deptName);
+        return view('admin.unverifiedList', compact('list','student','deptName'));
+    }
 
     public function get_studList($facultyCode,$batch){
         $studentList = Student::select('id','regNo','initial')->where([['is_verified','=','0'],['regNo','like',$facultyCode.'/%'],['batch_id','=',$batch]])->get();
         $studentList = $studentList->toArray();
+        $list =1;
         //dd($studentList);        
-        return view('admin.unverifiedList')->with('studentList',$studentList);
+        return view('admin.unverifiedList')->with('studentList',$studentList)->with('list',$list);
     }
 
     //deleting a entry from a users table

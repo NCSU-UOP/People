@@ -54,6 +54,7 @@ Route::group(['middleware' => ['admin.users']], function () {
     //Routes that can be only access by the admin
     Route::group(['middleware' => ['admin']], function() {
         Route::get('/dashboard/admin/unverifiedStudent/{facultyCode}/{id}', [App\Http\Controllers\UserController::class, 'get_studList']); 
+        Route::get('unverifiedList/{id}', [App\Http\Controllers\UserController::class, 'view_student']);
     });
 });
 
