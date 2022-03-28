@@ -21,10 +21,8 @@ class PeopleController extends Controller
     //people-student selection method
     public function getStudent()
     {
-        $faculty = new faculty();
-        $faculties = $faculty::all()->toArray();
-        $batch = new Batch();
-        $batches = $batch::all()->toArray();
+        $faculties = Faculty::all()->toArray();
+        $batches = Batch::all()->toArray();
         // dd($faculties);
         return view('people.student')->with('fac', $faculties)->with('batches', $batches);
     }
@@ -48,27 +46,23 @@ class PeopleController extends Controller
     public function getProfile($facultyName,$batch,$id)
     {
         // dd($id);
-        $user = new User();
-        $username = $user::select('username')->where('id',$id)->first()->toArray();
+        $username = User::where('id',$id)->first()->username;
         // dd($username);
-        return redirect('uop/student/profile/'.$username['username']);
+        return redirect('uop/student/profile/'.$username);
     }
 
     //profile view method
     public function getProfileDetails($username)
     {
-        // dd($username);
-        $user = new User();
-        $user = $user::select('id','email')->where('username',$username)->first()->toArray();
-        // dd($userid);
-        $studentdata = Student::where('id',$user['id'])->first()->makeHidden(['department_id', 'faculty_id', 'is_verified', 'created_at', 'updated_at']);
-        
+        $studentdata = User::where('username', $username)->first()->students()->first()->makeHidden(['department_id', 'faculty_id', 'is_verified', 'created_at', 'updated_at']);
+
         $studentdata->facultyName = $studentdata->faculty()->first()->name;
         $studentdata->departmentName = $studentdata->department()->first()->name;
         $studentdata->username = $studentdata->user()->first()->username;
         $studentdata->email = $studentdata->user()->first()->email;
         $studentdata->date = date('d-m-Y',strtotime($studentdata['updated_at']));
         $studentdata->image = '/uploads/images/'.$studentdata->image;
+        
         // dd($studentdata->toArray());
         return view('people.profile')->with('student',$studentdata->toArray());
     }
@@ -77,7 +71,7 @@ class PeopleController extends Controller
     public function getStudentList($facultycode,$batch)
     {
         //dd($fac);
-        $facultyData = Faculty::select('id','name')->where('code', $facultycode)->firstorFail();
+        $facultyData = Faculty::where('code', $facultycode)->firstorFail();
         $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
         // dd($facultyData);
 
