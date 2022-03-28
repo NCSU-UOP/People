@@ -83,6 +83,11 @@ Route::group(['middleware' => ['admin.users']], function () {
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
 Route::group(['middleware' => ['non.admin.users']], function () {
+    //Routes that can be only access by the students
+    Route::group(['middleware' => ['student']], function() {
+        // Here goes students' profle edit routes
+
+    });
 });
 
 //tempory route
