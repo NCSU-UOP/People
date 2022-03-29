@@ -68,26 +68,82 @@
         </div>
         </div>
 
-    @elseif(Auth::user()->admins()->first()->is_admin === 0)
+        @section('superAdminCharts')
+        <div class="container">
         <div class="p-3 pb-3 rounded">
-            <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
+                <h2 class="text-center">Database Insights</h2>
+            </div>
+        <div class="p-5 pb-3 rounded">
+                <h4 class="text-center">Total No of Students | Rejected | Verified | Unverified Students Vs Faculty Code</h4>
+            </div>
+        <!-- Chart's container -->
+        <div id="chart" style="height: 300px;"></div>
+        <!-- Charting library -->
+        <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+        <!-- Chartisan -->
+        <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+        <!-- Your application script -->
+        <script>
+        const chart = new Chartisan({
+            el: '#chart',
+            url: "@chart('admin_chart1')",
+            hooks: new ChartisanHooks()
+                    .colors()
+                    .legend()
+                    .datasets(['bar','bar','bar','bar']),
+        });
+        </script>
+        @endsection
 
-            <div class="container pt-4" style="display: flex; justify-content:center;">
+    @elseif(Auth::user()->admins()->first()->is_admin === 0)
+        <div class="p-3 pb-8 rounded">
+            <h6 class="text-center text-muted">{{$facultyName}}</h6>
+            <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
+            <div class="container pt-4 pb-4" style="display: flex; justify-content:center;">
                 <div class="row" style="justify-content:center;">
+                    @php $delay = 100;@endphp
                     @foreach($batches as $batch)
-                        <div class="card bg-light m-3" style="max-width: 18rem;">
+                        <div class="card bg-light m-1" data-aos="zoom-in" data-aos-delay={{$delay}}  style="max-width: 15rem;">
                             <div class="card-header text-center">{{$facultyCode}}/{{$batch['id']}}</div>
                             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
                             <div class="card-body">
-                                <h6 class="card-title">Unverified Students:{{$count[$batch['id']]}}</h6>
+                                <h6 class="card-title text-center">Unverified Students</h6>
+                                <h6 class="card-title text-center"><span class="badge bg-primary text-wrap">{{$count[$batch['id']]}}</span></h6>
                             </div>
                             <a href="dashboard/admin/unverifiedStudent/{{$facultyCode}}/{{$batch['id']}}" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
                         </div>
-                        
+                    @php $delay = $delay+100; @endphp
                     @endforeach
                 </div>
             </div>
         </div>
+        @section('AdminCharts')
+        <div class="container">
+        <div class="pt-3 rounded">
+                <h2 class="text-center">Database Insights</h2>
+            </div>
+        <div class="p-5 pb-3 rounded">
+                <h4 class="text-center">Total No of Students | Rejected | Verified | Unverified Students Vs Batch</h4>
+                <h5 class="text-center">{{$facultyName}}</h5>
+            </div>
+        <!-- Chart's container -->
+        <div id="chart2" style="height: 300px;"></div>
+        <!-- Charting library -->
+        <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+        <!-- Chartisan -->
+        <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+        <!-- Your application script -->
+        <script>
+        const chart = new Chartisan({
+            el: '#chart2',
+            url: "@chart('admin_chart2')?facultycode={{$facultyCode}}",
+            hooks: new ChartisanHooks()
+                    .colors()
+                    .legend()
+                    .datasets(['bar','bar','bar','bar']),
+        });
+        </script>
+        @endsection
 
     @else
         
