@@ -69,13 +69,22 @@
         </div>
 
     @elseif(Auth::user()->admins()->first()->is_admin === 0)
+    <main class="container">
+        <h1>{{$facName}}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+    </main>
         <div class="p-3 pb-3 rounded">
             <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
 
             <div class="container pt-4" style="display: flex; justify-content:center;">
                 <div class="row" style="justify-content:center;">
                     @foreach($batches as $batch)
-                        <div class="card bg-light m-3" style="max-width: 18rem;">
+                        <div class="card bg-light m-3" style="max-width: 12rem;">
                             <div class="card-header text-center">{{$facultyCode}}/{{$batch['id']}}</div>
                             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
                             <div class="card-body">

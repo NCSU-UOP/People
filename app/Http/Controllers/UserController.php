@@ -57,20 +57,37 @@ class UserController extends Controller
     }
     
     public function view_student($id){
-        $list=0;
         $student = Student::where('id','=',$id)->get();
         $student = $student[0]->toArray();
+        $image_link = explode('\\', $student['image']);
+        $image_link[2] = 'thumbs';
+        $student['image'] = implode('/', $image_link); 
         $deptName = Department::where('id','=',$student['department_id'])->firstOrFail()->name;
-        //dd($deptName);
-        return view('admin.unverifiedList', compact('list','student','deptName'));
+        $facName = Faculty::where('id','=',$student['faculty_id'])->firstOrFail()->name;
+        $facultyCode = Faculty::where('id','=',$student['faculty_id'])->firstOrFail()->code;
+        //dd($facultyCode);
+        return view('admin.unverifiedStudent', compact('student','deptName','facName','facultyCode'));
     }
 
     public function get_studList($facultyCode,$batch){
-        $studentList = Student::select('id','regNo','initial')->where([['is_verified','=','0'],['regNo','like',$facultyCode.'/%'],['batch_id','=',$batch]])->get();
-        $studentList = $studentList->toArray();
-        $list =1;
-        //dd($studentList);        
-        return view('admin.unverifiedList')->with('studentList',$studentList)->with('list',$list);
+        $studentList = Student::select('id','regNo','initial','image')->where([['is_verified','=','0'],['regNo','like',$facultyCode.'/%'],['batch_id','=',$batch]])->get();
+        $facName = Faculty::where('code','=',$facultyCode)->firstOrFail()->name;
+        foreach ($studentList as $key => $stdtList) {
+            $image_link = explode('\\', $stdtList->image);
+            $image_link[2] = 'thumbs';
+            $stdtList->image = implode('/', $image_link); 
+        }       
+        return view('admin.unverifiedList',compact('studentList','batch','facName'));
+    }
+
+    public function verify($id){
+        $updated = Student::where('id','=',$id)->update(['is_verified'=>'1']);
+        return back()->with('message', 'Profile verified Succesfully!!');
+    }
+
+    public function reject($id){
+        $updated = Student::where('id','=',$id)->update(['is_verified'=>'1']);
+        return back()->with('message', 'Profile verified Succesfully!!');
     }
 
     //deleting a entry from a users table
