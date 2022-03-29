@@ -106,7 +106,6 @@
         </nav>
         </main>
         <div class="p-3 pb-8 rounded">
-            <h6 class="text-center text-muted">{{$facultyName}}</h6>
             <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
             <div class="container pt-4 pb-4" style="display: flex; justify-content:center;">
                 <div class="row" style="justify-content:center;">
