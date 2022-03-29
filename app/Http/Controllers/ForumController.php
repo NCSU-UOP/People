@@ -28,7 +28,9 @@ class ForumController extends Controller
         'in' => 'The :attribute must be one of the following types: :values',
         'unique' => 'The :attribute is already in use.',
         'exists' => 'The :attribute is invalid.',
-        'regex' => 'The :attribute format is invalid.'
+        'regex' => 'The :attribute format is invalid.',
+        'email' => 'Invalid email.',
+        'string' => 'The :attribute should be a string.',
     ];
 
     //forum selection method
@@ -65,7 +67,7 @@ class ForumController extends Controller
     public function updatePassword($username)
     {
         $data = request()->validate([
-            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'confirmed'],
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
         ], $this->messages);
 
         $data['password'] = Hash::make($data['password']);
