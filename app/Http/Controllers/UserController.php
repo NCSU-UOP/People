@@ -13,7 +13,7 @@ use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
-    //
+
     public function __construct()
     {
         $this->middleware('auth');   
@@ -41,6 +41,7 @@ class UserController extends Controller
         }elseif($admin->is_admin == 0){
             $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
             $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
+            $facultyName = Faculty::find($facultyId)->name;
             $batch = new Batch();
             $batches = $batch::all()->toArray();
 
@@ -49,7 +50,7 @@ class UserController extends Controller
                 $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['is_rejected','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
                 $count = Arr::add($count, $batch['id'], $unverified_count);
             }
-            return view('admin.dashboard', compact('facultyCode','batches','count'));
+            return view('admin.dashboard', compact('facultyName','facultyCode','batches','count'));
         }
         
         return view('admin.dashboard');
