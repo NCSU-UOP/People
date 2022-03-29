@@ -14,7 +14,22 @@ use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
+    protected $messages = [
+        'required' => 'The :attribute field is required.',
+        'same' => 'The :attribute and :other must match.',
+        'size' => 'The :attribute must be exactly :size.',
+        'min' => 'The :attribute must be greater than :min characters.',
+        'max' => 'The :attribute must be less than :max characters.',
+        'between' => 'The :attribute value :input is not between :min - :max.',
+        'in' => 'The :attribute must be one of the following types: :values',
+        'unique' => 'The :attribute is already in use.',
+        'exists' => 'The :attribute is invalid.',
+        'regex' => 'The :attribute format is invalid.',
+        'email' => 'Invalid email.',
+        'string' => 'The :attribute should be a string.',
+    ];
 
+    //
     public function __construct()
     {
         $this->middleware('auth');   
@@ -39,6 +54,7 @@ class UserController extends Controller
 
             $admin_list = $admin_list->toJson();
             return view('admin.dashboard', compact('admin_list'));
+
         }elseif($admin->is_admin == 0){
             $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
             $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
@@ -140,4 +156,60 @@ class UserController extends Controller
 
         return redirect('/dashboard')->with('message', 'User update sucessfully 👍');
     }
+
+    // (Super Admin) add user
+    public function createUser() 
+    {
+        $faculty = Faculty::select('id', 'name')->get();
+        return view('admin.createUser', compact('faculty'));
+    }
+
+    // (Super Admin) add faculty
+    public function createFaculty() 
+    {
+        return view('admin.createFaculty');
+    }
+
+    // (Super Admin) add batch
+    public function createBatch() 
+    {
+        return view('admin.createBatch');
+    }
+
+    // add user POST method
+    public function addUser() 
+    {
+        $userData = request()->validate([
+            'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN"), 'max:'.env("USERS_USERNAME_MAX"), 'unique:users'],
+            'email' => ['required', 'email:rfc,dns', 'unique:users'],
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed']
+        ], $this->messages);
+
+        $adminData = request()->validate([
+            'name' => ['required','string', 'max:'.env("USERS_NAME_MAX"), 'min:'.env("USERS_NAME_MIN")],
+            'faculty_id' => ['required','int','exists:faculties,id'],
+            'is_admin' => ['required', 'boolean'],
+            'remark' => ['required', 'string', 'max:'.env("ADMINS_REMARK_MAX")],
+
+        ], $this->messages);
+
+        // dd($userData);
+        // dd($adminData);
+
+        $userData['password'] = Hash::make($userData['password']);
+        $userData['usertype'] = env('ADMIN');
+
+        // Create user
+        User::create($userData);
+
+        // Create respective admin
+        $adminData['id'] = User::where('username', $userData['username'])->firstOrFail()->id;
+        $adminData['active'] = 1;
+
+        Admin::create($adminData);
+
+        return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
+    }
+
+
 }

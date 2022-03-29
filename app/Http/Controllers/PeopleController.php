@@ -43,7 +43,7 @@ class PeopleController extends Controller
     }
 
     //redirect to profile view route method
-    public function getProfile($facultyName,$batch,$id)
+    public function getProfile($id)
     {
         // dd($id);
         $username = User::where('id',$id)->first()->username;
@@ -54,7 +54,8 @@ class PeopleController extends Controller
     //profile view method
     public function getProfileDetails($username)
     {
-        $studentdata = User::where('username', $username)->first()->students()->first()->makeHidden(['department_id', 'faculty_id', 'is_verified', 'created_at', 'updated_at']);
+        // dd($username);
+        $studentdata = User::where('username', $username)->first()->students()->first()->makeHidden(['department_id', 'faculty_id', 'created_at', 'updated_at']);
 
         $studentdata->facultyName = $studentdata->faculty()->first()->name;
         $studentdata->departmentName = $studentdata->department()->first()->name;

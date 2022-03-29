@@ -31,6 +31,10 @@ Route::prefix('forum')->group(function () {
     Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
     
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
+
+    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification');
+
+    Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
 });
  
 // These are public routes which provides users' profile to the outsiders
@@ -61,7 +65,9 @@ Route::prefix('people')->group(function () {
 // User profiles routes
 Route::prefix('uop')->group(function () {
     // student category
-    Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+    Route::group(['middleware' => ['unverified']], function () {
+        Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+    });
 });
 
 
@@ -75,6 +81,13 @@ Route::group(['middleware' => ['admin.users']], function () {
         Route::get('/dashboard/delete/{user}', [App\Http\Controllers\UserController::class, 'delete']);
         Route::get('/dashboard/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
         Route::put('/dashboard/{user}', [App\Http\Controllers\UserController::class, 'update']);
+
+        // 
+        Route::get('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'createUser']);
+        Route::get('/dashboard/add/faculty', [App\Http\Controllers\UserController::class, 'createFaculty']);
+        Route::get('/dashboard/add/batch', [App\Http\Controllers\UserController::class, 'createBatch']);
+
+        Route::post('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'addUser']);
     });
 
     //Routes that can be only access by the admin
@@ -96,7 +109,7 @@ Route::group(['middleware' => ['non.admin.users']], function () {
 });
 
 //tempory route
-Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
 //coming soon route
 Route::get('/comingsoon', [App\Http\Controllers\PeopleController::class, 'comingsoon']);

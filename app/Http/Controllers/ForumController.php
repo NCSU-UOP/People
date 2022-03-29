@@ -18,6 +18,21 @@ use Illuminate\Support\Facades\Mail;
 
 class ForumController extends Controller
 {
+    protected $messages = [
+        'required' => 'The :attribute field is required.',
+        'same' => 'The :attribute and :other must match.',
+        'size' => 'The :attribute must be exactly :size.',
+        'min' => 'The :attribute must be greater than :min characters.',
+        'max' => 'The :attribute must be less than :max characters.',
+        'between' => 'The :attribute value :input is not between :min - :max.',
+        'in' => 'The :attribute must be one of the following types: :values',
+        'unique' => 'The :attribute is already in use.',
+        'exists' => 'The :attribute is invalid.',
+        'regex' => 'The :attribute format is invalid.',
+        'email' => 'Invalid email.',
+        'string' => 'The :attribute should be a string.',
+    ];
+
     //forum selection method
     public function index()
     {
@@ -42,6 +57,25 @@ class ForumController extends Controller
         return view('forum.student')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
     }
 
+    //Email verification and password setting function
+    public function verification($username)
+    {
+        return view('forum.verification', compact('username'));
+    }
+
+    //updating the password field 
+    public function updatePassword($username)
+    {
+        $data = request()->validate([
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+        ], $this->messages);
+
+        $data['password'] = Hash::make($data['password']);
+        User::where('username', $username)->update($data);
+
+        return redirect('/');
+    }
+
     // Academic staff froum selection method. (TO BE DEVELOPED)
     public function staffForum()
     {
@@ -52,23 +86,10 @@ class ForumController extends Controller
     // Recieve students' forum data
     public function storeStudent()
     {   
-        $messages = [
-            'required' => 'The :attribute field is required.',
-            'same' => 'The :attribute and :other must match.',
-            'size' => 'The :attribute must be exactly :size.',
-            'min' => 'The :attribute must be greater than :min characters.',
-            'max' => 'The :attribute must be less than :max characters.',
-            'between' => 'The :attribute value :input is not between :min - :max.',
-            'in' => 'The :attribute must be one of the following types: :values',
-            'unique' => 'The :attribute is already in use.',
-            'exists' => 'The :attribute is invalid.',
-            'regex' => 'The :attribute format is invalid.'
-        ];
-
         $user = request()->validate([
             'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN"), 'max:'.env("USERS_USERNAME_MAX"), 'unique:users'],
             'email' => ['required', 'email:rfc,dns', 'unique:users'],
-        ], $messages);
+        ], $this->messages);
 
         $user['usertype'] = env('STUDENT');
 
@@ -89,7 +110,7 @@ class ForumController extends Controller
             'batch_id' => ['required','int','exists:batches,id'],
             'regNo' => ['required','string','unique:students', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
             'image' => ['required','image'],
-        ], $messages);
+        ], $this->messages);
 
         
         // Create the student's registration number        
@@ -119,7 +140,7 @@ class ForumController extends Controller
         }
 
         //Mail sending procedure
-        // Mail::to($user['email'])->send(new ForumVerificationMail());
+        Mail::to($user['email'])->send(new ForumVerificationMail($user["username"]));
 
         return redirect('/forum/student')->with('message', 'Forum data entered Succesfully!!');
     }
@@ -146,7 +167,8 @@ class ForumController extends Controller
      * Create the directory if not exists
      * @return paths
      */
-    private function createDirectory($faculty_code, $type, $batch_id, $regNo) {
+    private function createDirectory($faculty_code, $type, $batch_id, $regNo) 
+    {
         /**
          * chmode codes has 3 digits (Owner, Group, World)
          * Permission (4 = read only, 7 = read and write and execute)
@@ -187,7 +209,8 @@ class ForumController extends Controller
      * Change image name
      * Save image in respective directory
      */
-    private function storeImage($path, $regNo, $file) {     
+    private function storeImage($path, $regNo, $file) 
+    {     
         // Create the image name
         $number = explode('/', $regNo);
         $number = $number[count($number)-1];
@@ -204,4 +227,5 @@ class ForumController extends Controller
 
         return $path.$imageName;
     }
+
 }
