@@ -76,5 +76,6 @@ class Kernel extends HttpKernel
         'super.admin' => \App\Http\Middleware\SuperAdminAuthentication::class,
         'admin' => \App\Http\Middleware\AdminAuthentication::class,
         'student' => \App\Http\Middleware\StudentAuthentication::class,
+        'unverified' => \App\Http\Middleware\UnverifiedProfiles::class,
     ];
 }
