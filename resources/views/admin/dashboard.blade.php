@@ -10,9 +10,9 @@
 
     @if(Auth::user()->admins()->first()->is_admin === 1)
         @section('navbar-item')
-            <a href="#" class="dropdown-item">Add new user</a>
-            <a href="#" class="dropdown-item">Add/Edit faculty details</a>
-            <a href="#" class="dropdown-item">Add/Edit batch details</a>
+            <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
+            <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
+            <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
             <a href="/activity" class="dropdown-item">View site activity</a>
         @endsection
 
@@ -46,7 +46,7 @@
 
                     @if($admin->valid === 1)
                         @php $active = "Yes"; @endphp
-                    @elseif($admin->vaild === 0)
+                    @else
                         @php $active = "No"; @endphp
                     @endif
 
