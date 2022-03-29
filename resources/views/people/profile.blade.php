@@ -192,12 +192,16 @@
                     <div class="d-flex flex-column align-items-center text-center">
                         <img src="{{$student['image']}}" alt="image" style="border-radius: 10%" width="200">
                         <div class="mt-2"><h4>{{$student['fullname']}}</h4></div>
-                        <h5 class="text-muted"> @ {{$student['username']}}</h5>
+                        <h5 class="text-muted"> {{"@".$student['username']}}</h5>
                     </div>
                     <div class="d-flex flex-column border border-3 mt-3 p-3">
                         <div class="container p-0">
                             <div class="float-start"><h4> Bio </h4></div>
-                            <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#biostaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                            @auth
+                                @if (Auth::user()->username == $student['username'] && $student['is_verified'])
+                                    <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#biostaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                                @endif
+                            @endauth
                         </div>
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam natus tenetur voluptas</p>
                     </div>
@@ -207,7 +211,11 @@
             <div class="card mt-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-messenger"></i>  Social Media</div>
-                    <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#socialstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                    @auth
+                        @if (Auth::user()->username == $student['username'] && $student['is_verified'])
+                            <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#socialstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                        @endif
+                    @endauth
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -230,7 +238,11 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-fill"></i> Profile</div>
-                    <div class="float-end badge bg-success text-wrap" style="width: 4rem;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Information on this palette is verified by a faculty official on {{$student['date']}}">verified <i class="bi bi-check-circle-fill"></i></div>
+                    @if ($student['is_verified'])
+                        <div class="float-end badge bg-success text-wrap" style="width: 5rem;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Information on this palette is verified by a faculty official on {{$student['date']}}">verified <i class="bi bi-check-circle-fill"></i></div>
+                    @else
+                        <div class="float-end badge bg-warning text-wrap" style="width: 5rem; color:black" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Information on this palette is not verified by a faculty official yet">unverified <i class="bi bi-x-circle-fill"></i></div>
+                    @endif
                 </div>
                 
                 <div class="card-body">
@@ -284,7 +296,11 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i> Contact details</div>
-                    <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#contactstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                    @auth
+                        @if (Auth::user()->username == $student['username'] && $student['is_verified'])
+                            <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#contactstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
+                        @endif
+                    @endauth
                 </div>
             <div class="card-body">
                 <div class="row">
