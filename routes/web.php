@@ -80,6 +80,9 @@ Route::group(['middleware' => ['admin.users']], function () {
     //Routes that can be only access by the admin
     Route::group(['middleware' => ['admin']], function() {
         Route::get('/dashboard/admin/unverifiedStudent/{facultyCode}/{id}', [App\Http\Controllers\UserController::class, 'get_studList']); 
+        Route::get('unverifiedStudent/{id}', [App\Http\Controllers\UserController::class, 'view_student']);
+        Route::get('unverifiedStudent/{id}/verify', [App\Http\Controllers\UserController::class, 'verify']);
+        Route::post('unverifiedStudent/{id}/reject', [App\Http\Controllers\UserController::class, 'reject']);
     });
 });
 
