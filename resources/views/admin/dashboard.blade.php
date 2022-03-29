@@ -96,6 +96,15 @@
         @endsection
 
     @elseif(Auth::user()->admins()->first()->is_admin === 0)
+        <main class="container">
+        <h1>{{$facultyName}}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+        </main>
         <div class="p-3 pb-8 rounded">
             <h6 class="text-center text-muted">{{$facultyName}}</h6>
             <h1 class="text-center font-weight-bold">Admin Dashboard</h1>
