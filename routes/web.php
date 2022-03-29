@@ -31,6 +31,10 @@ Route::prefix('forum')->group(function () {
     Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
     
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
+
+    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification');
+
+    Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
 });
  
 // These are public routes which provides users' profile to the outsiders
@@ -61,7 +65,9 @@ Route::prefix('people')->group(function () {
 // User profiles routes
 Route::prefix('uop')->group(function () {
     // student category
-    Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+    Route::group(['middleware' => ['unverified']], function () {
+        Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+    });
 });
 
 
@@ -93,7 +99,7 @@ Route::group(['middleware' => ['non.admin.users']], function () {
 });
 
 //tempory route
-Route::get('/profile', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
 //coming soon route
 Route::get('/comingsoon', [App\Http\Controllers\PeopleController::class, 'comingsoon']);
