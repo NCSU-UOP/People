@@ -22,22 +22,48 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//forum routes
+// Forum routes
 Route::prefix('forum')->group(function () {
     Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
+
     Route::get('/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
+
     Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+    
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
 });
  
-//people routes
-Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
-Route::get('/people/student', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
-Route::get('/people/student/{facultycode}/{batch}', [App\Http\Controllers\PeopleController::class, 'getStudentList'])->name('people.studentList');
-Route::get('/people/student/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
-Route::get('uop/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
-Route::get('/people/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
-Route::get('/people/nonacademic', [App\Http\Controllers\PeopleController::class, 'getNonAcademic'])->name('people.nonAcademic');
+// These are public routes which provides users' profile to the outsiders
+Route::prefix('people')->group(function () {
+// Can select one of the three user profile categories
+    Route::get('/', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.home');
+
+    // Students routes
+    Route::prefix('student')->group(function () {
+        // Can select the faculty and the batch of the student users
+        Route::get('/', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
+        
+        // Shows all the verified student available in the respective batch of the selected faculty
+        Route::get('/{facultycode}/{batch}', [App\Http\Controllers\PeopleController::class, 'getStudentList'])->name('people.studentList');
+        
+        // Thie route is used to redirect outsider to the respective students's profile
+        Route::get('/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+    });
+
+// Academic staff  routes. Still in the development process
+    Route::get('/academic', [App\Http\Controllers\PeopleController::class, 'getAcademic'])->name('people.academic');
+
+// Non-Academic staff  routes. Still in the development process
+    Route::get('/nonacademic', [App\Http\Controllers\PeopleController::class, 'getNonAcademic'])->name('people.nonAcademic');
+});
+
+
+// User profiles routes
+Route::prefix('uop')->group(function () {
+    // student category
+    Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+});
+
 
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
@@ -59,6 +85,11 @@ Route::group(['middleware' => ['admin.users']], function () {
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
 Route::group(['middleware' => ['non.admin.users']], function () {
+    //Routes that can be only access by students
+    Route::group(['middleware' => ['student']], function() {
+        // Here goes students' profle edit routes
+
+    });
 });
 
 //tempory route
