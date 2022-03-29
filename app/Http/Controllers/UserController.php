@@ -46,7 +46,7 @@ class UserController extends Controller
 
             $count = [];
             foreach($batches as $batch){
-                $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
+                $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['is_rejected','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
                 $count = Arr::add($count, $batch['id'], $unverified_count);
             }
             return view('admin.dashboard', compact('facultyCode','batches','count'));
