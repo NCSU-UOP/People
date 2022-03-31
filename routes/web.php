@@ -84,10 +84,12 @@ Route::group(['middleware' => ['admin.users']], function () {
 
         // 
         Route::get('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'createUser']);
-        Route::get('/dashboard/add/faculty', [App\Http\Controllers\UserController::class, 'createFaculty']);
-        Route::get('/dashboard/add/batch', [App\Http\Controllers\UserController::class, 'createBatch']);
+        Route::get('/dashboard/add/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
+        Route::get('/dashboard/add/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
 
         Route::post('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'addUser']);
+        Route::post('/dashboard/add/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
+        Route::post('/dashboard/add/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
     });
 
     //Routes that can be only access by the admin

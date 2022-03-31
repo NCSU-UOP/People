@@ -223,6 +223,4 @@ class UserController extends Controller
 
         return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
-
-
 }
