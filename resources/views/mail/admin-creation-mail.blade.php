@@ -1,23 +1,26 @@
 @component('mail::message')
-# You’re nearly there!
+# Get Started
 
 Hello {{$name}}!<br>
-Please click the button below to login to the system.
-<br><br>
+Your account has been created on the {{env('APP_NAME')}} by the university administration.<br><br>
 
-Followings are your credentials<br>
-Username = {{$username}}<br>
-Password = {{$password}}<br>
+Below are your system generated credentials,<br>
+Please change the password immediately after login.
+<br>
+
+Username<br>
+{{$username}}<br>
+
+Password<br>
+{{$password}}
 
 @component('mail::button', ['url' => route('login')])
-Login
+LOGIN TO YOUR ACCOUNT
 @endcomponent
 
-{{-- If you did not create an account, no further action is required.<br> --}}
-<br>
 Regards,<br>
 NCSU, University of Peradeniya
 
-{{-- <br> --}}
-{{-- If you're having trouble clicking the "Verify Email Address" button, copy and paste the URL below into your web browser: {{$url}} --}}
+<br>
+We've sent this to you as part of our Welcome to {{env('APP_NAME')}} by the University Administration.
 @endcomponent
