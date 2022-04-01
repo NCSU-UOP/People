@@ -22,6 +22,10 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/creaters', function () {
+    return view('people.team');
+});
+
 // Forum routes
 Route::prefix('forum')->group(function () {
     Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
