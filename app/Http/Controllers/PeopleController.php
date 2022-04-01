@@ -46,7 +46,7 @@ class PeopleController extends Controller
     public function getProfile($id)
     {
         // dd($id);
-        $username = User::where('id',$id)->first()->username;
+        $username = User::where('id', $id)->firstOrfail()->username;
         // dd($username);
         return redirect('uop/student/profile/'.$username);
     }

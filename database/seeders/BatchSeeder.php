@@ -14,7 +14,7 @@ class BatchSeeder extends Seeder
      */
     public function run()
     {
-        $expired_in = now()->addYear(env('EXPIRED_IN', 4));
+        $expired_in = now()->addYear(env('EXPIRED_IN', 4))->format('Y-m-d');
 
         $current_batches = [
             ['id' => 16, 'expire_date' => $expired_in],

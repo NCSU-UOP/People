@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdminCreationMail;
+
 class UserController extends Controller
 {
     protected $messages = [
@@ -195,21 +198,29 @@ class UserController extends Controller
 
         // dd($userData);
         // dd($adminData);
+        
+        // create a copy of the userData with only username and password included
+        $emailData = [
+            'username' => $userData['username'],
+            'password' => $userData['password'],
+            'name' => $adminData['name']
+        ];
 
+        // Hash the password and set the usertype as an ADMIN
         $userData['password'] = Hash::make($userData['password']);
         $userData['usertype'] = env('ADMIN');
 
-        // Create user
+        // Create the user
         User::create($userData);
 
-        // Create respective admin
+        // Create the respective admin
         $adminData['id'] = User::where('username', $userData['username'])->firstOrFail()->id;
         $adminData['active'] = 1;
-
         Admin::create($adminData);
+
+        // Send an email to the above created user to inform that he has been selected as an admin
+        Mail::to($userData['email'])->send(new AdminCreationMail($emailData));
 
         return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
-
-
 }
