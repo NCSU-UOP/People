@@ -8,8 +8,8 @@ use App\Models\Faculty;
 use App\Models\Department;
 use App\Models\Batch;
 use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Arr;
 
 use Image;
 use File;
@@ -60,6 +60,10 @@ class ForumController extends Controller
     //Email verification and password setting function
     public function verification($username)
     {
+        if (! request()->hasValidSignature()) {
+            abort(401);
+        }
+        
         return view('forum.verification', compact('username'));
     }
 

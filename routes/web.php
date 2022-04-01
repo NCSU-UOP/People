@@ -27,13 +27,11 @@ Route::prefix('forum')->group(function () {
     Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
 
     Route::get('/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
-
     Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
     
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
 
     Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification');
-
     Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
 });
  
@@ -47,11 +45,11 @@ Route::prefix('people')->group(function () {
         // Can select the faculty and the batch of the student users
         Route::get('/', [App\Http\Controllers\PeopleController::class, 'getStudent'])->name('people.student');
         
+        // Thie route is used to redirect outsider to the respective students's profile
+        Route::get('/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+
         // Shows all the verified student available in the respective batch of the selected faculty
         Route::get('/{facultycode}/{batch}', [App\Http\Controllers\PeopleController::class, 'getStudentList'])->name('people.studentList');
-        
-        // Thie route is used to redirect outsider to the respective students's profile
-        Route::get('/{facultyName}/{batch}/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
     });
 
 // Academic staff  routes. Still in the development process
