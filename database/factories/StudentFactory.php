@@ -34,7 +34,7 @@ class StudentFactory extends Factory
 
             'address' => $this->faker->streetAddress().', '.$city.', '.$this->faker->state().' '.$this->faker->postcode(),
 
-            'image' => $this->faker->unique()->imageUrl($width = 400, $height = 400),
+            // 'image' => $this->faker->unique()->imageUrl($width = 400, $height = 400),
         ];
     }
 }
