@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('throttle:api');
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('throttle:api');
 
 Route::get('/creaters', function () {
     return view('people.team');
@@ -105,7 +105,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 });
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
-Route::group(['middleware' => ['non.admin.users']], function () {
+Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
