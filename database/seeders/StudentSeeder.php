@@ -56,7 +56,14 @@ class StudentSeeder extends Seeder
                 foreach ($batchIds as $key => $batch) {
                     for ($i=0; $i < $userCount; $i++, $index++) { 
                         $regNo = $faculty->code.'/'.$batch->id.'/'.$this->faker->unique()->randomNumber($nbDigits = 3, $strict = true);
-                        Student::factory()->state(['id' => $studentUsers[$index]->id, 'regNo' => $regNo, 'batch_id' => $batch->id, 'department_id' => $department->id, 'faculty_id' => $faculty->id])->create();
+                        Student::factory()->state([
+                            'id' => $studentUsers[$index]->id, 
+                            'regNo' => $regNo, 
+                            'batch_id' => $batch->id, 
+                            'department_id' => $department->id, 
+                            'faculty_id' => $faculty->id,
+                            'image' => 'default.png'
+                        ])->create();
                     }
                 }
             }
