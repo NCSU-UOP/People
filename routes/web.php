@@ -114,6 +114,8 @@ Route::group(['middleware' => ['admin.users']], function () {
                 Route::get('/{userId}', [App\Http\Controllers\UserController::class, 'getStudent']);
                 Route::get('/{facultyCode}/{batchId}', [App\Http\Controllers\UserController::class, 'getStudentList'])->name('getStudentList'); 
             });
+            Route::get('{facultyName}/add/department', [App\Http\Controllers\UserController::class, 'createDepartment']);
+            Route::post('{facultyName}/add/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
         });
     });
 });
