@@ -275,4 +275,8 @@ class UserController extends Controller
 
         return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
+
+    public function addDepartment(){
+        return view('admin.addDepartment');
+    }
 }
