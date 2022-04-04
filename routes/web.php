@@ -100,6 +100,7 @@ Route::group(['middleware' => ['admin.users']], function () {
         Route::get('unverifiedStudent/{id}', [App\Http\Controllers\UserController::class, 'view_student']);
         Route::get('unverifiedStudent/{id}/verify', [App\Http\Controllers\UserController::class, 'verify']);
         Route::post('unverifiedStudent/{id}/reject', [App\Http\Controllers\UserController::class, 'reject']);
+        Route::get('/dashboard/add/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
     });
 });
 
