@@ -5,10 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Register a Department - faculty name</div>
+                <div class="card-header">Register a Department - {{$facultyName}}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/dashboard/add/department" enctype="multipart/form-data">
+                    <form method="POST" action="/dashboard/{{$facultyName}}/add/department" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-3">
                             <label for="departmentname" class="col-md-4 col-form-label text-md-end">Department Name</label>

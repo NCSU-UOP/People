@@ -96,6 +96,9 @@
         @endsection
 
     @else
+        @section('navbar-item')
+            <a href="/dashboard/{{$facultyName}}/add/department" class="dropdown-item">Add Department</a>
+        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
