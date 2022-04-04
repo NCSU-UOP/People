@@ -96,6 +96,9 @@
         @endsection
 
     @elseif(Auth::user()->admins()->first()->is_admin === 0)
+        @section('navbar-item')
+            <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
+        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
