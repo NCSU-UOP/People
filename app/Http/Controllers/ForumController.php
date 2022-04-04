@@ -61,7 +61,7 @@ class ForumController extends Controller
     public function verification($username)
     {
         if (! request()->hasValidSignature()) {
-            abort(401);
+            abort(403);
         }
         
         return view('forum.verification', compact('username'));
