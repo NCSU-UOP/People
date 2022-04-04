@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminCreationMail;
+use App\Mail\EntryRejectionMail;
 
 class UserController extends Controller
 {
@@ -38,77 +39,128 @@ class UserController extends Controller
         $this->middleware('auth');   
     }
 
+    /**
+     * Send specific dashboard to both admin and super admin
+     */
     public function index()
     {
-        $admin_id = auth()->user()->id;
-        $admin = User::find($admin_id)->admins()->firstOrfail();
+        /**
+         * Super admin page
+         */
+        $admin = User::find(auth()->user()->id)->admins()->firstOrfail();
 
         if($admin->is_admin == 1){
             $admin_list = Admin::all();
 
-            foreach($admin_list as $admin) {
-                $admin->username = $admin->user()->first()->username;
-                $admin->email = $admin->user()->first()->email;
-                $admin->faculty = $admin->faculty()->first()->name;
-                $admin->valid = $admin->active;
-                $admin->admin = $admin->is_admin;
-                $admin->online = $admin->last_online;
+            foreach($admin_list as $tmp_admin) {
+                $user = $tmp_admin->user()->firstOrfail();
+                $faculty = $tmp_admin->faculty()->firstOrfail();
+
+                $tmp_admin->username = $user->username;
+                $tmp_admin->email = $user->email;
+                $tmp_admin->faculty = $faculty->name;
+                $tmp_admin->valid = $tmp_admin->active;
+                $tmp_admin->admin = $tmp_admin->is_admin;
+                $tmp_admin->online = $tmp_admin->last_online;
             }
 
             $admin_list = $admin_list->toJson();
             return view('admin.dashboard', compact('admin_list'));
-
-        }elseif($admin->is_admin == 0){
-            $facultyCode = Faculty::join('admins', 'faculties.id', '=', 'admins.faculty_id')->where('admins.id', $admin_id)->firstOrFail()->code;
-            $facultyId = Admin::where('id','=',$admin_id)->firstOrFail()->faculty_id;
-            $facultyName = Faculty::find($facultyId)->name;
-            $batch = new Batch();
-            $batches = $batch::all()->toArray();
-
-            $count = [];
-            foreach($batches as $batch){
-                $unverified_count=Student::where([['faculty_id','=',$facultyId],['is_verified','=','0'],['is_rejected','=','0'],['regNo','like',$facultyCode.'%'],['batch_id','=',$batch['id']]])->count();
-                $count = Arr::add($count, $batch['id'], $unverified_count);
-            }
-            return view('admin.dashboard', compact('facultyName','facultyCode','batches','count'));
         }
-        
-        return view('admin.dashboard');
+
+        /**
+         * Admin page
+         */
+
+        $faculty = $admin->faculty()->firstOrfail();
+        $facultyCode = $faculty->code;
+        $facultyId = $faculty->id;
+        $facultyName = $faculty->name;
+        $batches = Batch::select('id')->get();
+
+        $count = [];
+        foreach($batches as $batch){
+            $unverified_count = $faculty->students()->where([['is_verified','=','0'], ['is_rejected','=','0'], ['batch_id','=', $batch->id]])->count();
+            $count = Arr::add($count, $batch->id, $unverified_count);
+        }
+
+        return view('admin.dashboard', compact('facultyName','facultyCode','batches','count'));
     }
     
-    public function view_student($id){
-        $student = Student::where('id','=',$id)->get();
-        $student = $student[0]->toArray();
-        $image_link = explode('\\', $student['image']);
-        $image_link[2] = 'thumbs';
-        $student['image'] = implode('/', $image_link); 
-        $deptName = Department::where('id','=',$student['department_id'])->firstOrFail()->name;
-        $facName = Faculty::where('id','=',$student['faculty_id'])->firstOrFail()->name;
-        $facultyCode = Faculty::where('id','=',$student['faculty_id'])->firstOrFail()->code;
-        //dd($facultyCode);
-        return view('admin.unverifiedStudent', compact('student','deptName','facName','facultyCode'));
+    /**
+     * show all the students of respective batch of the faculty
+     */
+    public function getStudentList($facultyCode, $batchId){
+        $faculty = Faculty::where('code', $facultyCode)->firstOrfail();
+        $studentList = $faculty->students()->select('students.id','students.regNo','students.initial','students.image')->where([['students.is_verified', 0], ['students.is_rejected', 0], ['students.batch_id', $batchId]])->get();
+        $facultyName = Faculty::where('code', $facultyCode)->firstOrFail()->name;
+        
+        return view('admin.unverifiedStudentList',compact('studentList','batchId','facultyName', 'facultyCode'));
     }
 
-    public function get_studList($facultyCode,$batch){
-        $studentList = Student::select('id','regNo','initial','image')->where([['is_verified','=','0'],['regNo','like',$facultyCode.'/%'],['batch_id','=',$batch]])->get();
-        $facName = Faculty::where('code','=',$facultyCode)->firstOrFail()->name;
-        foreach ($studentList as $key => $stdtList) {
-            $image_link = explode('\\', $stdtList->image);
-            $image_link[2] = 'thumbs';
-            $stdtList->image = implode('/', $image_link); 
-        }       
-        return view('admin.unverifiedList',compact('studentList','batch','facName'));
+    /**
+     * Show user information to the admin to verify them
+     */
+    public function getStudent($userId){
+        // dd($userId);
+        $student = Student::where('id', $userId)->firstOrfail();
+        $user = $student->user()->firstOrfail();
+        $student->username = $user->username;
+        $student->email = $user->email;
+
+        $faculty = $student->faculty()->firstOrfail();
+        $deptName = $student->department()->firstOrfail()->name;
+        // dd($student);
+
+        $reasons = ["Profile Picture not acceptable", "RegNo/Name mismatch", "Initial/Fullname mismatch", "Wrong Department", "Other"];
+
+        return view('admin.unverifiedStudent', compact('student', 'deptName', 'faculty', 'reasons'));
     }
 
-    public function verify($id){
-        $updated = Student::where('id','=',$id)->update(['is_verified'=>'1']);
-        return back()->with('message', 'Profile verified Succesfully!!');
+    /**
+     * This route is used to verify user information
+     */
+    public function verifyStudent($userId){
+        // dd($userId);
+        $student = Student::where('id', $userId)->firstOrfail();
+        $facultyCode = $student->faculty()->firstOrfail()->code;
+
+        if($student) {
+            $student->is_verified = 1;
+            $student->save();
+            return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile verified Succesfully!!');
+        }
+
+        // Abort as a bad request
+        abort(400);
     }
 
-    public function reject($id){
-        $updated = Student::where('id','=',$id)->update(['is_verified'=>'1']);
-        return back()->with('message', 'Profile verified Succesfully!!');
+    public function rejectStudent($userId){
+        // dd($userId);
+
+        $rejectData = request()->validate([
+            'keyerror' => ['required','string', 'max:'.env("USER_REJECT_KEYERROR_MAX")],
+            'remarks' => ['max:'.env("USER_REJECT_REMARK_MAX")]
+        ], $this->messages);
+
+        $student = Student::where('id', $userId)->firstOrfail();
+        $facultyCode = $student->faculty()->firstOrfail()->code;
+        $user = $student->user()->firstOrfail();
+
+        if($student) {
+            $student->is_rejected = 1;
+            $student->save();
+
+            Mail::to($user->email)->send(new EntryRejectionMail($student->preferedname, $user->username, $rejectData));
+            // dd($rejectData);
+            return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile rejected Succesfully!!');
+        }
+
+        // Abort as a bad request
+        abort(400);
     }
+
+    
 
     //deleting a entry from a users table
     public function delete(User $user)

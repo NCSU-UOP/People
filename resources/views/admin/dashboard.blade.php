@@ -95,7 +95,7 @@
         </script>
         @endsection
 
-    @elseif(Auth::user()->admins()->first()->is_admin === 0)
+    @else
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
@@ -118,7 +118,7 @@
                                 <h6 class="card-title text-center">Unverified Students</h6>
                                 <h6 class="card-title text-center"><span class="badge bg-primary text-wrap">{{$count[$batch['id']]}}</span></h6>
                             </div>
-                            <a href="dashboard/admin/unverifiedStudent/{{$facultyCode}}/{{$batch['id']}}" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
+                            <a href="dashboard/student/{{$facultyCode}}/{{$batch['id']}}" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
                         </div>
                     @php $delay = $delay+100; @endphp
                     @endforeach
@@ -126,35 +126,31 @@
             </div>
         </div>
         @section('AdminCharts')
-        <div class="container">
-        <div class="pt-3 rounded">
+            <div class="container">
+            <div class="pt-3 rounded">
                 <h2 class="text-center">Database Insights</h2>
             </div>
-        <div class="p-5 pb-3 rounded">
+            <div class="p-5 pb-3 rounded">
                 <h4 class="text-center">Total No of Students | Rejected | Verified | Unverified Students Vs Batch</h4>
                 <h5 class="text-center">{{$facultyName}}</h5>
             </div>
-        <!-- Chart's container -->
-        <div id="chart2" style="height: 300px;"></div>
-        <!-- Charting library -->
-        <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
-        <!-- Chartisan -->
-        <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
-        <!-- Your application script -->
-        <script>
-        const chart = new Chartisan({
-            el: '#chart2',
-            url: "@chart('admin_chart2')?facultycode={{$facultyCode}}",
-            hooks: new ChartisanHooks()
-                    .colors()
-                    .legend()
-                    .datasets(['bar','bar','bar','bar']),
-        });
-        </script>
-        @endsection
-
-    @else
-        
+            <!-- Chart's container -->
+            <div id="chart2" style="height: 300px;"></div>
+            <!-- Charting library -->
+            <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+            <!-- Chartisan -->
+            <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+            <!-- Your application script -->
+            <script>
+                const chart = new Chartisan({
+                    el: '#chart2',
+                    url: "@chart('admin_chart2')?facultycode={{$facultyCode}}",
+                    hooks: new ChartisanHooks()
+                        .colors()
+                        .legend()
+                        .datasets(['bar','bar','bar','bar']),
+                });
+            </script>
+        @endsection        
     @endif
-
 @endsection
