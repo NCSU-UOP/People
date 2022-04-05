@@ -16,6 +16,7 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
+        "linkeys/signed-url": "^4.0",
         "renatomarinho/laravel-page-speed": "^2.1"
     },
     "require-dev": {
