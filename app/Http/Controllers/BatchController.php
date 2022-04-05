@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Batch;
+use App\Models\Faculty;
+use LdapRecord\Models\ActiveDirectory\OrganizationalUnit;
 
 class BatchController extends Controller
 {
@@ -43,9 +45,35 @@ class BatchController extends Controller
         ], $this->messages);
 
         // dd($batchData);
+        try {
+            // Create Organizational unit for the new batch
+            $this->createBatchOU($batchData['id']);
 
-        Batch::create($batchData);
+            // If AD OU creates successfully, then the batch data will be added to the local database
+            Batch::create($batchData);
 
-        return redirect('/dashboard')->with('message', 'Batch has been created Succesfully 👍');
+        } catch (\Throwable $th) {
+            abort(500, 'Error{$th}');
+        }
+
+        return redirect('/dashboard/add/batch')->with('message', 'Batch has been created Succesfully 👍');
+    }
+
+    /**
+     * Create new organization unit for a batch
+     */
+    private function createBatchOU($batchId)
+    {
+        $faculties = Faculty::select('name')->get()->toArray();
+
+        // Create batch organization unit for each faculty
+        foreach ($faculties as $key => $faculty) {
+            $DN_Level = "OU=".$batchId.", OU=Undergraduate, OU=Students, OU=".$faculty['name'].", ".env('LDAP_BASE_DN');            
+            if(!OrganizationalUnit::find($DN_Level)) {
+                $ou = new OrganizationalUnit();
+                $ou->setDn($DN_Level);
+                $ou->save();
+            }
+        }
     }
 }
