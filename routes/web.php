@@ -95,10 +95,12 @@ Route::group(['middleware' => ['admin.users']], function () {
                 Route::get('/user', [App\Http\Controllers\UserController::class, 'createUser']);
                 Route::get('/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
                 Route::get('/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
+                Route::get('/department', [App\Http\Controllers\UserController::class, 'createDepartment']);
 
                 Route::post('/user', [App\Http\Controllers\UserController::class, 'addUser']);
                 Route::post('/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
                 Route::post('/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
+                Route::post('/{facultyName}/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
             });
         });
 
@@ -114,8 +116,6 @@ Route::group(['middleware' => ['admin.users']], function () {
                 Route::get('/{userId}', [App\Http\Controllers\UserController::class, 'getStudent']);
                 Route::get('/{facultyCode}/{batchId}', [App\Http\Controllers\UserController::class, 'getStudentList'])->name('getStudentList'); 
             });
-            Route::get('{facultyName}/add/department', [App\Http\Controllers\UserController::class, 'createDepartment']);
-            Route::post('{facultyName}/add/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
         });
     });
 });

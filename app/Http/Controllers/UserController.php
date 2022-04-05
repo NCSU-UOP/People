@@ -276,7 +276,9 @@ class UserController extends Controller
         return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
 
-    public function createDepartment($facultyName){
+    public function createDepartment(){
+        $admin = User::find(auth()->user()->id)->admins()->firstOrfail();
+        $facultyName = $admin->faculty()->firstOrfail()->name;
         return view('admin.addDepartment')->with('facultyName',$facultyName);
     }
     public function addDepartment($facultyName){

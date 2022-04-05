@@ -8,7 +8,7 @@
                 <div class="card-header">Register a Department - {{$facultyName}}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/dashboard/{{$facultyName}}/add/department" enctype="multipart/form-data">
+                    <form method="POST" action="/dashboard/add/{{$facultyName}}/department" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-3">
                             <label for="departmentname" class="col-md-4 col-form-label text-md-end">Department Name</label>
