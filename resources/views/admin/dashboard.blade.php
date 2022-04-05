@@ -97,9 +97,6 @@
         @endsection
 
     @else
-        @section('navbar-item')
-            
-        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
