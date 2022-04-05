@@ -35,7 +35,7 @@ Route::prefix('forum')->group(function () {
     
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
 
-    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification');
+    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
     Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
 });
  
