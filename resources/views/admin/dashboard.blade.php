@@ -13,6 +13,7 @@
             <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
             <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
             <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
+            <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
             <a href="/activity" class="dropdown-item">View site activity</a>
         @endsection
 
@@ -96,9 +97,6 @@
         @endsection
 
     @else
-        @section('navbar-item')
-            <a href="/dashboard/{{$facultyName}}/add/department" class="dropdown-item">Add Department</a>
-        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
