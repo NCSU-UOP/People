@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use \Linkeys\UrlSigner\Exceptions\ClickLimit\LinkClickLimitReachedException;
+use Linkeys\UrlSigner\Exceptions\LinkNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,8 +36,12 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (LinkClickLimitReachedException $e, $request) {
+            abort(419);
+        });
+
+        $this->renderable(function (LinkNotFoundException $e, $request) {
+            abort(404);
         });
     }
 }

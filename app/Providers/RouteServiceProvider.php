@@ -44,10 +44,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    //rate limits for 100 per minute for authenticated users and 10 per minute for unauthenticated users 
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        return $request->user()
+                    ? Limit::perMinute(100)->by($request->user()->id)
+                    : Limit::perMinute(10)->by($request->ip());
         });
     }
 }

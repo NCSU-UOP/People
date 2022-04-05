@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('throttle:api');
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('throttle:api');
 
 Route::get('/creaters', function () {
     return view('people.team');
@@ -35,7 +35,7 @@ Route::prefix('forum')->group(function () {
     
     Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
 
-    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification');
+    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
     Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
 
     Route::get('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'resubmission'])->name('forum.resubmit');
@@ -95,10 +95,12 @@ Route::group(['middleware' => ['admin.users']], function () {
                 Route::get('/user', [App\Http\Controllers\UserController::class, 'createUser']);
                 Route::get('/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
                 Route::get('/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
+                Route::get('/department', [App\Http\Controllers\UserController::class, 'createDepartment']);
 
                 Route::post('/user', [App\Http\Controllers\UserController::class, 'addUser']);
                 Route::post('/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
                 Route::post('/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
+                Route::post('/{facultyName}/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
             });
         });
 
@@ -119,7 +121,7 @@ Route::group(['middleware' => ['admin.users']], function () {
 });
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
-Route::group(['middleware' => ['non.admin.users']], function () {
+Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes

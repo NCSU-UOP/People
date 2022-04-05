@@ -59,11 +59,7 @@ class ForumController extends Controller
 
     //Email verification and password setting function
     public function verification($username)
-    {
-        if (! request()->hasValidSignature()) {
-            abort(403);
-        }
-        
+    {        
         return view('forum.verification', compact('username'));
     }
 
