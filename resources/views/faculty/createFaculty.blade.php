@@ -18,7 +18,7 @@
                     <form method="POST" action="/dashboard/add/faculty" enctype="multipart/form-data">
                         @csrf
 
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <label for="id" class="col-md-4 col-form-label text-md-end">ID</label>
 
                             <div class="col-md-6">
@@ -30,7 +30,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row mb-3">
                             <label for="code" class="col-md-4 col-form-label text-md-end">Faculty Code</label>
