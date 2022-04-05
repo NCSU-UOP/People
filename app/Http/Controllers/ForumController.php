@@ -228,4 +228,30 @@ class ForumController extends Controller
         return $path.$imageName;
     }
 
+    // Resubmission forum data
+    public function resubmission($username)
+    {
+        if (! request()->hasValidSignature()) {
+            abort(401);
+        }
+
+        $departments = [];
+        $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
+        $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
+        $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->first()->id)->get()->toArray();
+        $batches = Batch::select('id')->get()->toArray();
+
+        // Get all the departments of each faculty
+        foreach ($faculties as $key => $faculty) {
+            $departments[$faculty['id']] = Faculty::find($faculty['id'])->departments()->select('id', 'name')->get()->toArray();
+        }
+
+        // Retrive user information to auto fill data fields
+        $user = User::where('username', $username)->firstOrfail();
+        $student = $user->students()->firstOrfail();
+        $student->email = $user->email;
+        $student->username = $user->username;
+
+        return view('forum.resubmit')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
+    }
 }

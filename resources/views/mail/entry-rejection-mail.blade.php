@@ -3,7 +3,7 @@
 
 Hi {{$name}},
 
-Your Data submission has been rejected due to following key error/errors.
+Your Data submission has been rejected due to following key error/errors.<br>
 Key Error:
 @component('mail::panel')
 {{$feedback['keyerror']}}
@@ -19,6 +19,9 @@ Please correct them and resubmit your data using following link ASAP.
 Resubmit
 @endcomponent
 
-Thanks,<br>
-University of Peradeniya
+Regards,<br>
+NCSU, University of Peradeniya
+
+<br>
+If you're having trouble clicking the "Resubmit" button, copy and paste the URL below into your web browser: {{$url}}
 @endcomponent

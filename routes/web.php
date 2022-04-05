@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('throttle:api');
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('throttle:api');
 
 Route::get('/creaters', function () {
     return view('people.team');
@@ -37,6 +37,8 @@ Route::prefix('forum')->group(function () {
 
     Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
     Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
+
+    Route::get('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'resubmission'])->name('forum.resubmit');
 });
  
 // These are public routes which provides users' profile to the outsiders
@@ -76,36 +78,50 @@ Route::prefix('uop')->group(function () {
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
 
-    Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard'); 
+    // route: dashboard/
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard'); 
 
-    //Routes that can be only access by the super admins
-    Route::group(['middleware' => ['super.admin']], function() {
-        Route::get('/dashboard/delete/{user}', [App\Http\Controllers\UserController::class, 'delete']);
-        Route::get('/dashboard/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
-        Route::put('/dashboard/{user}', [App\Http\Controllers\UserController::class, 'update']);
+        /**
+         * Routes that can be only access by the super admins
+         */
+        Route::group(['middleware' => ['super.admin']], function() {
+            Route::get('/delete/{user}', [App\Http\Controllers\UserController::class, 'delete']);
+            Route::get('/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
+            Route::put('/{user}', [App\Http\Controllers\UserController::class, 'update']);
 
-        // 
-        Route::get('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'createUser']);
-        Route::get('/dashboard/add/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
-        Route::get('/dashboard/add/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
+            // route: dashboard/add
+            Route::prefix('add')->group(function () {
+                Route::get('/user', [App\Http\Controllers\UserController::class, 'createUser']);
+                Route::get('/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
+                Route::get('/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
+                Route::get('/department', [App\Http\Controllers\UserController::class, 'createDepartment']);
 
-        Route::post('/dashboard/add/user', [App\Http\Controllers\UserController::class, 'addUser']);
-        Route::post('/dashboard/add/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
-        Route::post('/dashboard/add/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
-    });
+                Route::post('/user', [App\Http\Controllers\UserController::class, 'addUser']);
+                Route::post('/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
+                Route::post('/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
+                Route::post('/{facultyName}/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
+            });
+        });
 
-    //Routes that can be only access by the admin
-    Route::group(['middleware' => ['admin']], function() {
-        Route::get('/dashboard/admin/unverifiedStudent/{facultyCode}/{id}', [App\Http\Controllers\UserController::class, 'get_studList']); 
-        Route::get('unverifiedStudent/{id}', [App\Http\Controllers\UserController::class, 'view_student']);
-        Route::get('unverifiedStudent/{id}/verify', [App\Http\Controllers\UserController::class, 'verify']);
-        Route::post('unverifiedStudent/{id}/reject', [App\Http\Controllers\UserController::class, 'reject']);
-        Route::get('/dashboard/add/department', [App\Http\Controllers\UserController::class, 'addDepartment']);
+        /**
+         * Routes that can be only access by the admin
+         */
+        Route::group(['middleware' => ['admin']], function() {
+            // route: dashboard/student
+            Route::prefix('student')->group(function () {
+                // WARNING:: This /verify/{userId} route must be placed before /{facultyCode}/{batchId} route
+                Route::get('/verify/{userId}', [App\Http\Controllers\UserController::class, 'verifyStudent']);
+                Route::post('/reject/{userId}', [App\Http\Controllers\UserController::class, 'rejectStudent']);
+                Route::get('/{userId}', [App\Http\Controllers\UserController::class, 'getStudent']);
+                Route::get('/{facultyCode}/{batchId}', [App\Http\Controllers\UserController::class, 'getStudentList'])->name('getStudentList'); 
+            });
+        });
     });
 });
 
 //Route for non admin users( only students, academic staff and non academic staff can access these routes )
-Route::group(['middleware' => ['non.admin.users']], function () {
+Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
