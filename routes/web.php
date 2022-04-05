@@ -109,10 +109,10 @@ Route::group(['middleware' => ['admin.users']], function () {
             // route: dashboard/student
             Route::prefix('student')->group(function () {
                 // WARNING:: This /verify/{userId} route must be placed before /{facultyCode}/{batchId} route
-                Route::get('/verify/{userId}', [App\Http\Controllers\UserController::class, 'verifyStudent']);
-                Route::post('/reject/{userId}', [App\Http\Controllers\UserController::class, 'rejectStudent']);
-                Route::get('/{userId}', [App\Http\Controllers\UserController::class, 'getStudent']);
-                Route::get('/{facultyCode}/{batchId}', [App\Http\Controllers\UserController::class, 'getStudentList'])->name('getStudentList'); 
+                Route::get('/verify/{userId}', [App\Http\Controllers\StudentController::class, 'verifyStudent']);
+                Route::post('/reject/{userId}', [App\Http\Controllers\StudentController::class, 'rejectStudent']);
+                Route::get('/{userId}', [App\Http\Controllers\StudentController::class, 'getStudent']);
+                Route::get('/{facultyCode}/{batchId}', [App\Http\Controllers\StudentController::class, 'getStudentList'])->name('getStudentList'); 
             });
         });
     });
