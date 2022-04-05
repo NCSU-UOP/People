@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
+use \Linkeys\UrlSigner\Facade\UrlSigner;
 
 class ForumVerificationMail extends Mailable
 {
@@ -30,7 +31,8 @@ class ForumVerificationMail extends Mailable
      */
     public function build()
     {
-        $url = URL::temporarySignedRoute('forum.verification',now()->addMinutes(5), ['username' => ($this->username)]);
+        $link = UrlSigner::generate(route('forum.verification', ['username' => ($this->username)]), [], null, 1);
+        $url = $link->getFullUrl();
         return $this->markdown('mail.forum-verification-mail', ['url' => $url, 'username' => $this->username]);
     }
 }
