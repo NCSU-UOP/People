@@ -33,6 +33,7 @@
             class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
             data-aos="zoom-in"
             data-aos-delay="200"
+            style="justify-content: center;"
           >
             <div class="icon-box">
               <div class="icon"><i class="ri-user-2-fill"></i></div>
@@ -47,6 +48,7 @@
             class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
             data-aos="zoom-in"
             data-aos-delay="300"
+            style="justify-content: center;"
           >
             <div class="icon-box">
               <div class="icon"><i class="ri-team-fill"></i></div>
@@ -61,6 +63,7 @@
             class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
             data-aos="zoom-in"
             data-aos-delay="400"
+            style="justify-content: center;"
           >
             <div class="icon-box">
               <div class="icon"><i class="ri-user-star-fill"></i></div>
@@ -75,6 +78,7 @@
             class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
             data-aos="zoom-in"
             data-aos-delay="500"
+            style="justify-content: center;"
           >
             <div class="icon-box">
               <div class="icon"><i class="ri-group-fill"></i></div>
