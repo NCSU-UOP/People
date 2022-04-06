@@ -6,9 +6,9 @@
 </div>
 
 <div class="container" style="display: flex; justify-content:center;">
-    <div class="row">
-    <div class="col-sm-6" data-aos="zoom-in" data-aos-delay=100 style="justify-content: center;">
-        <div class="card bg-light mb-3" style="max-width: 18rem;">
+    <div class="row" style="justify-content:center;" data-aos="zoom-in" data-aos-delay=100>
+    <!-- <div class="col-sm-6" data-aos="zoom-in" data-aos-delay=100> -->
+        <div class="card bg-light mb-3 mx-3" style="max-width: 18rem;">
             <div class="card-header text-center">Academic Staff</div>
             <img class="card-img-top" src="/img/staff.jpg" alt="Card image cap">
             <div class="card-body">
@@ -17,9 +17,9 @@
                 <a href="/forum/staff" class="btn btn-primary">Visit</a>
             </div>
         </div>
-    </div>
-    <div class="col-sm-6" data-aos="zoom-in" data-aos-delay=200>
-        <div class="card bg-light mb-3" style="max-width: 18rem;">
+    <!-- </div> -->
+    <!-- <div class="col-sm-6" data-aos="zoom-in" data-aos-delay=200> -->
+        <div class="card bg-light mb-3 mx-3" style="max-width: 18rem;">
             <div class="card-header text-center">Students</div>
             <img class="card-img-top" src="/img/student.jpg" alt="Card image cap">
             <div class="card-body">
@@ -28,7 +28,7 @@
                 <a href="/forum/student" class="btn btn-primary">Visit</a>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
     </div>
 </div>
 @endsection
