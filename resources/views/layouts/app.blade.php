@@ -41,7 +41,7 @@
     </div>
 
     <div id="app">
-        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top" style="position: fixed; bottom: 10px; right: 20px; display: none;"><i class="bi bi-arrow-bar-up"></i></button>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top" style="position: fixed; bottom: 10px; right: 20px; display: none; z-index:100;"><i class="bi bi-chevron-up"></i></button>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="background-image: linear-gradient(to right, #4e0000, #8b0008);">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
