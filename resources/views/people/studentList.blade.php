@@ -38,8 +38,8 @@
         @php $delay = $delay+100; @endphp
         @endforeach
        @else
-        <div class='pt-5'>
-        <div class="card text-dark bg-warning" data-aos="zoom-in" style="max-width: 540px; left: calc(50% - 270px);">
+        <div class='row justify-content-center p-5'>
+        <div class="card text-dark bg-warning" data-aos="zoom-in" style="max-width: 540px;">
             <h5 class="card-header text-center" data-aos="zoom-in">Oops!</h5>
             <div class="card-body">
                 <h5 class="card-title text-center" data-aos="zoom-in" data-aos-delay=200>No Verified Students from {{$facultyName}}, Batch {{$batch}} yet!</h5>
