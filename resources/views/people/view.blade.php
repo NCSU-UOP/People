@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container" data-aos="fade-up">
+<div class="container" data-aos="fade-up" style="position:relative; z-index:2;">
     <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-9">
         <form class="card card-sm text-center">
@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<div class="container pt-4" style="display: flex; justify-content:center;">
+<div class="container pt-4" style="display: flex; justify-content:center; position: relative; z-index:1;">
     <div class="row" style="justify-content:center;">
         <div class="card bg-light m-3" data-aos="zoom-in" data-aos-delay=100 style="max-width: 18rem;">
             <div class="card-header text-center">Academic Staff</div>
