@@ -11,19 +11,33 @@
                         <span class="input-group-text text-primary border-primary" id="basic-addon1">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input class="form-control border-primary" type="search" placeholder="Search people.pdn.ac.lk " id="search-input" autofocus="">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Advanced</button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/search/by-name">by Name</a></li>
-                        <li><a class="dropdown-item" href="/search/by-reg-no">by Registration Number</a></li>
-                        <li><a class="dropdown-item" href="/search/by-contact-number">by Contact Number</a></li>
-                        <li><a class="dropdown-item" href="/search/by-location">by Location</a></li>
-                    </ul>
+                        <input class="form-control border-primary" type="search" placeholder="Search people" id="search-input" autofocus="">
+                        <div class="form-floating">
+                        <select class="form-select" id="floatingUserSelect" aria-label="Floating label select example">
+                            <option value="1">Students</option>
+                            <option value="2">Academic Staff</option>
+                            <option value="3">Non-Academic Staff</option>
+                        </select>
+                        <label for="floatingSelect">User Type</label>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label">
+                                <option selected>Default</option>
+                                <option value="1">by Name</option>
+                                <option value="2">by RegNo</option>
+                            </select>
+                        <label for="floatingSelect">Advanced</label>
+                        </div>
                 </div>
             </div>
         </div>
         </form>
     </div>
+    </div>
+    <div class="row">
+        <div class="list-group col-lg-10 col p-2 mx-auto">
+            <div id="results-container"></div>
+        </div>
     </div>
 </div>
 
@@ -59,5 +73,55 @@
     </div>
     </div>
 </div>
+@endsection
+
+@section('search-script')
+<script>
+  $(document).ready(function() {
+    $('#search-input').on('input', function() {
+            let query = $(this).val();
+            let type = $('#floatingSelect').val();
+            let user = $('#floatingUserSelect').val();
+            if(query) 
+            {
+                $.ajax({
+                    url: '/search',
+                    type: "GET",
+                    data : {"q":query, "type":type, "user":user},
+                    dataType: "json",
+                    success:function(data) {
+                        console.log(data.length);
+                        if(data)
+                        {
+                            if(data.length>0){
+                            $('#results-container').empty();
+                            $('#results-container').focus;
+                            $.each(data, function(key, value){$('#results-container').append('<a href="/student/'+ value.id +'"class="list-group-item list-group-item-action">' + value.fullname + ' ('+value.regNo+')' + '</a>');});
+                            }
+                            else if(user != 1){
+                                $('#results-container').empty();
+                                $('#results-container').focus;
+                                $('#results-container').append('<a href="/comingsoon" class="list-group-item list-group-item-action">Currently support Student Search only</a>');
+                            }
+                            else{
+                                $('#results-container').empty();
+                                $('#results-container').focus;
+                                $('#results-container').append('<a href="#" class="list-group-item list-group-item-action">No results found</a>');
+                            }
+                        }
+                        else
+                        {
+                            $('#results-container').empty();
+                        }
+                        }
+                });
+            }
+            else
+            {
+                $('#results-container').empty();
+            }
+        });
+    });
+</script>
 @endsection
 
