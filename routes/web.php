@@ -22,6 +22,8 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('throttle:api');
 
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents'])->middleware('throttle:api');
+
 Route::get('/creaters', function () {
     return view('people.team');
 });
