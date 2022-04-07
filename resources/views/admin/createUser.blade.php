@@ -132,9 +132,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
-                                <button onclick="history.back()" class="btn btn-primary">
+                                <a href="/dashboard" class="btn btn-primary">
                                     Close
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </form>
