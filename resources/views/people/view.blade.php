@@ -12,21 +12,24 @@
                             <i class="bi bi-search"></i>
                         </span>
                         <input class="form-control border-primary" type="search" placeholder="Search people" id="search-input" autofocus="">
-                        <div class="form-floating">
-                        <select class="form-select" id="floatingUserSelect" aria-label="Floating label select example">
-                            <option value="1">Students</option>
-                            <option value="2">Academic Staff</option>
-                            <option value="3">Non-Academic Staff</option>
-                        </select>
-                        <label for="floatingSelect">User Type</label>
-                        </div>
-                        <div class="form-floating">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Advanced</button>
+                        <div class="dropdown-menu dropdown-menu-right" >
+                            <div class="container pb-3 pt-1">
+                            <label>User Type</label>
+                            <select class="form-select" id="floatingUserSelect" aria-label="Floating label select example">
+                                <option value="1">Students</option>
+                                <option value="2">Academic Staff</option>
+                                <option value="3">Non-Academic Staff</option>
+                            </select>
+                            </div>
+                            <div class="container pb-2">
+                            <label>Advanced</label>
                             <select class="form-select" id="floatingSelect" aria-label="Floating label">
                                 <option selected>Default</option>
                                 <option value="1">by Name</option>
                                 <option value="2">by RegNo</option>
                             </select>
-                        <label for="floatingSelect">Advanced</label>
+                            </div>
                         </div>
                 </div>
             </div>
