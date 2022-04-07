@@ -29,6 +29,7 @@ return new class extends Migration
                 $table->string('province', env("STUDENTS_PROVINCE_MAX", 50));
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
                 $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200));
+                $table->string('bio', 200)->nullable();
                 // $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          
                 $table->integer('batch_id');
                 $table->unsignedBigInteger('department_id');
