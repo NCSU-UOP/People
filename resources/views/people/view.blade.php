@@ -88,6 +88,21 @@ $(document).ready(function () {
     });
 });
 
+//clear search results and text input when search parameters changed
+$(document).ready(function () {
+    $('#floatingUserSelect').change(function() {
+        $('#search-input').val("");
+        $('#results-container').empty();
+    });
+});
+
+$(document).ready(function () {
+    $('#floatingSelect').change(function() {
+        $('#search-input').val("");
+        $('#results-container').empty();
+    });
+});
+
 $(document).ready(function() {
     $('#search-input').on('input', function() {
             let query = $(this).val();
@@ -101,7 +116,7 @@ $(document).ready(function() {
                     data : {"q":query, "type":type, "user":user},
                     dataType: "json",
                     success:function(data) {
-                        console.log(data.length);
+                        // console.log(data.length);
                         if(data)
                         {
                             if(data.length>0){
