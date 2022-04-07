@@ -145,5 +145,21 @@ class StudentController extends Controller
         abort(400);
     }
 
+    /***
+     * edit bio details of a student
+     */
+    public function editBio($username)
+    {
+        $data = request()->validate([
+            'bio' => ['required', 'string', 'max: 200'],
+        ], $this->messages);
 
+        $stu = \App\Models\User::where('username', $username)->firstOrfail()->students()->firstOrfail();
+
+        $stu->bio = $data['bio'];
+        $stu->save();
+
+        return redirect()->back();
+
+    }
 }

@@ -27,6 +27,7 @@ class Student extends Model
         'department_id',
         'faculty_id',
         'is_rejected',
+        'bio',
     ];
 
     /**

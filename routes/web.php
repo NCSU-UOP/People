@@ -127,7 +127,7 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
-
+        Route::put('/{username}/bio', [App\Http\Controllers\StudentController::class, 'editBio']);
     });
 });
 
