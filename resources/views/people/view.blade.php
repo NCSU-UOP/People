@@ -80,7 +80,33 @@
 
 @section('search-script')
 <script>
-  $(document).ready(function() {
+    
+//prevent submit by pressing enter
+$(document).ready(function () {
+    $(window).keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+});
+
+//clear search results and text input when search parameters changed
+$(document).ready(function () {
+    $('#floatingUserSelect').change(function() {
+        $('#search-input').val("");
+        $('#results-container').empty();
+    });
+});
+
+$(document).ready(function () {
+    $('#floatingSelect').change(function() {
+        $('#search-input').val("");
+        $('#results-container').empty();
+    });
+});
+
+$(document).ready(function() {
     $('#search-input').on('input', function() {
             let query = $(this).val();
             let type = $('#floatingSelect').val();
@@ -93,7 +119,7 @@
                     data : {"q":query, "type":type, "user":user},
                     dataType: "json",
                     success:function(data) {
-                        console.log(data.length);
+                        // console.log(data.length);
                         if(data)
                         {
                             if(data.length>0){
@@ -124,7 +150,7 @@
                 $('#results-container').empty();
             }
         });
-    });
+});
 </script>
 @endsection
 
