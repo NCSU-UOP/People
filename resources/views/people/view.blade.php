@@ -77,7 +77,18 @@
 
 @section('search-script')
 <script>
-  $(document).ready(function() {
+    
+//prevent submit by pressing enter
+$(document).ready(function () {
+    $(window).keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+});
+
+$(document).ready(function() {
     $('#search-input').on('input', function() {
             let query = $(this).val();
             let type = $('#floatingSelect').val();
@@ -121,7 +132,7 @@
                 $('#results-container').empty();
             }
         });
-    });
+});
 </script>
 @endsection
 
