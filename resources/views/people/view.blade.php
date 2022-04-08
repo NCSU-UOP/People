@@ -23,7 +23,7 @@
                             </select>
                             </div>
                             <div class="container pb-2">
-                            <label>Advanced</label>
+                            <label>Advanced Search</label>
                             <select class="form-select" id="floatingSelect" aria-label="Floating label">
                                 <option selected>Default</option>
                                 <option value="1">by Name</option>
@@ -119,7 +119,7 @@ $(document).ready(function() {
                     data : {"q":query, "type":type, "user":user},
                     dataType: "json",
                     success:function(data) {
-                        // console.log(data.length);
+                        // console.log(data);
                         if(data)
                         {
                             if(data.length>0){
