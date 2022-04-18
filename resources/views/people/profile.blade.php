@@ -10,10 +10,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="#" enctype="multipart/form-data">
+        <form method="POST" action="/{{$student['username']}}/bio" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <label for="bio" class="form-label">Bio</label>
-            <textarea class="form-control @error('bio') is-invalid @enderror" rows="10" aria-label="bio textarea" id="bio"></textarea>
+            <textarea class="form-control @error('bio') is-invalid @enderror" rows="10" aria-label="bio textarea" id="bio" name="bio" maxlength="200">{{ old('bio') ?? $student['bio']}}</textarea>
             @error('bio')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -203,7 +204,7 @@
                                 @endif
                             @endauth
                         </div>
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam natus tenetur voluptas</p>
+                        <p>{{$student['bio']}}</p>
                     </div>
                 </div>
             </div>

@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(NonAcademicStaff::class, 'id', 'id');
     }
+
+    public function socialMedia()
+    {
+        return $this->hasMany(UserSocialMedia::class, 'id', 'id');
+    }
 }

@@ -22,7 +22,7 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('throttle:api');
 
-Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents'])->middleware('throttle:api');
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents']);
 
 Route::get('/creaters', function () {
     return view('people.team');
@@ -127,7 +127,7 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
-
+        Route::put('/{username}/bio', [App\Http\Controllers\StudentController::class, 'editBio']);
     });
 });
 

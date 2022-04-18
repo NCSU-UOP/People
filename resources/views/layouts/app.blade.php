@@ -92,7 +92,11 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     @if(Auth::user()->usertype == env('ADMIN'))
                                     <a href="/dashboard" class="dropdown-item">Dashboard</a>
+
+                                    @elseif(Auth::user()->usertype == env('STUDENT'))
+                                    <a href="{{route('people.profile', ['username' => Auth::user()->username])}}" class="dropdown-item">Profile</a>
                                     @endif
+
 
                                     @yield('navbar-item')
                                     
@@ -142,8 +146,6 @@
     
     <!-- Vendor JS Files -->
     <script src="{{ asset('vendor/aos/aos.js') }}"></script>
-    <script src="{{ asset('vendor/glightbox/js/glightbox.min.js') }}"></script>
-    <script src="{{ asset('vendor/swiper/swiper-bundle.min.js') }}"></script>
 
     <!-- Main JS File -->
     <script src="{{ asset('js/main.js') }}"></script>

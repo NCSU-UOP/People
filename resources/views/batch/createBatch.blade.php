@@ -51,7 +51,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     Submit
                                 </button>
-                                <a type="button" class="btn btn-primary" href="/profile">
+                                <a type="button" class="btn btn-primary" href="/dashboard">
                                     Close
                                 </a>
                             </div>
