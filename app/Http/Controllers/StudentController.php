@@ -10,6 +10,8 @@ use LdapRecord\Models\ActiveDirectory\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
 
+use Illuminate\Support\Arr;
+
 class StudentController extends Controller
 {
     protected $messages = [
@@ -158,6 +160,53 @@ class StudentController extends Controller
 
         $stu->bio = $data['bio'];
         $stu->save();
+
+        return redirect()->back();
+
+    }
+
+    /***
+     * edit Social Media details of a student
+     */
+    public function editSocialMedia($username)
+    {
+        $data = request()->validate([
+            'cv' => ['string', 'max: 200', 'nullable'],
+            'website' => ['string', 'max: 200', 'nullable'],
+            'facebook' => ['string', 'max: 200', 'nullable'],
+            'linkedin' => ['string', 'max: 200', 'nullable'],
+            'twitter' => ['string', 'max: 200', 'nullable'],
+            'instagram' => ['string', 'max: 200', 'nullable'],
+            'discord' => ['string', 'max: 200', 'nullable'],
+            'medium' => ['string', 'max: 200', 'nullable'],
+        ], $this->messages);
+
+        $user = \App\Models\User::where('username', $username)->firstOrfail();
+        // dd($data);
+        if(Arr::has($data,'cv') && $data['cv'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'cv' , 'media_link'=>$data['cv']], ['media_link']);
+        }
+        if(Arr::has($data,'website') && $data['website'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'website' , 'media_link'=>$data['website']], ['media_link']);
+        }
+        if(Arr::has($data,'linkedin') && $data['linkedin'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'linkedin' , 'media_link'=>$data['linkedin']], ['media_link']);
+        }
+        if(Arr::has($data,'facebook') && $data['facebook'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'facebook' , 'media_link'=>$data['facebook']], ['media_link']);
+        }
+        if(Arr::has($data,'instagram') && $data['instagram'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'instagram' , 'media_link'=>$data['instagram']], ['media_link']);
+        }
+        if(Arr::has($data,'twitter') && $data['twitter'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'twitter' , 'media_link'=>$data['twitter']], ['media_link']);
+        }
+        if(Arr::has($data,'medium') && $data['medium'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'medium' , 'media_link'=>$data['medium']], ['media_link']);
+        }
+        if(Arr::has($data,'discord') && $data['discord'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'discord' , 'media_link'=>$data['discord']], ['media_link']);
+        }
 
         return redirect()->back();
 
