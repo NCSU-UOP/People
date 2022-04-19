@@ -12,10 +12,10 @@ if (!isset($btnSubmitText)) {
 }
 @endphp
 
-<div class="modal" id="{{$formTrigger}}" tabindex="-1" aria-hidden="true" role="dialog">
+<div class="modal fade modal-{{$modalClass}}" tabindex="-1" id="{{$formTrigger}}" role="dialog" aria-labelledby="{{$formTrigger}}Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header {{$modalClass}}">
         <h5 class="modal-title">
           Confirm
         </h5>
@@ -25,14 +25,8 @@ if (!isset($btnSubmitText)) {
         <p>Are you sure?</p>
       </div>
       <div class="modal-footer">
-        <!-- <button data-bs-dismiss = 'modal' class = 'btn btn-outline pull-left btn-flat'>
-        Cancel
-        </button> -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class = 'btn btn-{{$modalClass}} pull-right btn-flat' id = 'confirm' data-bs-target="{{route('clear-activity')}}" data-bs-method="get">
-        <i class="fa ' . {{$actionBtnIcon}} . '" aria-hidden="true"></i>
-        {{$btnSubmitText}}
-        </button>
+        {!! Form::button('<i class="fa fa-fw fa-close" aria-hidden="true"></i> ' . trans('LaravelLogger::laravel-logger.modals.shared.btnCancel'), array('class' => 'btn btn-outline pull-left btn-flat', 'type' => 'button', 'data-bs-dismiss' => 'modal' )) !!}
+        {!! Form::button('<i class="fa ' . $actionBtnIcon . '" aria-hidden="true"></i> ' . $btnSubmitText, array('class' => 'btn btn-' . $modalClass . ' pull-right btn-flat', 'type' => 'button', 'id' => 'confirm' )) !!}
       </div>
     </div>
   </div>
