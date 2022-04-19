@@ -23,7 +23,7 @@
 @endif
 
 @include('LaravelLogger::partials.scripts', ['activities' => $activities])
-@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => 'confirmDelete'])
+@include('LaravelLogger::scripts.confirm-modal', ['formTrigger' => '#confirmDelete'])
 
 @if(config('LaravelLogger.enableDrillDown'))
 @include('LaravelLogger::scripts.clickable-row')
