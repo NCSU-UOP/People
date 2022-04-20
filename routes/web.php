@@ -132,10 +132,14 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
 });
 
 //tempory route
-Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
+Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile'])->middleware('auth');
 
 //coming soon route
 Route::get('/comingsoon', [App\Http\Controllers\PeopleController::class, 'comingsoon']);
+
+//set password email route
+Route::get('/password/register/{username}', [\App\Http\Controllers\StudentController::class, 'setPassword'])->name('password.create')->middleware('link');
+Route::put('/{username}/setpassword', [\App\Http\Controllers\StudentController::class, 'updatePassword']);
 
 // Routes for the site activity logging
 Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'super.admin', 'activity']], function () {
