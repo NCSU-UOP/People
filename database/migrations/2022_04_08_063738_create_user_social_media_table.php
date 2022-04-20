@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    private $tableName = 'user_social_medias'; # table name
+    private $tableName = 'user_social_media'; # table name
     private $userTable = 'users';
     
     /**

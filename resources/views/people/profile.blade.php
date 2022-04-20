@@ -40,13 +40,26 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="#" enctype="multipart/form-data">
+        <form method="POST" action="/{{$student['username']}}/socialmedia" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="row mb-3">
                 <label for="cv" class="col-sm-2 col-form-label">CV</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('cv') is-invalid @enderror" class="form-control" id="cv">
+                <input type="text" class="form-control @error('cv') is-invalid @enderror" class="form-control" id="cv" name="cv" maxlength="200">
                 @error('cv')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="website" class="col-sm-2 col-form-label">Personel Website</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control @error('website') is-invalid @enderror" class="form-control" id="website" name="website" maxlength="200">
+                @error('website')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -57,7 +70,7 @@
             <div class="row mb-3">
                 <label for="facebook" class="col-sm-2 col-form-label">Facebook</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('facebook') is-invalid @enderror" class="form-control" id="facebook">
+                <input type="text" class="form-control @error('facebook') is-invalid @enderror" class="form-control" id="facebook" name="facebook" maxlength="200">
                 @error('facebook')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -67,10 +80,10 @@
             </div> 
 
             <div class="row mb-3">
-                <label for="linkdin" class="col-sm-2 col-form-label">LinkedIn</label>
+                <label for="linkedin" class="col-sm-2 col-form-label">LinkedIn</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('linkdin') is-invalid @enderror" class="form-control" id="linkdin">
-                @error('linkdin')
+                <input type="text" class="form-control @error('linkedin') is-invalid @enderror" class="form-control" id="linkedin" name="linkedin" maxlength="200">
+                @error('linkedin')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -79,16 +92,53 @@
             </div>
 
             <div class="row mb-3">
-                <label for="github" class="col-sm-2 col-form-label">Github</label>
+                <label for="twitter" class="col-sm-2 col-form-label">Twitter</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('github') is-invalid @enderror" class="form-control" id="github">
-                @error('github')
+                <input type="text" class="form-control @error('twitter') is-invalid @enderror" class="form-control" id="twitter" name="twitter" maxlength="200">
+                @error('twitter')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
                 </div>
-            </div> 
+            </div>
+
+            <div class="row mb-3">
+                <label for="instagram" class="col-sm-2 col-form-label">Instagram</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control @error('instagram') is-invalid @enderror" class="form-control" id="instagram" name="instagram" maxlength="200">
+                @error('instagram')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="discord" class="col-sm-2 col-form-label">Discord</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control @error('discord') is-invalid @enderror" class="form-control" id="discord" name="discord" maxlength="200">
+                @error('discord')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <label for="medium" class="col-sm-2 col-form-label">Medium</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control @error('medium') is-invalid @enderror" class="form-control" id="medium" name="medium" maxlength="200">
+                @error('medium')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -211,7 +261,7 @@
 
             <div class="card mt-3">
                 <div class="card-header">
-                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-messenger"></i>  Social Media</div>
+                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-lightning-fill"></i>  Social Media</div>
                     @auth
                         @if (Auth::user()->username == $student['username'] && $student['is_verified'])
                             <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#socialstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
@@ -219,18 +269,21 @@
                     @endauth
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <h6 class="mb-0">CV</h6>
-                        <span class="text-secondary"> <a href="#" target="_blank"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <h6 class="mb-0">LinkedIn</h6>
-                        <span class="text-secondary"> <a href="#" target="_blank"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <h6 class="mb-0">Github</h6>
-                        <span class="text-secondary"> <a href="#" target="_blank"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a></span>
-                    </li>
+                    @foreach ($student['socialmedia'] as $social)
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                        <h6 class="mb-0">
+                        @if ($social['media_name'] == 'cv')
+                            <i class="bi bi-file-person"></i>
+                        @elseif ($social['media_name'] == 'website')
+                            <i class="bi bi-globe"></i>
+                        @else
+                            <i class="bi bi-{{$social['media_name']}}"></i>
+                        @endif
+                        {{$social['media_name']}}</h6>
+                        <span class="text-secondary"> <a href="{{$social['media_link']}}" target="_blank"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a></span>
+                        </li>
+                    @endforeach
+
                 </ul>
             </div>
         </div>
@@ -294,7 +347,7 @@
                 </div>    
             </div>
 
-            <div class="card mb-3">
+            <div class="card mb-3 pt-2">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i> Contact details</div>
                     @auth

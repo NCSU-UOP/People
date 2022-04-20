@@ -9,6 +9,10 @@ use LdapRecord\Models\ActiveDirectory\User;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
+use App\Mail\SetPasswordMail;
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Arr;
 
 class StudentController extends Controller
 {
@@ -26,6 +30,46 @@ class StudentController extends Controller
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
     ];
+
+    /**
+     * password setting function
+     */
+    public function setPassword($username)
+    {
+        return view('password.create', compact('username'));
+    }
+
+    //updating the password field 
+    public function updatePassword($username)
+    {
+        $data = request()->validate([
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+        ], $this->messages);
+
+        $user = \App\Models\User::where('username', $username)->first();
+        // dd($user->username);
+        $student = $user->students()->first();
+
+        // dd($student->faculty()->firstOrfail()->name);
+        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');            
+
+        try {
+            
+            $adUser = User::find($DN_Level);
+            $adUser->unicodepwd=$data['password'];
+            $adUser->useraccountcontrol=512;
+            $adUser->save();
+
+        } catch (\Throwable $th) {
+            abort(500, 'Error{$th}');
+        }
+        
+
+        $data['password'] = Hash::make($data['password']);
+        $user->update($data);
+
+        return redirect('/');
+    }
 
     /**
      * Show user information to the admin to verify them
@@ -80,6 +124,8 @@ class StudentController extends Controller
                 abort(500, 'Error{$th}');
             }
 
+            //Mail sending procedure
+            Mail::to($user['email'])->send(new SetPasswordMail($user->username));
             return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile verified Succesfully!!');
         }
 
@@ -99,8 +145,6 @@ class StudentController extends Controller
 
             $adUser->cn = $user->username;
             $adUser->mail = $user->email;
-            // password should be added here somehow
-            // $adUser->unicodepwd = "abcd@12345";
             $adUser->sAMAccountName = $user->username;
             $adUser->userPrincipalName = $user->username;
             $adUser->displayName = $student->regNo;
@@ -158,6 +202,53 @@ class StudentController extends Controller
 
         $stu->bio = $data['bio'];
         $stu->save();
+
+        return redirect()->back();
+
+    }
+
+    /***
+     * edit Social Media details of a student
+     */
+    public function editSocialMedia($username)
+    {
+        $data = request()->validate([
+            'cv' => ['string', 'max: 200', 'nullable'],
+            'website' => ['string', 'max: 200', 'nullable'],
+            'facebook' => ['string', 'max: 200', 'nullable'],
+            'linkedin' => ['string', 'max: 200', 'nullable'],
+            'twitter' => ['string', 'max: 200', 'nullable'],
+            'instagram' => ['string', 'max: 200', 'nullable'],
+            'discord' => ['string', 'max: 200', 'nullable'],
+            'medium' => ['string', 'max: 200', 'nullable'],
+        ], $this->messages);
+
+        $user = \App\Models\User::where('username', $username)->firstOrfail();
+        // dd($data);
+        if(Arr::has($data,'cv') && $data['cv'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'cv' , 'media_link'=>$data['cv']], ['media_link']);
+        }
+        if(Arr::has($data,'website') && $data['website'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'website' , 'media_link'=>$data['website']], ['media_link']);
+        }
+        if(Arr::has($data,'linkedin') && $data['linkedin'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'linkedin' , 'media_link'=>$data['linkedin']], ['media_link']);
+        }
+        if(Arr::has($data,'facebook') && $data['facebook'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'facebook' , 'media_link'=>$data['facebook']], ['media_link']);
+        }
+        if(Arr::has($data,'instagram') && $data['instagram'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'instagram' , 'media_link'=>$data['instagram']], ['media_link']);
+        }
+        if(Arr::has($data,'twitter') && $data['twitter'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'twitter' , 'media_link'=>$data['twitter']], ['media_link']);
+        }
+        if(Arr::has($data,'medium') && $data['medium'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'medium' , 'media_link'=>$data['medium']], ['media_link']);
+        }
+        if(Arr::has($data,'discord') && $data['discord'] != null) {
+            \App\Models\UserSocialMedia::upsert(['id'=>$user->id, 'media_name'=>'discord' , 'media_link'=>$data['discord']], ['media_link']);
+        }
 
         return redirect()->back();
 
