@@ -24,7 +24,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents']);
 
-Route::get('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
+Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
 
 Route::get('/creaters', function () {
     return view('people.team');

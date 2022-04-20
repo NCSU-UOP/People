@@ -450,7 +450,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             // console.log(makeVisible);
             $.ajax({
                 url: '/changeVisibility',
-                type: "GET",
+                type: "PUT",
                 data : {"_token":"{{ csrf_token() }}", "visibilityStatus":makeVisible, "username":"{{$student['username']}}"},
                 success:function(data) {
                     console.log(data);
