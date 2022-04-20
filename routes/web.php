@@ -24,6 +24,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents']);
 
+Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
+
 Route::get('/creaters', function () {
     return view('people.team');
 });
@@ -80,9 +82,6 @@ Route::prefix('uop')->group(function () {
 
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
-
-    // route: change account visibility
-    Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
 
     // route: dashboard/
     Route::prefix('dashboard')->group(function () {
