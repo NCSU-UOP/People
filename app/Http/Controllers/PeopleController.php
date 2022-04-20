@@ -7,6 +7,7 @@ use App\Models\Faculty;
 use App\Models\Department;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\UserSocialMedia;
 use App\Models\Batch;
 use Illuminate\Support\Arr;
 
@@ -56,6 +57,9 @@ class PeopleController extends Controller
     {
         // dd($username);
         $studentdata = User::where('username', $username)->first()->students()->first()->makeHidden(['department_id', 'faculty_id', 'created_at', 'updated_at']);
+        $socialmedia = UserSocialMedia::where('id', $studentdata->id)->get()->makeHidden(['id','created_at', 'updated_at'])->toArray();
+
+        // dd($socialmedia);
 
         $studentdata->facultyName = $studentdata->faculty()->first()->name;
         $studentdata->departmentName = $studentdata->department()->first()->name;
@@ -63,8 +67,7 @@ class PeopleController extends Controller
         $studentdata->email = $studentdata->user()->first()->email;
         $studentdata->date = date('d-m-Y',strtotime($studentdata['updated_at']));
         $studentdata->image = '/uploads/images/'.$studentdata->image;
-        
-        // dd($studentdata->toArray());
+        $studentdata->socialmedia = $socialmedia;
         return view('people.profile')->with('student',$studentdata->toArray());
     }
 

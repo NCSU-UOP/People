@@ -4,7 +4,6 @@
 <!-- Vendor CSS Files -->
     <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/remixicon/remixicon.css') }}" rel="stylesheet" />
-    <link href="{{ asset('vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet" />
 
     <!-- Landing page custom CSS File -->
     <link href="{{ asset('css/landingpage.css') }}" rel="stylesheet" />
