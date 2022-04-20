@@ -95,8 +95,10 @@ class ForumController extends Controller
 
         $user['usertype'] = env('STUDENT');
 
+        // dd($user);
+
         // Process the registration number
-        if(request()->has(['regNddo', 'faculty_id', 'batch_id', 'department_id'])) {
+        if(request()->has(['regNo', 'faculty_id', 'batch_id', 'department_id'])) {
             request()['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
         } else {
             abort(400);
