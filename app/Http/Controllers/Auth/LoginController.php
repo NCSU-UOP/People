@@ -61,11 +61,11 @@ class LoginController extends Controller
                     : redirect()->intended($this->redirectPath());
         }
 
-        $id = auth()->user()->id;
+        $username = auth()->user()->username;
 
         return $request->wantsJson()
                     ? new JsonResponse([], 204)
-                    : redirect('/profile/'.$id);
+                    : redirect('uop/student/profile/'.$username);
         
     }
 
