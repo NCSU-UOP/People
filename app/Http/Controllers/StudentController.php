@@ -9,6 +9,8 @@ use LdapRecord\Models\ActiveDirectory\User;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
+use App\Mail\SetPasswordMail;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
@@ -26,6 +28,46 @@ class StudentController extends Controller
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
     ];
+
+    /**
+     * password setting function
+     */
+    public function setPassword($username)
+    {
+        return view('password.create', compact('username'));
+    }
+
+    //updating the password field 
+    public function updatePassword($username)
+    {
+        $data = request()->validate([
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+        ], $this->messages);
+
+        $user = \App\Models\User::where('username', $username)->first();
+        // dd($user->username);
+        $student = $user->students()->first();
+
+        // dd($student->faculty()->firstOrfail()->name);
+        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');            
+
+        try {
+            
+            $adUser = User::find($DN_Level);
+            $adUser->unicodepwd=$data['password'];
+            $adUser->useraccountcontrol=512;
+            $adUser->save();
+
+        } catch (\Throwable $th) {
+            abort(500, 'Error{$th}');
+        }
+        
+
+        $data['password'] = Hash::make($data['password']);
+        $user->update($data);
+
+        return redirect('/');
+    }
 
     /**
      * Show user information to the admin to verify them
@@ -80,6 +122,8 @@ class StudentController extends Controller
                 abort(500, 'Error{$th}');
             }
 
+            //Mail sending procedure
+            Mail::to($user['email'])->send(new SetPasswordMail($user->username));
             return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile verified Succesfully!!');
         }
 
@@ -99,8 +143,6 @@ class StudentController extends Controller
 
             $adUser->cn = $user->username;
             $adUser->mail = $user->email;
-            // password should be added here somehow
-            // $adUser->unicodepwd = "abcd@12345";
             $adUser->sAMAccountName = $user->username;
             $adUser->userPrincipalName = $user->username;
             $adUser->displayName = $student->regNo;
