@@ -15,6 +15,7 @@ use Image;
 use File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ForumController extends Controller
 {
@@ -31,6 +32,7 @@ class ForumController extends Controller
         'regex' => 'The :attribute format is invalid.',
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
+        'integer' => 'The :attribute field is required.',
     ];
 
     //forum selection method
@@ -94,7 +96,11 @@ class ForumController extends Controller
         $user['usertype'] = env('STUDENT');
 
         // Process the registration number
-        request()['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
+        if(request()->has(['regNddo', 'faculty_id', 'batch_id', 'department_id'])) {
+            request()['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
+        } else {
+            abort(400);
+        }
 
         // dd(request()->regNo);
 
@@ -228,10 +234,13 @@ class ForumController extends Controller
         return $path.$imageName;
     }
 
-    // Resubmission forum data
+    // Resubmission forum data will be displayed for the user
     public function resubmission($username)
     {
-        if (! request()->hasValidSignature()) {
+        $previousStudentData = User::where('username', $username)->firstOrfail();
+
+        // If the user has resubmitted once or the request has no valid signature, the link will be unauthorized
+        if (!request()->hasValidSignature() || !$previousStudentData->students()->firstOrfail()->is_rejected) {
             abort(401);
         }
 
@@ -247,11 +256,78 @@ class ForumController extends Controller
         }
 
         // Retrive user information to auto fill data fields
-        $user = User::where('username', $username)->firstOrfail();
-        $student = $user->students()->firstOrfail();
-        $student->email = $user->email;
-        $student->username = $user->username;
+        $student = $previousStudentData->students()->firstOrfail();
+        $student->email = $previousStudentData->email;
+        $student->username = $previousStudentData->username;
 
-        return view('forum.resubmit')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
+        // To fill the registration number placeholder
+        $regNoArray = explode('/', $student->regNo);
+        $student->code = implode("/", explode('/', $student->regNo, -1));
+        $student->regNo = end($regNoArray);
+
+        $tempDepartment = Faculty::find($student['faculty_id'])->departments()->select('id', 'name')->get()->toArray();
+
+        return view('forum.resubmit')->with('student', $student->toArray())->with('faculties', $faculties)->with('departments', json_encode($departments))->with('tempDeps', $tempDepartment)->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
+    }
+
+    // Resubmit the forum data
+    public function submitResubmission($username)
+    {
+        $previousStudentData = User::where('username', $username)->firstOrfail()->students();
+
+        $student = request()->validate([
+            'preferedname' => ['required','string', 'max:'.env("STUDENTS_PREFEREDNAME_MAX")],
+            'fullname' => ['required','string', 'max:'.env("STUDENTS_FULLNAME_MAX")],
+            'initial' => ['required','string', 'max:'.env("STUDENTS_INITIAL_MAX")],
+            'address' => ['required','string', 'max:'.env("STUDENTS_ADDRESS_MAX")],
+            'city' => ['required','string', 'max:'.env("STUDENTS_CITY_MAX")],
+            'province' => ['required','string', 'max:'.env("STUDENTS_PROVINCE_MAX")],
+            'faculty_id' => ['required','int','exists:faculties,id'],
+            'department_id' => ['required','int', 'exists:departments,id'],
+            'batch_id' => ['required','int','exists:batches,id'],
+            'regNo' => ['required','string'],
+            'image' => ['image'],
+        ], $this->messages);
+
+        // Process the registration number
+        if(request()->has(['regNo', 'faculty_id', 'batch_id', 'department_id'])) {
+            $student['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
+        } else {
+            abort(400);
+        }
+        
+        // Check the resubmitted registratino number is already in use by another student?
+        $validator = Validator::make($student, [
+            'regNo' => ['unique:students,regNo', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
+        ], $this->messages);
+
+        if ($validator->fails() && !$previousStudentData->where('regNo', $student['regNo'])->exists()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Check whether the image is updated
+        if(request()->has('image')) {
+            // Retrive the faculty code
+            $facultyCode = Faculty::where('id', $student['faculty_id'])->firstOrFail()->code;
+            
+            // Create the image directory if not exists
+            $paths = $this->createDirectory($facultyCode, 'Student', $student['batch_id'], $student['regNo']);
+
+            // Store the image in the respective directory
+            $path = $this->storeImage($paths, $student['regNo'], $student['image']);
+
+            // Change the image path in the user data
+            $student['image'] = $path;
+        }
+
+        // To evaluate student's informatino again
+        $student['is_rejected'] = 0;
+
+        // Update the entry
+        $previousStudentData->update($student);
+
+        return redirect('/')->with('message', 'Forum data resubmitted Succesfully!!');
     }
 }
