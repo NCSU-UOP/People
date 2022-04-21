@@ -40,8 +40,7 @@ Route::prefix('forum')->group(function () {
     Route::get('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'resubmission'])->name('forum.resubmit');
     Route::post('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'submitResubmission']);
 
-    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
-    Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
+    Route::get('/email/{username}', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
 });
  
 // These are public routes which provides users' profile to the outsiders
@@ -80,6 +79,9 @@ Route::prefix('uop')->group(function () {
 
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
+
+    // route: change account visibility
+    Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
 
     // route: dashboard/
     Route::prefix('dashboard')->group(function () {
@@ -134,14 +136,14 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
 });
 
 //tempory route
-Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile'])->middleware('auth');
+Route::get('/profile/{id}', [App\Http\Controllers\PeopleController::class, 'getProfile']);
 
 //coming soon route
 Route::get('/comingsoon', [App\Http\Controllers\PeopleController::class, 'comingsoon']);
 
 //set password email route
-Route::get('/password/register/{username}', [\App\Http\Controllers\StudentController::class, 'setPassword'])->name('password.create')->middleware('link');
-Route::put('/{username}/setpassword', [\App\Http\Controllers\StudentController::class, 'updatePassword']);
+Route::get('/password/register/{username}', [\App\Http\Controllers\StudentController::class, 'setPassword'])->name('password.create');
+Route::put('/setpassword/{username}', [\App\Http\Controllers\StudentController::class, 'updatePassword']);
 
 // Routes for the site activity logging
 Route::group(['prefix' => 'activity', 'namespace' => 'App\Http\Controllers', 'middleware' => ['web', 'super.admin', 'activity']], function () {

@@ -21,15 +21,15 @@ class SearchController extends Controller
         //student search
         if($user == '1'){
             if($type == '1'){
-                $students = Student::select('id','regNo','fullname')->where('preferedname', 'LIKE', "%{$query}%")->take(10)->where('is_verified',0)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
+                $students = Student::select('id','regNo','fullname')->where('preferedname', 'LIKE', "%{$query}%")->take(10)->where('is_verified',1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
                 return \response()->json($students);
             }
             elseif ($type == '2') {
-                $students = Student::select('id','regNo','fullname')->where('regNo', 'LIKE', "%{$query}%")->take(10)->where('is_verified',0)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
+                $students = Student::select('id','regNo','fullname')->where('regNo', 'LIKE', "%{$query}%")->take(10)->where('is_verified',1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
                 return \response()->json($students);
             }
             else{
-                $students = Student::select('id','regNo','fullname')->where('fullname', 'LIKE', "%{$query}%")->take(10)->where('is_verified',0)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
+                $students = Student::select('id','regNo','fullname')->where('fullname', 'LIKE', "%{$query}%")->take(10)->where('is_verified',1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
                 return \response()->json($students);
             }
         }

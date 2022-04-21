@@ -30,16 +30,23 @@ class UnverifiedProfiles
 
         $student = User::where('username', $thisUser)->firstOrfail()->students()->firstOrfail();
 
-        if($student->is_verified == 0){
-            if($this->auth->user()) {
-                if($this->auth->user()->username == $thisUser) {
-                    return $next($request);
+        if($student->is_visible == 1){
+            if($student->is_verified == 0 && $student->is_visible == 1){
+                if($this->auth->user()) {
+                    if($this->auth->user()->username == $thisUser) {
+                        return $next($request);
+                    }
                 }
+            } else {
+                return $next($request);
             }
-        } else {
+            abort(404, 'Not Found.');
+        } elseif($this->auth->user() != null && $this->auth->user()->admins()->first() != null && ($this->auth->user()->admins()->first()->is_admin == 1 || $this->auth->user()->admins()->first()->faculty_id == $student->faculty_id)) {
             return $next($request);
+        } else {
+            abort(404, 'Not Found.');
         }
 
-        abort(404, 'Not Found.');
+        
     }
 }

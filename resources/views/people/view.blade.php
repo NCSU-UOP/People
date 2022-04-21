@@ -125,7 +125,7 @@ $(document).ready(function() {
                             if(data.length>0){
                             $('#results-container').empty();
                             $('#results-container').focus;
-                            $.each(data, function(key, value){$('#results-container').append('<a href="/student/'+ value.id +'"class="list-group-item list-group-item-action">' + value.fullname + ' ('+value.regNo+')' + '</a>');});
+                            $.each(data, function(key, value){$('#results-container').append('<a href="/people/student/'+ value.id +'"class="list-group-item list-group-item-action">' + value.fullname + ' ('+value.regNo+')' + '</a>');});
                             }
                             else if(user != 1){
                                 $('#results-container').empty();
