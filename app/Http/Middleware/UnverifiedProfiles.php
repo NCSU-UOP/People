@@ -30,8 +30,13 @@ class UnverifiedProfiles
 
         $student = User::where('username', $thisUser)->firstOrfail()->students()->firstOrfail();
 
+        // if account is visible then account is shown to the public(admins,owner and others) provided the profile is verified. 
+        // The respective owner can go to the profile. even if the profile is not verified.
+        // the profile will not be shown under peoples when the profile is not verified by admins
+        // profile visibility is set to true by default. therefore even the admins need to first verify an account before changing
+        // the profile visibility.
         if($student->is_visible == 1){
-            if($student->is_verified == 0 && $student->is_visible == 1){
+            if($student->is_verified == 0){
                 if($this->auth->user()) {
                     if($this->auth->user()->username == $thisUser) {
                         return $next($request);
@@ -41,9 +46,17 @@ class UnverifiedProfiles
                 return $next($request);
             }
             abort(404, 'Not Found.');
-        } elseif($this->auth->user() != null && $this->auth->user()->admins()->first() != null && ($this->auth->user()->admins()->first()->is_admin == 1 || $this->auth->user()->admins()->first()->faculty_id == $student->faculty_id)) {
+        }
+        //if account is not visible respective owner or admins(super admin & admin of the respective faculty) can go to the profile.
+        elseif(!($this->auth->user()->admins())){
+            if($this->auth->user()->username == $thisUser) {
+                return $next($request);
+            }
+        }elseif($this->auth->user()->admins() && $this->auth->user()->admins()->first() && ($this->auth->user()->admins()->first()->is_admin == 1 || $this->auth->user()->admins()->first()->faculty_id == $student->faculty_id)) {
             return $next($request);
-        } else {
+        } 
+        //the route cannot be accessed when account is not visible and you are not the owner nor an admin of the respective faculty.
+        else {
             abort(404, 'Not Found.');
         }
 
