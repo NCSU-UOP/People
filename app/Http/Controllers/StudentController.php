@@ -122,7 +122,7 @@ class StudentController extends Controller
         $student = Student::where('id', $userId)->firstOrfail();
         $facultyCode = $student->faculty()->firstOrfail()->code;
 
-        if($student) {
+        if($student && $student->is_verified = 0 && $student->is_rejected = 0) {
             $user = $student->user()->firstOrfail();
             
             try {
@@ -189,7 +189,7 @@ class StudentController extends Controller
         $facultyCode = $student->faculty()->firstOrfail()->code;
         $user = $student->user()->firstOrfail();
 
-        if($student && $student->is_rejected = 0) {
+        if($student && $student->is_rejected = 0 && $student->is_verified = 0) {
             $student->is_rejected = 1;
             $student->save();
 
