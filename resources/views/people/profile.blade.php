@@ -235,6 +235,36 @@
     </div>
 </div>
 
+@auth
+@if (Auth::user()->admins()->first() != null )
+    @php $admin = true @endphp
+    @if(Auth::user()->admins()->first()->is_admin === 1)
+        @php $super_admin = true; 
+            $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
+    @elseif(Auth::user()->admins()->first()->is_admin === 0)
+        @php $super_admin = false; 
+            $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
+    @endif
+@else
+    @php $admin = false @endphp
+    @php $super_admin = false; @endphp
+    @php $fac_id = null; @endphp
+@endif
+@if ($admin && ($super_admin || $fac_id === $student['facultyID']))
+<div class="container pt-3">
+<div class="card col-md-4 offset-md-4">
+    <div class="card-header">
+        <div class="float-start" style="font-weight: 1000"><i class="bi bi-eye-fill"></i> Account Visibility</div>
+                <div class="form-check form-switch float-end">
+                <label class="form-check-label text-wrap badge" style="width: 4rem;" for="flexSwitchCheck" id="flexSwitchChecklabel"></label>
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheck">
+                </div>
+    </div>
+</div>
+</div>
+@endif
+@endauth
+
 <div class="container pt-4">
     <div class="row gutters-sm ">
         <div class="col-md-4 mb-3">
@@ -259,6 +289,7 @@
                 </div>
             </div>
 
+            
             <div class="card mt-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-lightning-fill"></i>  Social Media</div>
@@ -287,7 +318,6 @@
                 </ul>
             </div>
         </div>
-    
         <div class="col-md-8">
             <div class="card mb-3">
                 <div class="card-header">
@@ -407,8 +437,62 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 </script>
+
+@auth
+@if ($admin && ($super_admin || $fac_id === $student['facultyID']))
+<script>
+    /**
+     * Script to change visibility state in database
+     */
+    $(function() {
+        $('#flexSwitchCheck').change(function() {
+            let makeVisible = Number($(this).prop('checked'));
+            // console.log(makeVisible);
+            $.ajax({
+                url: '/changeVisibility',
+                type: "PUT",
+                data : {"_token":"{{ csrf_token() }}", "visibilityStatus":makeVisible, "username":"{{$student['username']}}"},
+                success:function(data) {
+                    console.log(data);
+                    document.location.reload(true);
+                    }
+            });
+        })
+    });
+</script>
+
+<script>
+    /**
+     * Script to adjust toggle state depending on the database data
+     */
+    window.addEventListener("load", function() {
+        if({{$student['visibility']}} == 1) {
+            // console.log("hello");
+            document.getElementById("flexSwitchCheck").checked = true;
+            $('#flexSwitchChecklabel').html('Visible ');
+            // console.log($('flexSwitchChecklabel').classList);
+            document.getElementById("flexSwitchChecklabel").classList.add('bg-primary');
+            document.getElementById("flexSwitchChecklabel").innerHTML += '<i class="bi bi-eye-fill" aria-hidden="true"></i>';
+            
+            
+
+        } 
+        else{
+            document.getElementById("flexSwitchCheck").checked = false;
+            $('#flexSwitchChecklabel').html('Hidden ');
+            document.getElementById("flexSwitchChecklabel").classList.add('bg-danger');
+            document.getElementById("flexSwitchChecklabel").innerHTML += '<i class="bi bi-eye-slash-fill" aria-hidden="true"></i>';
+
+        }
+    });
+</script>
+@endif
+@endauth
+
 @endsection
 
 @section('profile-page-js')
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 @endsection

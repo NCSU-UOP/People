@@ -36,6 +36,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('faculty_id');
                 $table->boolean('is_verified')->default(false);
                 $table->boolean('is_rejected')->default(false);
+                $table->boolean('is_visible')->default(true);
                 $table->timestamps();
 
                 $table->foreign('id')->references('id')->on($this->userTable)->onDelete('cascade');

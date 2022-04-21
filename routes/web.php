@@ -80,6 +80,9 @@ Route::prefix('uop')->group(function () {
 //Route for admin users( only super admin and admins can access these routes )
 Route::group(['middleware' => ['admin.users']], function () {
 
+    // route: change account visibility
+    Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
+
     // route: dashboard/
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard'); 

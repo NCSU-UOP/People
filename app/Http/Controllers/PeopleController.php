@@ -62,21 +62,31 @@ class PeopleController extends Controller
         // dd($socialmedia);
 
         $studentdata->facultyName = $studentdata->faculty()->first()->name;
+        $studentdata->facultyID = $studentdata->faculty()->first()->id;
         $studentdata->departmentName = $studentdata->department()->first()->name;
         $studentdata->username = $studentdata->user()->first()->username;
         $studentdata->email = $studentdata->user()->first()->email;
         $studentdata->date = date('d-m-Y',strtotime($studentdata['updated_at']));
         $studentdata->image = '/uploads/images/'.$studentdata->image;
         $studentdata->socialmedia = $socialmedia;
+        $studentdata->visibility = $studentdata->is_visible;
+        // dd($studentdata);
         return view('people.profile')->with('student',$studentdata->toArray());
     }
 
     //getting student list method
-    public function getStudentList($facultycode,$batch)
+    public function getStudentList(Request $request, $facultycode,$batch)
     {
+        // dd($request->user()->id);
         //dd($fac);
         $facultyData = Faculty::where('code', $facultycode)->firstorFail();
-        $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
+        if($request->user() != null && $request->user()->admins()->first() != null && ($request->user()->admins()->first()->is_admin == 1 || $request->user()->admins()->first()->faculty_id == $facultyData->id)){
+            $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->orderBy('students.regNo', 'asc')->get();
+        }
+        else{
+            $studentList = $facultyData->students()->select('students.id','students.image', 'students.fullname', 'students.regNo')->where('students.batch_id', $batch)->where('students.is_verified', 1)->where('students.is_rejected', 0)->where('students.is_visible', 1)->orderBy('students.regNo', 'asc')->get();
+        }
+        
         // dd($facultyData);
 
         // Change the image url to pick its respective thumbnails 
@@ -86,5 +96,21 @@ class PeopleController extends Controller
 
         //dd($studentList);
         return view('people.studentList')->with('facultyName', $facultyData->name)->with('studentlist', $studentList->toArray())->with('batch', $batch);
+    }
+
+    public function changeVisibility(Request $request)
+    {
+        // dd($request);
+        $data = request()->validate([
+            'visibilityStatus' => 'required', 'boolean',
+            'username' => 'required', 'string',
+        ]);  
+        $visibilitytatus = $data['visibilityStatus'];
+        $username = $data['username'];
+
+        $studentdata = User::where('username', $username)->first()->students()->first();
+        $studentdata->is_visible = $visibilitytatus;
+        $studentdata->save();
+        return \response()->json([]);
     }
 }
