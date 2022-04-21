@@ -55,14 +55,17 @@ class ForumController extends Controller
             $departments[$faculty['id']] = Faculty::find($faculty['id'])->departments()->select('id', 'name')->get()->toArray();
         }
 
-        // dd($departments);
         return view('forum.student')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
     }
 
     //Email verification and password setting function
     public function verification($username)
     {        
-        return view('forum.verification', compact('username'));
+        $user = User::where('username', $username)->firstOrfail();
+        $user->email_verified_at = now();
+        $user->save();
+
+        return view('forum.verification');
     }
 
     //updating the password field 

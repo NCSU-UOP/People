@@ -40,8 +40,7 @@ Route::prefix('forum')->group(function () {
     Route::get('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'resubmission'])->name('forum.resubmit');
     Route::post('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'submitResubmission']);
 
-    Route::get('/{username}/register', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
-    Route::put('/{username}/setpassword', [App\Http\Controllers\ForumController::class, 'updatePassword']);
+    Route::get('/email/{username}', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
 });
  
 // These are public routes which provides users' profile to the outsiders
