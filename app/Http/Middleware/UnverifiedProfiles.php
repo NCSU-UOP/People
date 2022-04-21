@@ -47,7 +47,7 @@ class UnverifiedProfiles
             }
             abort(404, 'Not Found.');
         }
-        //if account is not visible respective owner or admins(super admin & admin of the respective faculty) can go to the profile.
+        //if account is not visible, only respective owner or admins(super admin & admin of the respective faculty) can go to the profile.
         elseif(!($this->auth->user()->admins())){
             if($this->auth->user()->username == $thisUser) {
                 return $next($request);
@@ -55,7 +55,7 @@ class UnverifiedProfiles
         }elseif($this->auth->user()->admins() && $this->auth->user()->admins()->first() && ($this->auth->user()->admins()->first()->is_admin == 1 || $this->auth->user()->admins()->first()->faculty_id == $student->faculty_id)) {
             return $next($request);
         } 
-        //the route cannot be accessed when account is not visible and you are not the owner nor an admin of the respective faculty.
+        //the route cannot be accessed when account is not visible and you are not the owner nor an superadmin/admin of the respective faculty.
         else {
             abort(404, 'Not Found.');
         }
