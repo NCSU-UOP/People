@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@php $user = json_decode($user); @endphp
 <div class="container">
     <div class="row justify-content-center">
     <div class="col-md-8">
@@ -10,14 +9,14 @@
             <div class="container p-2 pb-2 rounded"><h1 class="font-weight-bold">Edit user details</h1></div>
         </div>
         <div class="card-body">
-            <form action="/dashboard/{{$user->id}}" method="POST" enctype="multipart/form-data">
+            <form action="/dashboard/{{$userData['id']}}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
             <div class="row mb-3">
                 <label for="name" class="col-md-4 col-form-label text-md-end">Name</label>
                 <div class="col-md-6">
-                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Alex Steven Cooper" name="name" value="{{ old('name') ?? $user->name}}">
+                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Alex Steven Cooper" name="name" value="{{ old('name') ?? $userData['name']}}">
 
                     @error('name')
                         <span class="invalid-feedback" role="alert">
@@ -30,14 +29,14 @@
             <div class="row mb-3">
                 <label for="username" class="col-md-4 col-form-label text-md-end">Username</label>
                 <div class="col-md-6">
-                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') ?? $user->username}}" disabled>  
+                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') ?? $userData['username']}}" disabled>  
                 </div>
             </div>
             
             <div class="row mb-3">
                 <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>
                 <div class="col-md-6">
-                    <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') ?? $user->email}}" disabled>
+                    <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') ?? $userData['email']}}" disabled>
 
                     @error('email')
                         <span class="invalid-feedback" role="alert">
@@ -51,12 +50,13 @@
                 <label for="faculty_id" class="col-md-4 col-form-label text-md-end">Faculty name</label>
 
                 <div class="col-md-6">
-                    <select id="faculty_id" type="faculty_id" class="form-select @error('faculty_id') is-invalid @enderror" name="faculty_id" value="{{ old('faculty_id') ?? $user->faculty_id}}">
-                        @foreach(json_decode($faculty) as $fac)
-                            @if($fac->id === $user->faculty_id)
-                            <option selected value="{{$fac->id}}">{{$fac->name}}</option>
-                            @endif
-                            <option value="{{$fac->id}}">{{$fac->name}}</option>
+                    <select id="faculty_id" type="faculty_id" class="form-select @error('faculty_id') is-invalid @enderror" name="faculty_id" value="{{ old('faculty_id')}}">
+                        @foreach($faculties as $faculty)
+                            <option value="{{$faculty['id']}}"
+                                @if ($faculty['id'] == $userData['faculty_id'])
+                                    selected
+                                @endif
+                            >{{$faculty['name']}}</option>
                         @endforeach
                     </select>
 
@@ -73,13 +73,13 @@
                 
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault1" value=1>
+                        <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault1" value=1 @if($userData['isAdmin'] == 1) checked @endif>
                         <label class="form-check-label" for="flexRadioDefault1">
                             Super admin
                         </label>
                         </div>
                         <div class="form-check">
-                        <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault2" value=0 checked>
+                        <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault2" value=0 @if($userData['isAdmin'] == 0) checked @endif>
                         <label class="form-check-label" for="flexRadioDefault2">
                             Admin
                         </label>
