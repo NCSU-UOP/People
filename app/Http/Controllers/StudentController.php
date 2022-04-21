@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
 use App\Mail\SetPasswordMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Support\Arr;
 
@@ -51,7 +52,15 @@ class StudentController extends Controller
     public function updatePassword($username)
     {
         $data = request()->validate([
-            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+            'password' => [
+                'required', 
+                'string', 
+                Password::min(8)
+                 ->mixedcase()
+                 ->numbers()
+                 ->symbols(), 
+                'max:'.env("USERS_PASSWORD_MAX"), 
+                'confirmed'],
         ], $this->messages);
 
         $user = \App\Models\User::where('username', $username)->first();
