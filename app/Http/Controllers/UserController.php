@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use App\Mail\AdminCreationMail;
 use App\Mail\EntryRejectionMail;
 
@@ -31,6 +32,8 @@ class UserController extends Controller
         'regex' => 'The :attribute format is invalid.',
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
+        'integer' => 'The :attribute field is required.',
+        'confirmed' => 'Password and Confirm Password must be match',
     ];
 
     //
@@ -103,38 +106,52 @@ class UserController extends Controller
     public function edit(User $user)
     {
         //creating user json
-        $user->name = $user->admins()->first()->name;
-        $user->faculty_id = $user->admins()->first()->faculty_id;
-        $user->faculty_name = $user->admins()->first()->faculty()->first()->name;
+        $adminData = $user->admins()->firstOrfail();
 
-        $user = $user->toJson();
-        $faculty = Faculty::all()->toJson();
+        // Map user attributes to an object
+        $userData = [
+            'id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+            'name' => $adminData->name,
+            'isAdmin' => $adminData->is_admin,
+            'faculty_id' => $adminData->faculty()->firstOrfail()->id,
+        ];
 
-        return view('admin.edit', compact('user', 'faculty'));
+        // Retrive all the faculties
+        $faculties = Faculty::select('id', 'name')->get()->toArray();
+
+        return view('admin.edit', compact('userData', 'faculties'));
     }
 
     //updating the user details
     public function update(User $user)
     {
-        $data = request()->validate([
-            "name" => ['required', 'string', 'max:50'],
-            "username" =>['prohibited'],
-            "email" =>['prohibited'],
+        $adminUpdate = request()->validate([
             "faculty_id" =>['required', 'int','exists:faculties,id'],
-            "is_admin" => ['required' , 'int'],
-            "password" => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            "is_admin" => ['required' , 'boolean'],
+            "name" => ['required', 'string', 'max:'.env("ADMINS_NAME_MAX", 100), 'min:'.env("ADMINS_NAME_MIN", 10)],
+        ], $this->messages);
 
-        $adminUpdate['faculty_id'] = $data['faculty_id'];
-        $adminUpdate['is_admin'] = $data['is_admin'];
-        $adminUpdate['name'] = $data['name'];
+        // If a password was entered, then it will be updated in the database
+        if(request()->has('password')) {
+            if(request()->password != null) {
+                // Validate the password
+                $userUpdate = request()->validate([
+                    "password" => ['string', 'min:'.env("USERS_PASSWORD_MIN", 8), 'max:'.env("USERS_PASSWORD_MAX", 15), 'confirmed'],
+                ], $this->messages);
+                
+                $userUpdate['password'] = Hash::make($userUpdate['password']);
 
-        $userUpdate['password'] = Hash::make($data['password']);
+                // Update the password
+                User::find($user->id)->update($userUpdate);
+            }
+        }
 
-        User::find($user->id)->update($userUpdate);
+        // Update admin informations
         Admin::find($user->id)->update($adminUpdate);
 
-        return redirect('/dashboard')->with('message', 'User update sucessfully 👍');
+        return redirect('/dashboard')->with('message', 'User update sucessfully!!');
     }
 
     // (Super Admin) add user
@@ -160,16 +177,16 @@ class UserController extends Controller
     public function addUser() 
     {
         $userData = request()->validate([
-            'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN"), 'max:'.env("USERS_USERNAME_MAX"), 'unique:users'],
+            'username' => ['required','string', 'min:'.env("USERS_USERNAME_MIN", 4), 'max:'.env("USERS_USERNAME_MAX", 20), 'unique:users'],
             'email' => ['required', 'email:rfc,dns', 'unique:users'],
-            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed']
+            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN", 8), 'max:'.env("USERS_PASSWORD_MAX", 15), 'confirmed']
         ], $this->messages);
 
         $adminData = request()->validate([
-            'name' => ['required','string', 'max:'.env("USERS_NAME_MAX"), 'min:'.env("USERS_NAME_MIN")],
+            'name' => ['required','string', 'max:'.env("ADMINS_NAME_MAX", 100), 'min:'.env("ADMINS_NAME_MIN", 10)],
             'faculty_id' => ['required','int','exists:faculties,id'],
             'is_admin' => ['required', 'boolean'],
-            'remark' => ['required', 'string', 'max:'.env("ADMINS_REMARK_MAX")],
+            'remark' => ['required', 'string', 'max:'.env("ADMINS_REMARK_MAX", 100)],
 
         ], $this->messages);
 

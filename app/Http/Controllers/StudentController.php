@@ -36,7 +36,15 @@ class StudentController extends Controller
      */
     public function setPassword($username)
     {
-        return view('password.create', compact('username'));
+        $user = \App\Models\User::where('username', $username)->first();
+
+        if(!($user->password_set))
+        {
+            return view('password.create', compact('username'));
+        }
+
+        abort(419);
+        
     }
 
     //updating the password field 
@@ -47,28 +55,33 @@ class StudentController extends Controller
         ], $this->messages);
 
         $user = \App\Models\User::where('username', $username)->first();
-        // dd($user->username);
-        $student = $user->students()->first();
 
-        // dd($student->faculty()->firstOrfail()->name);
-        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');            
+        if(!($user->password_set))
+        {
+            $student = $user->students()->first();
 
-        try {
+            $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');            
+
+            try {
+                
+                $adUser = User::find($DN_Level);
+                $adUser->unicodepwd=$data['password'];
+                $adUser->useraccountcontrol=512;
+                $adUser->save();
+
+            } catch (\Throwable $th) {
+                abort(500, 'Error{$th}');
+            }
             
-            $adUser = User::find($DN_Level);
-            $adUser->unicodepwd=$data['password'];
-            $adUser->useraccountcontrol=512;
-            $adUser->save();
 
-        } catch (\Throwable $th) {
-            abort(500, 'Error{$th}');
+            $data['password'] = Hash::make($data['password']);
+            $data['password_set'] = true;
+            $user->update($data);
+
+            return redirect('/');
         }
         
-
-        $data['password'] = Hash::make($data['password']);
-        $user->update($data);
-
-        return redirect('/');
+        abort(419);
     }
 
     /**

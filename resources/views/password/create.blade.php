@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header"> Set a password to your account</div>
                 <div class="card-body">
-                    <form method="POST" action="/{{$username}}/setpassword">
+                    <form method="POST" action="/setpassword/{{$username}}">
                         @csrf
                         @method('PUT')
 
