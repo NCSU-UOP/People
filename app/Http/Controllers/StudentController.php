@@ -176,7 +176,7 @@ class StudentController extends Controller
         $facultyCode = $student->faculty()->firstOrfail()->code;
         $user = $student->user()->firstOrfail();
 
-        if($student) {
+        if($student && $student->is_rejected = 0) {
             $student->is_rejected = 1;
             $student->save();
 
