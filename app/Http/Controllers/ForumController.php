@@ -57,9 +57,13 @@ class ForumController extends Controller
         ];
 
         $departments = [];
+        $departmentCodesAHS = [];
         $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
         $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
-        $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->first()->id)->get()->toArray();
+
+        if(Faculty::where('code', 'AHS')->exists())
+            $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->firstOrfail()->id)->get()->toArray();
+
         $batches = Batch::select('id')->get()->toArray();
 
         // Get all the departments of each faculty
@@ -164,7 +168,7 @@ class ForumController extends Controller
         Student::create($student);
         
         // Delete user from the users table if the user is not in the students table
-        if(!Student::find($student['id'])->first()) {
+        if(!Student::find($student['id'])->firstOrfail()) {
             User::find($student['id'])->delete();
         }
 
@@ -183,7 +187,7 @@ class ForumController extends Controller
         $RegNo = $facultyCode.'/'.$batch_id.'/';
 
         if($facultyCode == "AHS") {
-            $departmentCode = Department::select('code')->where('id', $department_id)->first()->code;
+            $departmentCode = Department::select('code')->where('id', $department_id)->firstOrfail()->code;
             $RegNo = $RegNo.$departmentCode.'/';
         }
 
@@ -282,7 +286,10 @@ class ForumController extends Controller
         $departments = [];
         $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
         $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
-        $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->first()->id)->get()->toArray();
+
+        if(Faculty::where('code', 'AHS')->exists())
+            $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->firstOrfail()->id)->get()->toArray();
+        
         $batches = Batch::select('id')->get()->toArray();
 
         // Get all the departments of each faculty
