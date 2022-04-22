@@ -235,36 +235,6 @@
     </div>
 </div>
 
-@auth
-@if (Auth::user()->admins()->first() != null )
-    @php $admin = true @endphp
-    @if(Auth::user()->admins()->first()->is_admin === 1)
-        @php $super_admin = true; 
-            $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
-    @elseif(Auth::user()->admins()->first()->is_admin === 0)
-        @php $super_admin = false; 
-            $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
-    @endif
-@else
-    @php $admin = false @endphp
-    @php $super_admin = false; @endphp
-    @php $fac_id = null; @endphp
-@endif
-@if ($admin && ($super_admin || $fac_id === $student['facultyID']))
-<div class="container pt-3">
-<div class="card col-md-4 offset-md-4">
-    <div class="card-header">
-        <div class="float-start" style="font-weight: 1000"><i class="bi bi-eye-fill"></i> Account Visibility</div>
-                <div class="form-check form-switch float-end">
-                <label class="form-check-label text-wrap badge" style="width: 4rem;" for="flexSwitchCheck" id="flexSwitchChecklabel"></label>
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheck">
-                </div>
-    </div>
-</div>
-</div>
-@endif
-@endauth
-
 <div class="container pt-4">
     <div class="row gutters-sm ">
         <div class="col-md-4 mb-3">
@@ -289,7 +259,6 @@
                 </div>
             </div>
 
-            
             <div class="card mt-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-lightning-fill"></i>  Social Media</div>
@@ -319,6 +288,33 @@
             </div>
         </div>
         <div class="col-md-8">
+            @auth
+            @if (Auth::user()->admins()->first() != null )
+                @php $admin = true @endphp
+                @if(Auth::user()->admins()->first()->is_admin === 1)
+                    @php $super_admin = true; 
+                        $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
+                @elseif(Auth::user()->admins()->first()->is_admin === 0)
+                    @php $super_admin = false; 
+                        $fac_id = Auth::user()->admins()->first()->faculty_id; @endphp
+                @endif
+            @else
+                @php $admin = false @endphp
+                @php $super_admin = false; @endphp
+                @php $fac_id = null; @endphp
+            @endif
+            @if ($admin && ($super_admin || $fac_id === $student['facultyID']))
+            <div class="card">
+                <div class="card-header">
+                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-eye-fill"></i> Account Visibility</div>
+                            <div class="form-check form-switch float-end">
+                            <label class="form-check-label text-wrap badge" style="width: 4rem;" for="flexSwitchCheck" id="flexSwitchChecklabel"></label>
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheck">
+                            </div>
+                </div>
+            </div>
+            @endif
+            @endauth
             <div class="card mb-3">
                 <div class="card-header">
                     <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-fill"></i> Profile</div>

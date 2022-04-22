@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
 use App\Mail\SetPasswordMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Support\Arr;
 
@@ -51,7 +52,15 @@ class StudentController extends Controller
     public function updatePassword($username)
     {
         $data = request()->validate([
-            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+            'password' => [
+                'required', 
+                'string', 
+                Password::min(8)
+                 ->mixedcase()
+                 ->numbers()
+                 ->symbols(), 
+                'max:'.env("USERS_PASSWORD_MAX"), 
+                'confirmed'],
         ], $this->messages);
 
         $user = \App\Models\User::where('username', $username)->first();
@@ -122,7 +131,7 @@ class StudentController extends Controller
         $student = Student::where('id', $userId)->firstOrfail();
         $facultyCode = $student->faculty()->firstOrfail()->code;
 
-        if($student) {
+        if($student && $student->is_verified = 0 && $student->is_rejected = 0) {
             $user = $student->user()->firstOrfail();
             
             try {
@@ -189,7 +198,7 @@ class StudentController extends Controller
         $facultyCode = $student->faculty()->firstOrfail()->code;
         $user = $student->user()->firstOrfail();
 
-        if($student) {
+        if($student && $student->is_rejected = 0 && $student->is_verified = 0) {
             $student->is_rejected = 1;
             $student->save();
 
