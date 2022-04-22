@@ -44,6 +44,18 @@ class ForumController extends Controller
     //student forum selection method
     public function studentForum()
     {
+        $provinces = [
+            'Central Province',
+            'Eastern Province',
+            'North Central Province',
+            'Northern Province',
+            'North Western Province',
+            'Sabaragamuwa Province',
+            'Southern Province',
+            'Uva Province',
+            'Western Province'
+        ];
+
         $departments = [];
         $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
         $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
@@ -55,7 +67,13 @@ class ForumController extends Controller
             $departments[$faculty['id']] = Faculty::find($faculty['id'])->departments()->select('id', 'name')->get()->toArray();
         }
 
-        return view('forum.student')->with('faculties', $faculties)->with('departments', json_encode($departments))->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
+        return view('forum.student')
+            ->with('faculties', $faculties)
+            ->with('departments', json_encode($departments))
+            ->with('batches', $batches)
+            ->with('fcodes', json_encode($facultyCodes))
+            ->with('dcodes', json_encode($departmentCodesAHS))
+            ->with('provinces', $provinces);
     }
 
     //Email verification and password setting function
@@ -249,6 +267,18 @@ class ForumController extends Controller
             abort(401);
         }
 
+        $provinces = [
+            'Central Province',
+            'Eastern Province',
+            'North Central Province',
+            'Northern Province',
+            'North Western Province',
+            'Sabaragamuwa Province',
+            'Southern Province',
+            'Uva Province',
+            'Western Province'
+        ];
+
         $departments = [];
         $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
         $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
@@ -272,7 +302,15 @@ class ForumController extends Controller
 
         $tempDepartment = Faculty::find($student['faculty_id'])->departments()->select('id', 'name')->get()->toArray();
 
-        return view('forum.resubmit')->with('student', $student->toArray())->with('faculties', $faculties)->with('departments', json_encode($departments))->with('tempDeps', $tempDepartment)->with('batches', $batches)->with('fcodes', json_encode($facultyCodes))->with('dcodes', json_encode($departmentCodesAHS));
+        return view('forum.resubmit')
+            ->with('student', $student->toArray())
+            ->with('faculties', $faculties)
+            ->with('departments', json_encode($departments))
+            ->with('tempDeps', $tempDepartment)
+            ->with('batches', $batches)
+            ->with('fcodes', json_encode($facultyCodes))
+            ->with('dcodes', json_encode($departmentCodesAHS))
+            ->with('provinces', $provinces);
     }
 
     // Resubmit the forum data

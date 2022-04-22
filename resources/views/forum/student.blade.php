@@ -97,7 +97,12 @@
     <div class="col-md-6">
       <label for="province" class="form-label">Province</label>
       
-      <input id="province" type="text" class="form-control @error('province') is-invalid @enderror" placeholder="Western" name="province" value="{{ old('province') }}" required autocomplete="province" autofocus>
+      <select id="province" type="province" class="form-select @error('province') is-invalid @enderror" name="province" value="{{ old('province') }}" required autocomplete="province">
+        <option value="{{null}}">-- Select the Province --</option>
+        @foreach ($provinces as $province)
+            <option value="{{$province}}">{{$province}}</option>
+        @endforeach
+      </select>
 
       @error('province')
           <span class="invalid-feedback" role="alert">
