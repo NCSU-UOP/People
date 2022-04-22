@@ -18,8 +18,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         // backup run every day at 01:00 AM
-        // $schedule->command('backup:clean')->daily()->at('01:00');
-        // $schedule->command('backup:run')->daily()->at('01:30');
+        $schedule->command('backup:clean')->daily()->at('01:00');
+        $schedule->command('backup:run')->daily()->at('01:30');
+        $schedule->command('backup:monitor')->daily()->at('03:00');
     }
 
     /**
