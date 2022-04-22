@@ -23,7 +23,8 @@ class BatchController extends Controller
         'email' => 'Invalid email.',
         'string' => 'The :attribute must be a string.',
         'date' => "The :attribute must be a date",
-        'after_or_equal' => 'The :attribute is invalid.'
+        'after_or_equal' => 'The :attribute is invalid.',
+        'gt' => 'The :attribute must be a positive integer.'
     ];
 
     // (super admin) create batch page
@@ -40,7 +41,7 @@ class BatchController extends Controller
         $minDate = now()->format('Y-m-d');
 
         $batchData = request()->validate([
-            'id' => ['required','int', 'unique:batches'],
+            'id' => ['required','int', 'unique:batches', 'gt:0'],
             'expire_date' => ['required', 'date', 'after_or_equal:'.$minDate]
         ], $this->messages);
 
@@ -56,7 +57,7 @@ class BatchController extends Controller
             abort(500, 'Error{$th}');
         }
 
-        return redirect('/dashboard/add/batch')->with('message', 'Batch has been created Succesfully 👍');
+        return redirect('/dashboard/add/batch')->with('message', 'Batch has been created Succesfully!!');
     }
 
     /**
