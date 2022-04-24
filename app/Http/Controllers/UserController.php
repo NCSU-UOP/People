@@ -161,18 +161,6 @@ class UserController extends Controller
         return view('admin.createUser', compact('faculty'));
     }
 
-    // (Super Admin) add faculty
-    public function createFaculty() 
-    {
-        return view('admin.createFaculty');
-    }
-
-    // (Super Admin) add batch
-    public function createBatch() 
-    {
-        return view('admin.createBatch');
-    }
-
     // add user POST method
     public function addUser() 
     {
@@ -218,33 +206,34 @@ class UserController extends Controller
         return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
 
-    public function createDepartment(){
-        $admin = User::find(auth()->user()->id)->admins()->firstOrfail();
-        $facultyName = $admin->faculty()->firstOrfail()->name;
-        return view('admin.addDepartment')->with('facultyName',$facultyName);
-    }
-    public function addDepartment($facultyName){
-        $fac_id = Faculty::where('name', $facultyName)->firstOrFail()->id;
-        if($fac_id === 8){
-            $data = request()->validate([
-                "departmentname" => ['required', 'string', 'max:50'],
-                "departmentcode" =>['required','string'],
-            ]);
-            $code = $data['departmentcode'];
-        }else{
-            $data = request()->validate([
-                "departmentname" => ['required', 'string', 'max:50'],
-            ]);
-            $code = NULL;
-        }
-        $deptData = [
-            'name' => $data['departmentname'],
-            'code' => $code,
-            'faculty_id' => $fac_id
-        ];
-        Department::create($deptData);
-        //dd($fac_id);
-        return redirect('/dashboard')->with('message', 'Department has been created Succesfully 👍');
-    }
+    // public function createDepartment(){
+    //     $admin = User::find(auth()->user()->id)->admins()->firstOrfail();
+    //     $facultyName = $admin->faculty()->firstOrfail()->name;
+    //     return view('department.createDepartment')->with('facultyName',$facultyName);
+    // }
+
+    // public function addDepartment($facultyName){
+    //     $fac_id = Faculty::where('name', $facultyName)->firstOrFail()->id;
+    //     if($fac_id === 8){
+    //         $data = request()->validate([
+    //             "departmentname" => ['required', 'string', 'max:50'],
+    //             "departmentcode" =>['required','string'],
+    //         ]);
+    //         $code = $data['departmentcode'];
+    //     }else{
+    //         $data = request()->validate([
+    //             "departmentname" => ['required', 'string', 'max:50'],
+    //         ]);
+    //         $code = NULL;
+    //     }
+    //     $deptData = [
+    //         'name' => $data['departmentname'],
+    //         'code' => $code,
+    //         'faculty_id' => $fac_id
+    //     ];
+    //     Department::create($deptData);
+    //     //dd($fac_id);
+    //     return redirect('/dashboard')->with('message', 'Department has been created Succesfully 👍');
+    // }
 
 }
