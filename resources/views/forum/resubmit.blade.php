@@ -274,8 +274,6 @@
     }
 
     setBatchFiller();
-
-    console.log(departmentSelector.value);
   }
 
   // Update Reg No filler when the department is updated

@@ -52,7 +52,7 @@ class FacultyController extends Controller
             abort(500, 'Error{$th}');
         }
         
-        return redirect('/dashboard/add/faculty')->with('message', 'Faculty has been created Succesfully 👍');
+        return redirect('/dashboard/add/faculty')->with('message', 'Faculty has been created Succesfully!!');
     }
 
     /**
