@@ -168,7 +168,7 @@ class ForumController extends Controller
         Student::create($student);
         
         // Delete user from the users table if the user is not in the students table
-        if(!Student::find($student['id'])->firstOrfail()) {
+        if(!Student::find($student['id'])->exists()) {
             User::find($student['id'])->delete();
         }
 
