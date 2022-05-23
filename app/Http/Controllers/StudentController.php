@@ -37,7 +37,7 @@ class StudentController extends Controller
      */
     public function setPassword($username)
     {
-        $user = \App\Models\User::where('username', $username)->first();
+        $user = \App\Models\User::where('username', $username)->firstOrfail();
 
         if(!($user->password_set))
         {

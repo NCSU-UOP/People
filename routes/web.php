@@ -28,19 +28,20 @@ Route::get('/creaters', function () {
     return view('people.team');
 });
 
-// Forum routes
-Route::prefix('forum')->group(function () {
-    Route::get('/', [App\Http\Controllers\ForumController::class, 'index'])->name('forum.home');
+// Form routes
+Route::prefix('form')->group(function () {
+    Route::get('/', [App\Http\Controllers\FormController::class, 'index'])->name('form.home');
 
-    Route::get('/student', [App\Http\Controllers\ForumController::class, 'studentForum']);
-    Route::get('/staff', [App\Http\Controllers\ForumController::class, 'staffForum']);
+    Route::get('/student', [App\Http\Controllers\FormController::class, 'studentForm']);
+    Route::get('/academic', [App\Http\Controllers\FormController::class, 'academicForm']);
+    Route::get('/nonacademic', [App\Http\Controllers\FormController::class, 'nonAcademicForm']);
     
-    Route::post('/student', [App\Http\Controllers\ForumController::class, 'storeStudent']);
+    Route::post('/student', [App\Http\Controllers\FormController::class, 'storeStudent']);
 
-    Route::get('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'resubmission'])->name('forum.resubmit');
-    Route::post('/resubmit/{username}', [App\Http\Controllers\ForumController::class, 'submitResubmission']);
+    Route::get('/resubmit/{username}', [App\Http\Controllers\FormController::class, 'resubmission'])->name('form.resubmit');
+    Route::post('/resubmit/{username}', [App\Http\Controllers\FormController::class, 'submitResubmission']);
 
-    Route::get('/email/{username}', [App\Http\Controllers\ForumController::class, 'verification'])->name('forum.verification')->middleware('link');
+    Route::get('/email/{username}', [App\Http\Controllers\FormController::class, 'verification'])->name('form.verification')->middleware('link');
 });
  
 // These are public routes which provides users' profile to the outsiders

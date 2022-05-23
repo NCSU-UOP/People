@@ -34,7 +34,7 @@ class EntryRejectionMail extends Mailable
      */
     public function build()
     {
-        $url = URL::signedRoute('forum.resubmit', ['username' => ($this->username)]);
+        $url = URL::signedRoute('form.resubmit', ['username' => ($this->username)]);
         return $this->markdown('mail.entry-rejection-mail', ['url' => $url, 'feedback' => ($this->feedback), 'name' => ($this->preferedname)]);
 
     }

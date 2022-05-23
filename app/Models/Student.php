@@ -23,11 +23,15 @@ class Student extends Model
         'province',
         'address',
         'image',
+        'bio',
+        'telephone',
         'batch_id',
         'department_id',
         'faculty_id',
+        'is_verified',
         'is_rejected',
-        'bio',
+        'is_activated',
+        'is_visible'
     ];
 
     /**
@@ -35,7 +39,7 @@ class Student extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'is_rejected'
+        'is_rejected',
     ];
 
     /**

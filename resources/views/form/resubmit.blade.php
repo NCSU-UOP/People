@@ -13,7 +13,7 @@
 </div>
 
 <div class="container" data-aos="zoom-in" data-aos-delay=100>
-  <form id="data_form" class="row g-3" method="POST" action="/forum/resubmit/{{$student['username']}}" enctype="multipart/form-data">
+  <form id="data_form" class="row g-3" method="POST" action="/form/resubmit/{{$student['username']}}" enctype="multipart/form-data">
     @csrf
 
     <div class="col-md-6">
