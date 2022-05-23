@@ -63,15 +63,28 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
         ];
+    
+    private $faculty_id;
+    private $batch_id;
+    private $usertype;
+
+    public function __construct(int $faculty_id,int $batch_id,int $usertype) 
+    {
+        $this->faculty_id = $faculty_id;
+        $this->batch_id = $batch_id;
+        $this->usertype = $usertype;
+    }
+    
 
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) 
         {
+            // dd($this->faculty_id);
             //creating a user in user table for each row in excel file
             User::updateOrCreate([
                 'username' => $row['enrolment_no'],
-                'usertype' => $row['usertype'],
+                'usertype' => $this->usertype,
                 'password' => $row['nic'],
             ]);
 
@@ -79,8 +92,8 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
                 'regNo' => $row['enrolment_no'],
                 'initial' => $row['name'],
                 'address' => $row['address'],
-                'batch_id' => $row['batch_id'],
-                'faculty_id' => $row['faculty_id'],
+                'batch_id' => $this->batch_id,
+                'faculty_id' => $this->faculty_id,
             ]); 
             $student['id'] = User::where('username', $row['enrolment_no'])->firstOrFail()->id;
 
