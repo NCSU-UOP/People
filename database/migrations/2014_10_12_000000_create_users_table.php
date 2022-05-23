@@ -20,7 +20,7 @@ return new class extends Migration
             Schema::create($this->tableName, function (Blueprint $table) {
                 $table->id();
                 $table->string('username', env("USERS_USERNAME_MAX", 20))->unique();
-                $table->string('email', env("USERS_EMAIL_MAX", 100))->unique();
+                $table->string('email', env("USERS_EMAIL_MAX", 100))->unique()->nullable();
                 $table->string('password', env("USERS_PASSWORD_HASH_MAX", 120))->default(Hash::make(env('DEFAULT_PASSWORD')));
                 $table->integer('usertype');
                 $table->timestamp('email_verified_at')->nullable();
