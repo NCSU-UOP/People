@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 
+
 // class UsersImport implements ToModel, WithHeadingRow, WithProgressBar, SkipsEmptyRows
 // {
 //     use Importable;
@@ -49,21 +50,6 @@ use Illuminate\Support\Facades\Validator;
 class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, SkipsEmptyRows, WithValidation
 {
     use Importable;
-    protected $messages = [
-        'required' => 'The :attribute field is required.',
-        'same' => 'The :attribute and :other must match.',
-        'size' => 'The :attribute must be exactly :size.',
-        'min' => 'The :attribute must be greater than :min characters.',
-        'max' => 'The :attribute must be less than :max characters.',
-        'between' => 'The :attribute value :input is not between :min - :max.',
-        'in' => 'The :attribute must be one of the following types: :values',
-        'unique' => 'The :attribute is already in use.',
-        'exists' => 'The :attribute is invalid.',
-        'regex' => 'The :attribute format is invalid.',
-        'email' => 'Invalid email.',
-        'string' => 'The :attribute should be a string.',
-        ];
-    
     private $faculty_id;
     private $batch_id;
     private $usertype;
@@ -82,7 +68,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
         {
             // dd($this->faculty_id);
             //creating a user in user table for each row in excel file
-            User::updateOrCreate([
+            User::updateOrCreate(['username' => $row['enrolment_no'],'password' => $row['nic']],[
                 'username' => $row['enrolment_no'],
                 'usertype' => $this->usertype,
                 'password' => $row['nic'],
@@ -97,7 +83,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
             ]); 
             $student['id'] = User::where('username', $row['enrolment_no'])->firstOrFail()->id;
 
-            Student::updateOrCreate($student);
+            Student::updateOrCreate(['regNo' => $row['enrolment_no']],$student);
         }
     }
 
