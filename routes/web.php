@@ -132,6 +132,7 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
         // Here goes students' profle edit routes
         Route::put('/{username}/bio', [App\Http\Controllers\StudentController::class, 'editBio']);
         Route::put('/{username}/socialmedia', [App\Http\Controllers\StudentController::class, 'editSocialMedia']);
+        Route::put('/{username}/contacts', [App\Http\Controllers\StudentController::class, 'editContactDetails']);
     });
 });
 

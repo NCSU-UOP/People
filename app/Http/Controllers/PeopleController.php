@@ -55,8 +55,20 @@ class PeopleController extends Controller
     //profile view method
     public function getProfileDetails($username)
     {
+        $provinces = [
+            'Central Province',
+            'Eastern Province',
+            'North Central Province',
+            'Northern Province',
+            'North Western Province',
+            'Sabaragamuwa Province',
+            'Southern Province',
+            'Uva Province',
+            'Western Province'
+        ];
+
         // dd($username);
-        $studentdata = User::where('username', $username)->first()->students()->first()->makeHidden(['department_id', 'faculty_id', 'created_at', 'updated_at']);
+        $studentdata = User::where('username', $username)->firstOrfail()->students()->firstOrfail()->makeHidden(['department_id', 'faculty_id', 'created_at', 'updated_at']);
         $socialmedia = UserSocialMedia::where('id', $studentdata->id)->get()->makeHidden(['id','created_at', 'updated_at'])->toArray();
 
         // dd($socialmedia);
@@ -71,7 +83,7 @@ class PeopleController extends Controller
         $studentdata->socialmedia = $socialmedia;
         $studentdata->visibility = $studentdata->is_visible;
         // dd($studentdata);
-        return view('people.profile')->with('student',$studentdata->toArray());
+        return view('people.profile')->with('student',$studentdata->toArray())->with('provinces', $provinces);
     }
 
     //getting student list method
