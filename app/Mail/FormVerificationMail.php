@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use \Linkeys\UrlSigner\Facade\UrlSigner;
 
-class ForumVerificationMail extends Mailable
+class FormVerificationMail extends Mailable
 {
     use Queueable, SerializesModels;
     protected $username;
@@ -30,8 +30,8 @@ class ForumVerificationMail extends Mailable
      */
     public function build()
     {
-        $link = UrlSigner::generate(route('forum.verification', ['username' => ($this->username)]), [], null, 1);
+        $link = UrlSigner::generate(route('form.verification', ['username' => ($this->username)]), [], null, 1);
         $url = $link->getFullUrl();
-        return $this->markdown('mail.forum-verification-mail', ['url' => $url, 'username' => $this->username]);
+        return $this->markdown('mail.form-verification-mail', ['url' => $url, 'username' => $this->username]);
     }
 }

@@ -159,12 +159,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="#" enctype="multipart/form-data">
+        <form method="POST" action="/{{$student['username']}}/contacts" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="row mb-3">
                 <label for="address" class="col-sm-2 col-form-label">Address</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('address') is-invalid @enderror" class="form-control" id="address">
+                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" placeholder="687/3, Nagolla, Kegalle">
                 @error('address')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -176,7 +177,7 @@
             <div class="row mb-3">
                 <label for="city" class="col-sm-2 col-form-label">City</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('city') is-invalid @enderror" class="form-control" id="city">
+                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" placeholder="Kegalle">
                 @error('city')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -188,20 +189,26 @@
             <div class="row mb-3">
                 <label for="province" class="col-sm-2 col-form-label">Province</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('province') is-invalid @enderror" class="form-control" id="province">
-                @error('province')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+                    <select id="province" type="province" class="form-select @error('province') is-invalid @enderror" name="province">
+                        <option value="{{null}}">-- Select the Province --</option>
+                        @foreach ($provinces as $province)
+                            <option value="{{$province}}">{{$province}}</option>
+                        @endforeach
+                    </select>
+
+                    @error('province')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="telNo" class="col-sm-2 col-form-label">Telephone No.</label>
+                <label for="telephone" class="col-sm-2 col-form-label">Telephone No.</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('telNo') is-invalid @enderror" class="form-control" id="telNo">
-                @error('telNo')
+                <input type="text" class="form-control @error('telephone') is-invalid @enderror" class="form-control" id="telephone" name="telephone" placeholder="0771234567">
+                @error('telephone')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -408,14 +415,14 @@
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">Province</span>
                     </div>
-                    <div class="col-sm-9 text-secondary">Western</div>
+                    <div class="col-sm-9 text-secondary">{{$student['province']}}</div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">Telephone No.</span>
                     </div>
-                    <div class="col-sm-9 text-secondary">0778375430</div>
+                    <div class="col-sm-9 text-secondary">{{$student['telephone']}}</div>
                 </div>
             </div>
             </div>

@@ -67,7 +67,7 @@
                             <a class="nav-link" href="/people" style="color: white;">People</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/forum" style="color: white;">Forum</a>
+                            <a class="nav-link" href="/form" style="color: white;">Form</a>
                         </li>
 
                         <!-- Authentication Links -->
