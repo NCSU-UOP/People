@@ -30,7 +30,8 @@ class excelimport extends Command
     {
         $this->output->title('Starting import');
         try {
-            (new UsersImport)->withOutput($this->output)->import(public_path('/uploads/excelfiles/efac1.xlsx'));
+            $import = new UsersImport(4,20,1);
+            ($import)->withOutput($this->output)->import(public_path('/uploads/excelfiles/efac1.xlsx'));
             $this->output->success('Import successful');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();

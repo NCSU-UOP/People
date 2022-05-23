@@ -21,7 +21,7 @@ return new class extends Migration
         if (! Schema::hasTable($this->tableName)) {
             Schema::create($this->tableName, function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
-                $table->string('regNo', env("STUDENTS_REGNO_MAX", 10));
+                $table->string('regNo', env("STUDENTS_REGNO_MAX", 10))->unique();
                 $table->string('preferedname', env("STUDENTS_PREFEREDNAME_MAX", 60))->nullable();
                 $table->string('initial', env("STUDENTS_INITIAL_MAX", 30));
                 $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100));
