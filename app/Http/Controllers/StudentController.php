@@ -37,7 +37,7 @@ class StudentController extends Controller
      */
     public function setPassword($username)
     {
-        $user = \App\Models\User::where('username', $username)->first();
+        $user = \App\Models\User::where('username', $username)->firstOrfail();
 
         if(!($user->password_set))
         {
@@ -274,5 +274,42 @@ class StudentController extends Controller
 
         return redirect()->back();
 
+    }
+
+    /**
+     * Edit contact details of a student
+     */
+    public function editContactDetails($username) {
+        $data = request()->validate([
+            'address' => ['string', 'max:'.env("STUDENTS_ADDRESS_MAX", 200), 'nullable'],
+            'city' => ['string', 'max:'.env("STUDENTS_CITY_MAX", 50), 'nullable'],
+            'province' => ['string', 'max:'.env("STUDENTS_PROVINCE_MAX", 50), 'nullable'],
+            'telephone' => ['string', 'max:'.env("STUDENTS_TELEPHONE_MAX", 12), 'regex:/^[0-9]+$/', 'nullable'],
+        ], $this->messages);
+
+        // dd($data);
+
+        // Retrive the respective student from the database
+        $student = \App\Models\User::where('username', $username)->firstOrfail()->students()->firstOrfail();
+
+        // Update respective fields if not null
+        if($data['address'] != null)
+            $student->address = $data['address'];
+
+        if($data['city'] != null)
+            $student->city = $data['city'];
+
+        if($data['province'] != null)
+            $student->province = $data['province'];
+
+        if($data['telephone'] != null)
+            $student->telephone = $data['telephone'];
+        
+        // Save updated fields
+        $student->save();
+
+        // dd($student);
+
+        return redirect()->back();
     }
 }

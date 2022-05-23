@@ -24,18 +24,19 @@ return new class extends Migration
                 $table->string('regNo', env("STUDENTS_REGNO_MAX", 10))->unique();
                 $table->string('preferedname', env("STUDENTS_PREFEREDNAME_MAX", 60))->nullable();
                 $table->string('initial', env("STUDENTS_INITIAL_MAX", 30));
-                $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100))->nullable();
+                $table->string('fullname', env("STUDENTS_FULLNAME_MAX", 100));
                 $table->string('city', env("STUDENTS_CITY_MAX", 50))->nullable();
                 $table->string('province', env("STUDENTS_PROVINCE_MAX", 50))->nullable();
                 $table->string('address', env("STUDENTS_ADDRESS_MAX", 200));            
                 $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->nullable();
-                $table->string('bio', 200)->nullable();
-                // $table->string('image', env("STUDENTS_IMAGE_PATH_MAX", 200))->unique();          
+                $table->string('bio', env("STUDENTS_BIO_MAX", 200))->nullable();
+                $table->string('telephone', env("STUDENTS_TELEPHONE_MAX", 12))->nullable();
                 $table->integer('batch_id');
                 $table->unsignedBigInteger('department_id')->nullable();
                 $table->unsignedBigInteger('faculty_id');
                 $table->boolean('is_verified')->default(false);
                 $table->boolean('is_rejected')->default(false);
+                $table->boolean('is_activated')->default(false);
                 $table->boolean('is_visible')->default(true);
                 $table->timestamps();
 

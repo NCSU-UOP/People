@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ForumVerificationMail;
+use App\Mail\FormVerificationMail;
 use App\Models\User;
 use App\Models\Faculty;
 use App\Models\Department;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
-class ForumController extends Controller
+class FormController extends Controller
 {
     protected $messages = [
         'required' => 'The :attribute field is required.',
@@ -35,14 +35,14 @@ class ForumController extends Controller
         'integer' => 'The :attribute field is required.',
     ];
 
-    //forum selection method
+    //form selection method
     public function index()
     {
-        return view('forum.view');
+        return view('form.view');
     }
 
-    //student forum selection method
-    public function studentForum()
+    //student form selection method
+    public function studentForm()
     {
         $provinces = [
             'Central Province',
@@ -71,7 +71,7 @@ class ForumController extends Controller
             $departments[$faculty['id']] = Faculty::find($faculty['id'])->departments()->select('id', 'name')->get()->toArray();
         }
 
-        return view('forum.student')
+        return view('form.student')
             ->with('faculties', $faculties)
             ->with('departments', json_encode($departments))
             ->with('batches', $batches)
@@ -87,7 +87,7 @@ class ForumController extends Controller
         $user->email_verified_at = now();
         $user->save();
 
-        return view('forum.verification');
+        return view('form.verification');
     }
 
     //updating the password field 
@@ -104,13 +104,20 @@ class ForumController extends Controller
     }
 
     // Academic staff froum selection method. (TO BE DEVELOPED)
-    public function staffForum()
+    public function academicForm()
     {
         return view('comingsoon.comingsoon');
-        // return view('forum.staff');
+        // return view('form.staff');
     }
 
-    // Recieve students' forum data
+    // Non-Academic staff form selection method. (TO BE DEVELOPED)
+    public function nonAcademicForm()
+    {
+        return view('comingsoon.comingsoon');
+        // return view('form.staff');
+    }
+
+    // Recieve students' form data
     public function storeStudent()
     {   
         $user = request()->validate([
@@ -154,6 +161,9 @@ class ForumController extends Controller
 
         // Retrive the foreign key of students table
         $student['id'] = User::where('username', $user['username'])->firstOrFail()->id;
+        
+        // Automatically activeate the account when user fill the form.
+        $student['is_activated'] = true;
 
         // Create the image directory if not exists
         $paths = $this->createDirectory($facultyCode, 'Student', $student['batch_id'], $student['regNo']);
@@ -173,9 +183,9 @@ class ForumController extends Controller
         }
 
         //Mail sending procedure
-        Mail::to($user['email'])->send(new ForumVerificationMail($user["username"]));
+        Mail::to($user['email'])->send(new FormVerificationMail($user["username"]));
 
-        return redirect('/forum/student')->with('message', 'Forum data entered Succesfully!!');
+        return redirect('/form/student')->with('message', 'Form data entered Succesfully!!');
     }
 
     /**
@@ -261,7 +271,7 @@ class ForumController extends Controller
         return $path.$imageName;
     }
 
-    // Resubmission forum data will be displayed for the user
+    // Resubmission form data will be displayed for the user
     public function resubmission($username)
     {
         $previousStudentData = User::where('username', $username)->firstOrfail();
@@ -309,7 +319,7 @@ class ForumController extends Controller
 
         $tempDepartment = Faculty::find($student['faculty_id'])->departments()->select('id', 'name')->get()->toArray();
 
-        return view('forum.resubmit')
+        return view('form.resubmit')
             ->with('student', $student->toArray())
             ->with('faculties', $faculties)
             ->with('departments', json_encode($departments))
@@ -320,7 +330,7 @@ class ForumController extends Controller
             ->with('provinces', $provinces);
     }
 
-    // Resubmit the forum data
+    // Resubmit the form data
     public function submitResubmission($username)
     {
         $previousStudentData = User::where('username', $username)->firstOrfail()->students();
@@ -378,6 +388,6 @@ class ForumController extends Controller
         // Update the entry
         $previousStudentData->update($student);
 
-        return redirect('/')->with('message', 'Forum data resubmitted Succesfully!!');
+        return redirect('/')->with('message', 'Form data resubmitted Succesfully!!');
     }
 }
