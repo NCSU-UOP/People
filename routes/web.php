@@ -113,7 +113,7 @@ Route::group(['middleware' => ['admin.users']], function () {
         /**
          * Routes that can be only access by the admin
          */
-        Route::group(['middleware' => ['admin']], function() {
+        Route::group(['middleware' => ['faculty.admin']], function() {
             // route: dashboard/student
             Route::prefix('student')->group(function () {
                 // WARNING:: This /verify/{userId} route must be placed before /{facultyCode}/{batchId} route
@@ -131,9 +131,9 @@ Route::group(['middleware' => ['non.admin.users','throttle:api']], function () {
     //Routes that can be only access by students
     Route::group(['middleware' => ['student']], function() {
         // Here goes students' profle edit routes
-        Route::put('/{username}/bio', [App\Http\Controllers\StudentController::class, 'editBio']);
-        Route::put('/{username}/socialmedia', [App\Http\Controllers\StudentController::class, 'editSocialMedia']);
-        Route::put('/{username}/contacts', [App\Http\Controllers\StudentController::class, 'editContactDetails']);
+        Route::put('/bio/{username}', [App\Http\Controllers\StudentController::class, 'editBio']);
+        Route::put('/socialmedia/{username}', [App\Http\Controllers\StudentController::class, 'editSocialMedia']);
+        Route::put('/contacts/{username}', [App\Http\Controllers\StudentController::class, 'editContactDetails']);
     });
 });
 

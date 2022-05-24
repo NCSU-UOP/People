@@ -10,7 +10,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/{{$student['username']}}/bio" enctype="multipart/form-data">
+        <form method="POST" action="/bio/{{$student['username']}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <label for="bio" class="form-label">Bio</label>
@@ -40,7 +40,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/{{$student['username']}}/socialmedia" enctype="multipart/form-data">
+        <form method="POST" action="/socialmedia/{{$student['username']}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row mb-3">
@@ -159,13 +159,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/{{$student['username']}}/contacts" enctype="multipart/form-data">
+        <form method="POST" action="/contacts/{{$student['username']}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row mb-3">
                 <label for="address" class="col-sm-2 col-form-label">Address</label>
                 <div class="col-sm-10">
-                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" placeholder="687/3, Nagolla, Kegalle">
+                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" placeholder="687/3, Nagolla, Kegalle" value="{{$student['address']}}">
                 @error('address')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -177,7 +177,7 @@
             <div class="row mb-3">
                 <label for="city" class="col-sm-2 col-form-label">City</label>
                 <div class="col-sm-10">
-                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" placeholder="Kegalle">
+                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" placeholder="Kegalle" value="{{$student['city']}}">
                 @error('city')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -192,7 +192,11 @@
                     <select id="province" type="province" class="form-select @error('province') is-invalid @enderror" name="province">
                         <option value="{{null}}">-- Select the Province --</option>
                         @foreach ($provinces as $province)
-                            <option value="{{$province}}">{{$province}}</option>
+                            <option value="{{$province}}"
+                                @if ($province == $student['province'])
+                                    selected="selected"
+                                @endif
+                            >{{$province}}</option>
                         @endforeach
                     </select>
 
@@ -207,7 +211,7 @@
             <div class="row mb-3">
                 <label for="telephone" class="col-sm-2 col-form-label">Telephone No.</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control @error('telephone') is-invalid @enderror" class="form-control" id="telephone" name="telephone" placeholder="0771234567">
+                <input type="text" class="form-control @error('telephone') is-invalid @enderror" class="form-control" id="telephone" name="telephone" placeholder="0771234567" value="{{$student['telephone']}}">
                 @error('telephone')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

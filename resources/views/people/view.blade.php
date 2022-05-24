@@ -68,8 +68,8 @@
             <div class="card-header text-center">Non-Academic Staff</div>
             <img class="card-img-top" src="/img/non-academic.jpg" alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title">Non-academic Catalogue</h5>
-                <p class="card-text">Click Explore button to view Non-academic staff details</p>
+                <h5 class="card-title">Non-Academic Catalogue</h5>
+                <p class="card-text">Click Explore button to view Non-Academic staff details</p>
             </div>
             <a href="people/nonacademic" type="button" class="btn btn-outline-secondary btn-block mb-3">Explore</a>
         </div>
