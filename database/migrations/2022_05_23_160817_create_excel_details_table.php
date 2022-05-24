@@ -16,7 +16,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary();
+            $table->id();
             $table->unsignedBigInteger('admin_id');
             $table->integer('usertype');
             $table->string('excel_filename', env("EXCEL_FILENAME_MAX", 20))->unique();
