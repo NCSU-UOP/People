@@ -29,11 +29,23 @@ class AdminUserAuthentication
         $this->auth = $auth;
     }
 
+    /**
+     * User must be logged in to access this route
+     * User must be either admin or super admin
+     */
     public function handle(Request $request, Closure $next)
     {
-        if ($this->auth->user()->usertype != env('ADMIN')) {
+        // dd($this->auth->user());
+        $authUser = $this->auth->user();
+
+        if($authUser) {
+            if ($authUser->usertype != env('ADMIN')) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
             abort(403, 'Unauthorized action.');
         }
+        
 
         return $next($request);
     }
