@@ -18,7 +18,7 @@ class AcademicStaffSeeder extends Seeder
     public function run()
     {
         $index = 0;
-        $academicUsers = User::select('id')->where('usertype', env('ACADEMIN_STAFF'))->get();
+        $academicUsers = User::select('id')->where('usertype', env('ACADEMIC_STAFF'))->get();
         $academicCount = AcademicStaff::count();
         $departmentIds = Department::select('id')->get();
 

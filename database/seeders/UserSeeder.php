@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
     {
         $admin = env('ADMIN', 0);
         $student = env('STUDENT', 1);
-        $academic = env('ACADEMIN_STAFF', 2);
+        $academic = env('ACADEMIC_STAFF', 2);
         $nonAcademic = env('NON_ACADEMIC_STAFF', 3);
 
         $password = Hash::make(env('DEFAULT_PASSWORD', 'admin12345'));
