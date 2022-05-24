@@ -22,52 +22,113 @@
         </div>
 
         <div class="container">
-        <div class ="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Faculty</th>
-                    <th scope="col">Active</th>
-                    <th scope="col">Type(Admin/user)</th>
-                    <th scope="col">Last Login</th>
-                    <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach(json_decode($admin_list) as $admin)
-                    @if($admin->admin === 1)
-                        @php $is_admin = "Super admin"; @endphp
-                    @elseif($admin->admin === 0)
-                        @php $is_admin = "admin"; @endphp
-                    @endif
+            <div class ="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Type(Admin/user)</th>
+                        <th scope="col">Last Login</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(json_decode($admin_list) as $admin)
+                        @if($admin->admin === 1)
+                            @php $is_admin = "Super admin"; @endphp
+                        @elseif($admin->admin === 0)
+                            @php $is_admin = "admin"; @endphp
+                        @endif
 
-                    @if($admin->valid === 1)
-                        @php $active = "Yes"; @endphp
-                    @else
-                        @php $active = "No"; @endphp
-                    @endif
+                        @if($admin->valid === 1)
+                            @php $active = "Yes"; @endphp
+                        @else
+                            @php $active = "No"; @endphp
+                        @endif
 
-                    <tr>
-                        <th scope="row">{{$admin->id}}</th>
-                        <td>{{$admin->name}}</td>
-                        <td>{{$admin->username}}</td>
-                        <td>{{$admin->email}}</td>
-                        <td>{{$admin->faculty}}</td>
-                        <td>{{$active}}</td>
-                        <td>{{$is_admin}}</td>
-                        <td>{{$admin->online}}</td>
-                        <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
-                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Edit</a></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+                        <tr>
+                            <th scope="row">{{$admin->id}}</th>
+                            <td>{{$admin->name}}</td>
+                            <td>{{$admin->username}}</td>
+                            <td>{{$admin->email}}</td>
+                            <td>{{$admin->faculty}}</td>
+                            <td>{{$active}}</td>
+                            <td>{{$is_admin}}</td>
+                            <td>{{$admin->online}}</td>
+                            <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Edit</a></td>
+                            <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <div class="container">
+            <div class="p-3 pb-3 rounded">
+                <h2 class="text-center">Excel File Importation Details</h2>
+            </div>
+            <div class ="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Usertype</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Batch</th>
+                        <th scope="col">Uploaded by</th>
+                        <th scope="col">link</th>
+                        <th scope="col">Is_Imported</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(json_decode($excelfile_list) as $excelfile)
+                        <tr>
+                            <th scope="row">{{$excelfile->id}}</th>
+                            <td>{{$excelfile->excel_filename}}</td>
+                            <td>{{$excelfile->usertype}}</td>
+                            <td>{{$excelfile->faculty}}</td>
+                            <td>
+                                @if($excelfile->batch_id == NULL)
+                                    N/A
+                                @elseif($excelfile->imported == 0)
+                                    {{$excelfile->batch_id}}
+                                @endif
+                            </td>
+                            <td>{{$excelfile->username}}</td>
+                            <td>{{$excelfile->excel_file_link}}</td>
+                            <td>
+                                @if($excelfile->imported == 1)
+                                    <i class="bi bi-check-circle-fill" style="color:#48BB78;"></i>
+                                @elseif($excelfile->imported == 0)
+                                    <i class="bi bi-x-circle-fill" style="color:#ED8936;"></i>
+                                @endif
+                            </td>
+                            <td><a type="button" class="btn btn-primary btn-sm" role="button" id="preview_excel_btn">Preview</a></td>
+                            @if($excelfile->imported == 1)
+                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">Import</a></td>
+                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">RollBack</a></td>
+                                <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete/{{$admin->id}}" aria-disabled="true">Remove</a></td>
+                            @elseif($excelfile->imported == 0)
+                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Import</a></td>
+                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">RollBack</a></td>
+                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
+                            @endif
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <div id="TableContainer"></div>
 
         @section('superAdminCharts')
         <div class="container">
@@ -155,3 +216,7 @@
         @endsection        
     @endif
 @endsection
+
+
+
+
