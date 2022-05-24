@@ -31,9 +31,16 @@ class UnverifiedProfiles
         $student = User::where('username', $thisUser)->firstOrfail()->students()->firstOrfail();
 
         //setting up boolean values required for conditions
-        $auth_user_is_an_admin = $this->auth->user()->usertype == env('ADMIN');
-        $auth_user_is_superadmin = User::find($this->auth->user()->id)->admins()->first()->is_admin == 1;
-        $auth_user_is_admin_of_the_faculty = User::find($this->auth->user()->id)->admins()->first()->faculty_id == $student->faculty_id;
+        if($this->auth->user() != null){
+            $auth_user_is_an_admin = $this->auth->user()->usertype == env('ADMIN');
+            $auth_user_is_superadmin = User::find($this->auth->user()->id)->admins()->first()->is_admin == 1;
+            $auth_user_is_admin_of_the_faculty = User::find($this->auth->user()->id)->admins()->first()->faculty_id == $student->faculty_id;
+        }
+        else{
+            $auth_user_is_an_admin = false;
+            $auth_user_is_superadmin = false;
+            $auth_user_is_admin_of_the_faculty = false;
+        }
 
         // if account is visible then account is shown to the public(admins,owner and others) provided the profile is verified. 
         // The respective owner can go to the profile. even if the profile is not verified.
@@ -54,9 +61,12 @@ class UnverifiedProfiles
         }
         //if account is not visible, only respective owner or admins(super admin & admin of the respective faculty) can go to the profile.
         elseif(!$auth_user_is_an_admin){
-            if($this->auth->user()->username == $thisUser) {
-                return $next($request);
+            if($this->auth->user()) {
+                if($this->auth->user()->username == $thisUser) {
+                    return $next($request);
+                }
             }
+            abort(404, 'Not Found.');
         }elseif($auth_user_is_superadmin || $auth_user_is_admin_of_the_faculty) {
             return $next($request);
         } 
