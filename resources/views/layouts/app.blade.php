@@ -153,5 +153,6 @@
 @yield('profile-page-scripts')
 @yield('scripts-footer')
 @yield('search-script')
+@yield('admin-page-scripts')
 </body>
 </html>

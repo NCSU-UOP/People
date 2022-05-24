@@ -111,7 +111,7 @@
                                     <i class="bi bi-x-circle-fill" style="color:#ED8936;"></i>
                                 @endif
                             </td>
-                            <td><a type="button" class="btn btn-primary btn-sm" role="button" id="preview_excel_btn">Preview</a></td>
+                            <td><button type="button" class="btn btn-primary btn-sm" role="button" onclick="showPreview('{{$excelfile->excel_filename}}')">Preview</button></td>
                             @if($excelfile->imported == 1)
                                 <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">Import</a></td>
                                 <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">RollBack</a></td>
@@ -127,8 +127,6 @@
                 </table>
             </div>
         </div>
-
-        <div id="TableContainer"></div>
 
         @section('superAdminCharts')
         <div class="container">
@@ -218,5 +216,30 @@
 @endsection
 
 
+@section('admin-page-js')
+<script src="/js/xlsx.full.min.js"></script>
+@endsection
 
+
+@section('admin-page-scripts')
+<script>
+    function showPreview(title) {
+        var winPrint = window.open('', '', width=800,height=600,toolbar=0);
+
+		winPrint.document.write('<head><title>Excel Preview</title></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div id="TableContainer"></div></body>');
+        (async() => {
+        const f = await fetch("/uploads/excelfiles/"+title+".xlsx"); // replace with the URL of the file
+        const ab = await f.arrayBuffer();
+
+        /* Parse file and get first worksheet */
+        const wb = XLSX.read(ab);
+        const ws = wb.Sheets[wb.SheetNames[0]];
+
+        /* Generate HTML */
+        var output = winPrint.document.getElementById("TableContainer");
+        output.innerHTML = XLSX.utils.sheet_to_html(ws);
+        })();
+    }
+</script>
+@endsection
 
