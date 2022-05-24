@@ -10,6 +10,7 @@ use LdapRecord\Models\ActiveDirectory\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EntryRejectionMail;
 use App\Mail\SetPasswordMail;
+use App\Models\Batch;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -116,6 +117,9 @@ class StudentController extends Controller
      * show all the students of respective batch of the faculty
      */
     public function getStudentList($facultyCode, $batchId){
+        // To check the given batch id is in the table batches
+        $batch = Batch::where('id', $batchId)->firstOrfail()->id;
+        
         $faculty = Faculty::where('code', $facultyCode)->firstOrfail();
         $studentList = $faculty->students()->select('students.id','students.regNo','students.initial','students.image')->where([['students.is_verified', 0], ['students.is_rejected', 0], ['students.batch_id', $batchId]])->get();
         $facultyName = Faculty::where('code', $facultyCode)->firstOrFail()->name;
