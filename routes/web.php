@@ -113,7 +113,7 @@ Route::group(['middleware' => ['admin.users']], function () {
         /**
          * Routes that can be only access by the admin
          */
-        Route::group(['middleware' => ['admin']], function() {
+        Route::group(['middleware' => ['faculty.admin']], function() {
             // route: dashboard/student
             Route::prefix('student')->group(function () {
                 // WARNING:: This /verify/{userId} route must be placed before /{facultyCode}/{batchId} route
