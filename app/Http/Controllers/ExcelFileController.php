@@ -24,6 +24,8 @@ class ExcelFileController extends Controller
         try {
             $import = new UsersImport($faculty_id,$batch_id,$usertype);
             $import->import(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
+            $excel_details->is_imported = true;
+            $excel_details->save();
             return redirect()->back()->with('success', 'Excel file imported!');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();

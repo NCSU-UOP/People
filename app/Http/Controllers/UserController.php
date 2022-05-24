@@ -8,6 +8,7 @@ use App\Models\Batch;
 use App\Models\Department;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\ExcelDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
@@ -68,7 +69,28 @@ class UserController extends Controller
             }
 
             $admin_list = $admin_list->toJson();
-            return view('admin.dashboard', compact('admin_list'));
+
+            //excel file details list
+            $excelfile_list = ExcelDetails::all();
+
+            foreach($excelfile_list as $tmp_excelfile) {
+                $user = $tmp_excelfile->user()->firstOrfail();
+                $faculty = $tmp_excelfile->faculty()->firstOrfail();
+
+                $tmp_excelfile->username = $user->username;
+                $tmp_excelfile->faculty = $faculty->name;
+                $tmp_excelfile->imported = $tmp_admin->is_imported;
+                if($tmp_excelfile->usertype == env('STUDENT')) {
+                    $tmp_excelfile->usertype = "Student";
+                } else if($tmp_excelfile->usertype == env('ACADEMIC_STAFF')) {
+                    $tmp_excelfile->usertype = "Academic Staff";
+                } else if($tmp_excelfile->usertype == env('NON_ACADEMIC_STAFF')) {
+                    $tmp_excelfile->usertype = "Non-Academic Staff";
+                }
+            }
+
+            $excelfile_list = $excelfile_list->toJson();
+            return view('admin.dashboard', compact('admin_list','excelfile_list'));
         }
 
         /**
