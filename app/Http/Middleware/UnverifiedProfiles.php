@@ -30,6 +30,11 @@ class UnverifiedProfiles
 
         $student = User::where('username', $thisUser)->firstOrfail()->students()->firstOrfail();
 
+        //setting up boolean values required for conditions
+        $auth_user_is_an_admin = $this->auth->user()->usertype == env('ADMIN');
+        $auth_user_is_superadmin = User::find($this->auth->user()->id)->admins()->first()->is_admin == 1;
+        $auth_user_is_admin_of_the_faculty = User::find($this->auth->user()->id)->admins()->first()->faculty_id == $student->faculty_id;
+
         // if account is visible then account is shown to the public(admins,owner and others) provided the profile is verified. 
         // The respective owner can go to the profile. even if the profile is not verified.
         // the profile will not be shown under peoples when the profile is not verified by admins
@@ -48,11 +53,11 @@ class UnverifiedProfiles
             abort(404, 'Not Found.');
         }
         //if account is not visible, only respective owner or admins(super admin & admin of the respective faculty) can go to the profile.
-        elseif(!($this->auth->user()->admins())){
+        elseif(!$auth_user_is_an_admin){
             if($this->auth->user()->username == $thisUser) {
                 return $next($request);
             }
-        }elseif($this->auth->user()->admins() && $this->auth->user()->admins()->first() && ($this->auth->user()->admins()->first()->is_admin == 1 || $this->auth->user()->admins()->first()->faculty_id == $student->faculty_id)) {
+        }elseif($auth_user_is_superadmin || $auth_user_is_admin_of_the_faculty) {
             return $next($request);
         } 
         //the route cannot be accessed when account is not visible and you are not the owner nor an superadmin/admin of the respective faculty.
