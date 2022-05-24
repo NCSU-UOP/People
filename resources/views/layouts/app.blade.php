@@ -15,6 +15,7 @@
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @yield('profile-page-js')
+    @yield('admin-page-js')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
