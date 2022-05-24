@@ -25,6 +25,15 @@ class ExcelDetails extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'admin_id',
+        'faculty_id'
+    ];
+
+    /**
      * Get the user, batch, department and faculty
      */
     public function user()
