@@ -225,8 +225,9 @@
 <script>
     function showPreview(title) {
         var winPrint = window.open('', '', width=800,height=600,toolbar=0);
-
-		winPrint.document.write('<head><title>Excel Preview</title></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div id="TableContainer"></div></body>');
+        winPrint.document.write('<html><head><title>Excel Preview</title><link href="{{ asset('css/app.css') }}" rel="stylesheet"></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div class ="table-responsive"><table class ="table table-hover table-bordered table-striped table-dark" id="TableContainer"></table></div></body></html>');
+        
+		// winPrint.document.write('<head><title>Excel Preview</title></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div id="TableContainer" class ="table-responsive"></div></body>');
         (async() => {
         const f = await fetch("/uploads/excelfiles/"+title+".xlsx"); // replace with the URL of the file
         const ab = await f.arrayBuffer();
