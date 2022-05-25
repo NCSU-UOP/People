@@ -16,6 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @yield('profile-page-js')
     @yield('admin-page-js')
+    @yield('excelupload-page-js')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -154,5 +155,6 @@
 @yield('scripts-footer')
 @yield('search-script')
 @yield('admin-page-scripts')
+@yield('excel-preview-script')
 </body>
 </html>
