@@ -99,11 +99,13 @@ Route::group(['middleware' => ['admin.users']], function () {
             // route: dashboard/add
             Route::prefix('add')->group(function () {
                 Route::get('/user', [App\Http\Controllers\UserController::class, 'createUser']);
+                Route::get('/excelfile', [App\Http\Controllers\ExcelFileController::class, 'addExcelFile']);
                 Route::get('/faculty', [App\Http\Controllers\FacultyController::class, 'createFaculty']);
                 Route::get('/batch', [App\Http\Controllers\BatchController::class, 'createBatch']);
                 Route::get('/department', [App\Http\Controllers\DepartmentController::class, 'createDepartment']);
 
                 Route::post('/user', [App\Http\Controllers\UserController::class, 'addUser']);
+                Route::post('/excelfile', [App\Http\Controllers\ExcelFileController::class, 'uploadExcelFile']);
                 Route::post('/faculty', [App\Http\Controllers\FacultyController::class, 'addFaculty']);
                 Route::post('/batch', [App\Http\Controllers\BatchController::class, 'addBatch']);
                 Route::post('/department', [App\Http\Controllers\DepartmentController::class, 'addDepartment']);
