@@ -11,6 +11,7 @@
     @if(Auth::user()->admins()->first()->is_admin === 1)
         @section('navbar-item')
             <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
+            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
             <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
             <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
             <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
@@ -225,7 +226,7 @@
 <script>
     function showPreview(title) {
         var winPrint = window.open('', '', width=800,height=600,toolbar=0);
-        winPrint.document.write('<html><head><title>Excel Preview</title><link href="{{ asset('css/app.css') }}" rel="stylesheet"></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div class ="table-responsive"><table class ="table table-hover table-bordered table-striped table-dark" id="TableContainer"></table></div></body></html>');
+        winPrint.document.write('<html><head><title>Excel Preview</title><link href="{{ asset('css/app.css') }}" rel="stylesheet"></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div class="container-fluid" style="height: 75vh; width:  100vw;  overflow: auto;"><div class ="table-responsive"><table class ="table table-hover table-bordered table-striped table-dark" id="TableContainer" border="1"></table></div></div></body></html>');
         
 		// winPrint.document.write('<head><title>Excel Preview</title></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div id="TableContainer" class ="table-responsive"></div></body>');
         (async() => {
