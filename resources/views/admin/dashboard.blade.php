@@ -234,7 +234,8 @@
 
 
 @section('admin-page-scripts')
-@if(count($excelfilelist_array)>0 && Auth::user()->admins()->first()->is_admin === 1)
+@if(Auth::user()->admins()->first()->is_admin === 1)
+@if(count($excelfilelist_array)>0)
 <script>
     function showPreview(title) {
         var winPrint = window.open('', '', width=800,height=600,toolbar=0);
@@ -255,6 +256,7 @@
         })();
     }
 </script>
+@endif
 @endif
 @endsection
 
