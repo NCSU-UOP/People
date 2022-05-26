@@ -9,6 +9,7 @@ use App\Models\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Imports\UsersImport;
 
 class ExcelFileController extends Controller
 {
@@ -34,7 +35,7 @@ class ExcelFileController extends Controller
     public function importExcelFile($id)
     {   
         $excel_details = ExcelDetails::where('id', $id)->first();
-        $excel_file_link = $excel_details->excel_file_link;
+        $excel_file_attributes = $excel_details->attributes;
         $excel_filename = $excel_details->excel_filename;
         $usertype = $excel_details->usertype;
         $admin_id = $excel_details->admin_id;
@@ -44,7 +45,7 @@ class ExcelFileController extends Controller
 
 
         try {
-            $import = new UsersImport($faculty_id,$batch_id,$usertype);
+            $import = new UsersImport($faculty_id,$batch_id,$usertype,$id);
             $import->import(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
             $excel_details->is_imported = true;
             $excel_details->save();
@@ -85,13 +86,12 @@ class ExcelFileController extends Controller
     // upload excel file POST method
     public function uploadExcelFile() 
     {
-        // dd("hello");
         $usertypes = [env('STUDENT'),env('ACADEMIC_STAFF'),env('NON_ACADEMIC_STAFF')];
         $Data = request()->validate([
             'usertype' => ['required','integer',Rule::in([env('STUDENT'),env('ACADEMIC_STAFF'),env('NON_ACADEMIC_STAFF')])],
             'faculty_id' => ['required','int','exists:faculties,id'],
             'batch_id' => ['int','exists:batches,id'],
-            'excel_file' => ['required', 'file', 'mimes:xlsx,xls', 'max:2048'],
+            'excel_file' => ['required', 'file', 'mimes:xlsx', 'max:2048'],
             'excelAttributes' => ['required', 'array'],
         ], $this->messages);
 
