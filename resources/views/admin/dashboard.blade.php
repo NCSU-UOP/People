@@ -70,10 +70,12 @@
             </div>
         </div>
 
+        
         <div class="container">
             <div class="p-3 pb-3 rounded">
                 <h2 class="text-center">Excel File Importation Details</h2>
             </div>
+            @php $excelfilelist_array = json_decode($excelfile_list); @endphp
             <div class ="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -89,6 +91,7 @@
                         <th scope="col">Action</th>
                         </tr>
                     </thead>
+                    @if(count($excelfilelist_array)>0)
                     <tbody>
                     @foreach(json_decode($excelfile_list) as $excelfile)
                         <tr>
@@ -104,7 +107,7 @@
                                 @endif
                             </td>
                             <td>{{$excelfile->username}}</td>
-                            <td>{{$excelfile->excel_file_link}}</td>
+                            <td>{{$excelfile->attributes}}</td>
                             <td>
                                 @if($excelfile->imported == 1)
                                     <i class="bi bi-check-circle-fill" style="color:#48BB78;"></i>
@@ -125,6 +128,13 @@
                         </tr>
                     @endforeach
                     </tbody>
+                    @else
+                        <tbody>
+                            <tr>
+                                <td colspan="9" class="text-center">No data found</td>
+                            </tr>
+                        </tbody>
+                    @endif
                 </table>
             </div>
         </div>
@@ -223,6 +233,7 @@
 
 
 @section('admin-page-scripts')
+@if(count($excelfilelist_array)>0)
 <script>
     function showPreview(title) {
         var winPrint = window.open('', '', width=800,height=600,toolbar=0);
@@ -243,5 +254,6 @@
         })();
     }
 </script>
+@endif
 @endsection
 
