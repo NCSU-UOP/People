@@ -147,11 +147,26 @@ class StudentController extends Controller
                 $student->save();
 
             } catch (\Throwable $th) {
-                abort(500, 'Error{$th}');
+                abort(500, 'Unable to verify at the moment!');
             }
 
             //Mail sending procedure
-            Mail::to($user['email'])->send(new SetPasswordMail($user->username));
+            try {
+                Mail::to($user['email'])->send(new SetPasswordMail($user->username));
+            } catch (\Throwable $th) {
+                // If failed to send the mail, user won't be verified.
+                $student->is_verified = 0;
+                $student->save();
+
+                /**
+                 * AD user will be deleted if possible.
+                 * If this is failed, nothing to worrie because the next time all the user attributes will be updated accordingly.
+                 */
+                try {
+                    $this->deleteStudentAD($user, $student);
+                } catch(\Throwable $th) {}
+            }
+            
             return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile verified Succesfully!!');
         }
 
@@ -161,29 +176,51 @@ class StudentController extends Controller
 
     /**
      * Put student data into AD
+     * NOTE: This function should be called inside a try catch block.
      */
     private function createStudentAD($user, $student)
     {
-        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');            
+        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');
 
-        if(!User::find($DN_Level)) {
+        $adUser = User::find($DN_Level);
+
+        // If the user is not already in the AD, a new user will be created.
+        if(!$adUser) {
             $adUser = new User();
+        }
 
-            $adUser->cn = $user->username;
-            $adUser->mail = $user->email;
-            $adUser->sAMAccountName = $user->username;
-            $adUser->userPrincipalName = $user->username;
-            $adUser->displayName = $student->regNo;
-            // $adUser->initials = $student->initial; // An error occured since this field is too long
-            $adUser->givenName = $student->preferedname;
-            $adUser->sn = $student->fullname;
-            $adUser->streetAddress = $student->address;
-            $adUser->l = $student->city;
-            $adUser->st = $student->province;
-            $adUser->department = $student->department()->firstOrfail()->name;
+        /**
+         * Initialize/Update the user attributes depending on the user's existance in the AD
+         */
+        $adUser->cn = $user->username;
+        $adUser->mail = $user->email;
+        $adUser->sAMAccountName = $user->username;
+        $adUser->userPrincipalName = $user->username;
+        $adUser->displayName = $student->regNo;
+        // $adUser->initials = $student->initial; // An error occured since this field is too long
+        $adUser->givenName = $student->preferedname;
+        $adUser->sn = $student->fullname;
+        $adUser->streetAddress = $student->address;
+        $adUser->l = $student->city;
+        $adUser->st = $student->province;
+        $adUser->department = $student->department()->firstOrfail()->name;
 
-            $adUser->setDn($DN_Level);
-            $adUser->save();
+        $adUser->setDn($DN_Level);
+        $adUser->save();
+    }
+
+    /**
+     * Delete a student data from AD
+     * NOTE: This function should be called inside a try catch block.
+     */
+    private function deleteStudentAD($user, $student)
+    {
+        $DN_Level = "CN=".$user->username.", OU=".$student->batch_id.", OU=Undergraduate, OU=Students, OU=".$student->faculty()->firstOrfail()->name.", ".env('LDAP_BASE_DN');
+
+        $userToBeDeleted = User::find($DN_Level);
+
+        if($userToBeDeleted) {
+            $userToBeDeleted->delete();
         }
     }
 
@@ -203,10 +240,20 @@ class StudentController extends Controller
         $user = $student->user()->firstOrfail();
 
         if($student->is_rejected == 0 && $student->is_verified == 0) {
-            $student->is_rejected = 1;
-            $student->save();
-
-            Mail::to($user->email)->send(new EntryRejectionMail($student->preferedname, $user->username, $rejectData));
+            try {
+                $student->is_rejected = 1;
+                $student->save();
+            } catch(\Throwable $th) {
+                abort(500, 'Unable to reject at the moment!');
+            }
+            
+            try {
+                Mail::to($user->email)->send(new EntryRejectionMail($student->preferedname, $user->username, $rejectData));
+            } catch(\Throwable $th) {
+                $student->is_rejected = 0;
+                $student->save();
+            }
+            
             // dd($rejectData);
             return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile rejected Succesfully!!');
         }

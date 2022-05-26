@@ -11,8 +11,9 @@ use App\Models\Student;
 // use Illuminate\Http\Request;
 // use Illuminate\Support\Arr;
 
-use Image;
-use File;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
