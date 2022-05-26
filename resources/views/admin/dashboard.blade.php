@@ -11,6 +11,7 @@
     @if(Auth::user()->admins()->first()->is_admin === 1)
         @section('navbar-item')
             <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
+            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
             <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
             <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
             <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
@@ -22,51 +23,110 @@
         </div>
 
         <div class="container">
-        <div class ="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Faculty</th>
-                    <th scope="col">Active</th>
-                    <th scope="col">Type(Admin/user)</th>
-                    <th scope="col">Last Login</th>
-                    <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach(json_decode($admin_list) as $admin)
-                    @if($admin->admin === 1)
-                        @php $is_admin = "Super admin"; @endphp
-                    @elseif($admin->admin === 0)
-                        @php $is_admin = "admin"; @endphp
-                    @endif
+            <div class ="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Type(Admin/user)</th>
+                        <th scope="col">Last Login</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(json_decode($admin_list) as $admin)
+                        @if($admin->admin === 1)
+                            @php $is_admin = "Super admin"; @endphp
+                        @elseif($admin->admin === 0)
+                            @php $is_admin = "admin"; @endphp
+                        @endif
 
-                    @if($admin->valid === 1)
-                        @php $active = "Yes"; @endphp
-                    @else
-                        @php $active = "No"; @endphp
-                    @endif
+                        @if($admin->valid === 1)
+                            @php $active = "Yes"; @endphp
+                        @else
+                            @php $active = "No"; @endphp
+                        @endif
 
-                    <tr>
-                        <th scope="row">{{$admin->id}}</th>
-                        <td>{{$admin->name}}</td>
-                        <td>{{$admin->username}}</td>
-                        <td>{{$admin->email}}</td>
-                        <td>{{$admin->faculty}}</td>
-                        <td>{{$active}}</td>
-                        <td>{{$is_admin}}</td>
-                        <td>{{$admin->online}}</td>
-                        <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
-                        <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Edit</a></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+                        <tr>
+                            <th scope="row">{{$admin->id}}</th>
+                            <td>{{$admin->name}}</td>
+                            <td>{{$admin->username}}</td>
+                            <td>{{$admin->email}}</td>
+                            <td>{{$admin->faculty}}</td>
+                            <td>{{$active}}</td>
+                            <td>{{$is_admin}}</td>
+                            <td>{{$admin->online}}</td>
+                            <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Edit</a></td>
+                            <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <div class="container">
+            <div class="p-3 pb-3 rounded">
+                <h2 class="text-center">Excel File Importation Details</h2>
+            </div>
+            <div class ="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Usertype</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Batch</th>
+                        <th scope="col">Uploaded by</th>
+                        <th scope="col">link</th>
+                        <th scope="col">Is_Imported</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(json_decode($excelfile_list) as $excelfile)
+                        <tr>
+                            <th scope="row">{{$excelfile->id}}</th>
+                            <td>{{$excelfile->excel_filename}}</td>
+                            <td>{{$excelfile->usertype}}</td>
+                            <td>{{$excelfile->faculty}}</td>
+                            <td>
+                                @if($excelfile->batch_id == NULL)
+                                    N/A
+                                @elseif($excelfile->imported == 0)
+                                    {{$excelfile->batch_id}}
+                                @endif
+                            </td>
+                            <td>{{$excelfile->username}}</td>
+                            <td>{{$excelfile->excel_file_link}}</td>
+                            <td>
+                                @if($excelfile->imported == 1)
+                                    <i class="bi bi-check-circle-fill" style="color:#48BB78;"></i>
+                                @elseif($excelfile->imported == 0)
+                                    <i class="bi bi-x-circle-fill" style="color:#ED8936;"></i>
+                                @endif
+                            </td>
+                            <td><button type="button" class="btn btn-primary btn-sm" role="button" onclick="showPreview('{{$excelfile->excel_filename}}')">Preview</button></td>
+                            @if($excelfile->imported == 1)
+                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">Import</a></td>
+                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">RollBack</a></td>
+                                <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete/{{$admin->id}}" aria-disabled="true">Remove</a></td>
+                            @elseif($excelfile->imported == 0)
+                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Import</a></td>
+                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">RollBack</a></td>
+                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
+                            @endif
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         @section('superAdminCharts')
@@ -155,3 +215,33 @@
         @endsection        
     @endif
 @endsection
+
+
+@section('admin-page-js')
+<script src="/js/xlsx.full.min.js"></script>
+@endsection
+
+
+@section('admin-page-scripts')
+<script>
+    function showPreview(title) {
+        var winPrint = window.open('', '', width=800,height=600,toolbar=0);
+        winPrint.document.write('<html><head><title>Excel Preview</title><link href="{{ asset('css/app.css') }}" rel="stylesheet"></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div class="container-fluid" style="height: 75vh; width:  100vw;  overflow: auto;"><div class ="table-responsive"><table class ="table table-hover table-bordered table-striped table-dark" id="TableContainer" border="1"></table></div></div></body></html>');
+        
+		// winPrint.document.write('<head><title>Excel Preview</title></head><body><h1 style="text-align:center;" >Excel Preview</h1><h2 style="text-align:center;">{{$excelfile->excel_filename}}.xlsx</h2><div id="TableContainer" class ="table-responsive"></div></body>');
+        (async() => {
+        const f = await fetch("/uploads/excelfiles/"+title+".xlsx"); // replace with the URL of the file
+        const ab = await f.arrayBuffer();
+
+        /* Parse file and get first worksheet */
+        const wb = XLSX.read(ab);
+        const ws = wb.Sheets[wb.SheetNames[0]];
+
+        /* Generate HTML */
+        var output = winPrint.document.getElementById("TableContainer");
+        output.innerHTML = XLSX.utils.sheet_to_html(ws);
+        })();
+    }
+</script>
+@endsection
+
