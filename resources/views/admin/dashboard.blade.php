@@ -167,6 +167,9 @@
         @endsection
 
     @else
+        @section('navbar-item')
+            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
+        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
