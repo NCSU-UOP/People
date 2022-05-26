@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('batch_id')->nullable();
             $table->boolean('is_imported')->default(false);
             $table->unsignedBigInteger('department_id')->nullable();
-            $table->string('excel_file_link')->unique();
+            $table->json('attributes')->nullable();
             $table->timestamps();
         });
     }

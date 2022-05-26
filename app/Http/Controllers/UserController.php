@@ -87,6 +87,7 @@ class UserController extends Controller
                 } else if($tmp_excelfile->usertype == env('NON_ACADEMIC_STAFF')) {
                     $tmp_excelfile->usertype = "Non-Academic Staff";
                 }
+                $tmp_excelfile->attributes = $tmp_admin->attributes;
             }
 
             $excelfile_list = $excelfile_list->toJson();
