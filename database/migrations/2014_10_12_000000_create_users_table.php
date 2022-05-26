@@ -24,6 +24,7 @@ return new class extends Migration
                 $table->string('password', env("USERS_PASSWORD_HASH_MAX", 120))->default(Hash::make(env('DEFAULT_PASSWORD')));
                 $table->integer('usertype');
                 $table->timestamp('email_verified_at')->nullable();
+                $table->integer('imported_excel_id')->nullable();
                 $table->boolean('password_set')->default(false);
                 $table->rememberToken()->default(Str::random(10));
                 $table->timestamps();

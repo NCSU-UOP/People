@@ -21,7 +21,16 @@ class ExcelDetails extends Model
         'faculty_id',
         'batch_id',
         'department_id',
-        'excel_file_link'
+        'attributes',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'admin_id',
+        'faculty_id'
     ];
 
     /**

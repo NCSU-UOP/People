@@ -3,16 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExcelDetails;
+use App\Models\Faculty;
+use App\Models\Batch;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use App\Imports\UsersImport;
 
 class ExcelFileController extends Controller
 {
+    protected $messages = [
+        'required' => 'The :attribute field is required.',
+        'same' => 'The :attribute and :other must match.',
+        'size' => 'The :attribute must be exactly :size.',
+        'min' => 'The :attribute must be greater than :min characters.',
+        'max' => 'The :attribute must be less than :max characters.',
+        'between' => 'The :attribute value :input is not between :min - :max.',
+        'in' => 'The :attribute must be one of the following types: :values',
+        'unique' => 'The :attribute is already in use.',
+        'exists' => 'The :attribute is invalid.',
+        'regex' => 'The :attribute format is invalid.',
+        'email' => 'Invalid email.',
+        'string' => 'The :attribute should be a string.',
+        'integer' => 'The :attribute field is required.',
+        'confirmed' => 'Password and Confirm Password must be match',
+        'mimes' => 'File format is invalid. only xlsx is supported.',
+    ];
+
     //function to import excel file, $id should be given from the route as a parameter
     public function importExcelFile($id)
     {   
         $excel_details = ExcelDetails::where('id', $id)->first();
-        $excel_file_link = $excel_details->excel_file_link;
+        $excel_file_attributes = $excel_details->attributes;
         $excel_filename = $excel_details->excel_filename;
         $usertype = $excel_details->usertype;
         $admin_id = $excel_details->admin_id;
@@ -22,8 +45,10 @@ class ExcelFileController extends Controller
 
 
         try {
-            $import = new UsersImport($faculty_id,$batch_id,$usertype);
+            $import = new UsersImport($faculty_id,$batch_id,$usertype,$id);
             $import->import(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
+            $excel_details->is_imported = true;
+            $excel_details->save();
             return redirect()->back()->with('success', 'Excel file imported!');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
@@ -46,5 +71,34 @@ class ExcelFileController extends Controller
     public function removeExcelFile($id)
     {   
 
+    }
+
+    // (Super Admin) add excel file
+    public function addExcelFile() 
+    {
+        $faculty = Faculty::select('id', 'name')->get();
+        $batch = Batch::select('id')->get();
+        $usertype = [[env('STUDENT'),'Student'], [env('ACADEMIC_STAFF'),'Academic Staff'], [env('NON_ACADEMIC_STAFF'),'Non-Academic Staff']];
+        // dd($usertype['1']);
+        return view('admin.uploadExcel', compact('faculty','batch','usertype'));
+    }
+
+    // upload excel file POST method
+    public function uploadExcelFile() 
+    {
+        $usertypes = [env('STUDENT'),env('ACADEMIC_STAFF'),env('NON_ACADEMIC_STAFF')];
+        $Data = request()->validate([
+            'usertype' => ['required','integer',Rule::in([env('STUDENT'),env('ACADEMIC_STAFF'),env('NON_ACADEMIC_STAFF')])],
+            'faculty_id' => ['required','int','exists:faculties,id'],
+            'batch_id' => ['int','exists:batches,id'],
+            'excel_file' => ['required', 'file', 'mimes:xlsx', 'max:2048'],
+            'excelAttributes' => ['required', 'array'],
+        ], $this->messages);
+
+        dd($Data);
+        //!TODO should implement storing the excel file in public folder and storing the details in the database
+        // dd($adminData);
+
+        // return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
     }
 }
