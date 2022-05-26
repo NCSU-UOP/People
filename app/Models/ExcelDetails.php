@@ -21,7 +21,7 @@ class ExcelDetails extends Model
         'faculty_id',
         'batch_id',
         'department_id',
-        'excel_file_link'
+        'attributes',
     ];
 
     /**
