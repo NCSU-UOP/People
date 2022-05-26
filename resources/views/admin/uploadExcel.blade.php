@@ -32,6 +32,7 @@
                         <div class="row mb-3">
                             <label for="faculty_id" class="col-md-4 col-form-label text-md-end">Facutly name</label>
 
+                            @if(Auth::user()->admins()->first()->is_admin === 1)
                             <div class="col-md-6">
                                 <select id="faculty_id" type="faculty_id" class="form-select form-control @error('faculty_id') is-invalid @enderror" name="faculty_id" value="{{ old('faculty_id') }}" required autocomplete="faculty_id">
                                     @foreach($faculty as $data)
@@ -45,7 +46,23 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                            @else
+                            @foreach($faculty as $data)
+                                @if($data->id === Auth::user()->admins()->first()->faculty_id)
+                                    @php $faculty_name = $data->name; @endphp
+                                @endif
+                            @endforeach
+                            <div class="col-md-6">
+                                <input id="facultyid" type="facultyid" class="form-control" name="facultyid" placeholder="{{ $faculty_name }}" disabled>
+                                <input id="faculty_id" type="hidden" class="form-control @error('faculty_id') is-invalid @enderror" name="faculty_id" value="{{ Auth::user()->admins()->first()->faculty_id }}">
+                                @error('faculty_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            @endif
+                            </div>
 
                         <div class="row mb-3">
                             <label for="batch_id" class="col-md-4 col-form-label text-md-end">Batch</label>
