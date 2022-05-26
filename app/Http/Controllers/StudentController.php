@@ -147,7 +147,7 @@ class StudentController extends Controller
                 $student->save();
 
             } catch (\Throwable $th) {
-                abort(500, 'Error{$th}');
+                abort(500, 'Unable to verify at the moment!');
             }
 
             //Mail sending procedure
@@ -176,6 +176,7 @@ class StudentController extends Controller
 
     /**
      * Put student data into AD
+     * NOTE: This function should be called inside a try catch block.
      */
     private function createStudentAD($user, $student)
     {
@@ -210,6 +211,7 @@ class StudentController extends Controller
 
     /**
      * Delete a student data from AD
+     * NOTE: This function should be called inside a try catch block.
      */
     private function deleteStudentAD($user, $student)
     {
@@ -238,10 +240,20 @@ class StudentController extends Controller
         $user = $student->user()->firstOrfail();
 
         if($student->is_rejected == 0 && $student->is_verified == 0) {
-            $student->is_rejected = 1;
-            $student->save();
-
-            Mail::to($user->email)->send(new EntryRejectionMail($student->preferedname, $user->username, $rejectData));
+            try {
+                $student->is_rejected = 1;
+                $student->save();
+            } catch(\Throwable $th) {
+                abort(500, 'Unable to reject at the moment!');
+            }
+            
+            try {
+                Mail::to($user->email)->send(new EntryRejectionMail($student->preferedname, $user->username, $rejectData));
+            } catch(\Throwable $th) {
+                $student->is_rejected = 0;
+                $student->save();
+            }
+            
             // dd($rejectData);
             return redirect()->route('getStudentList', ['facultyCode' => $facultyCode, 'batchId' => $student->batch_id])->with('message', 'Profile rejected Succesfully!!');
         }
