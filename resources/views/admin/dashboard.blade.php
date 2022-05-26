@@ -76,6 +76,7 @@
                 <h2 class="text-center">Excel File Importation Details</h2>
             </div>
             @php $excelfilelist_array = json_decode($excelfile_list); @endphp
+            @php echo(count($excelfilelist_array)) @endphp
             <div class ="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -93,7 +94,7 @@
                     </thead>
                     @if(count($excelfilelist_array)>0)
                     <tbody>
-                    @foreach(json_decode($excelfile_list) as $excelfile)
+                    @foreach($excelfilelist_array as $excelfile)
                         <tr>
                             <th scope="row">{{$excelfile->id}}</th>
                             <td>{{$excelfile->excel_filename}}</td>
@@ -233,6 +234,7 @@
 
 
 @section('admin-page-scripts')
+@if(Auth::user()->admins()->first()->is_admin === 1)
 @if(count($excelfilelist_array)>0)
 <script>
     function showPreview(title) {
@@ -254,6 +256,7 @@
         })();
     }
 </script>
+@endif
 @endif
 @endsection
 
