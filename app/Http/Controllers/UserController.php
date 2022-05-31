@@ -79,7 +79,7 @@ class UserController extends Controller
 
                 $tmp_excelfile->username = $user->username;
                 $tmp_excelfile->faculty = $faculty->name;
-                $tmp_excelfile->imported = $tmp_admin->is_imported;
+                $tmp_excelfile->imported = $tmp_excelfile->is_imported;
                 if($tmp_excelfile->usertype == env('STUDENT')) {
                     $tmp_excelfile->usertype = "Student";
                 } else if($tmp_excelfile->usertype == env('ACADEMIC_STAFF')) {
@@ -87,7 +87,6 @@ class UserController extends Controller
                 } else if($tmp_excelfile->usertype == env('NON_ACADEMIC_STAFF')) {
                     $tmp_excelfile->usertype = "Non-Academic Staff";
                 }
-                $tmp_excelfile->attributes = $tmp_admin->attributes;
             }
 
             $excelfile_list = $excelfile_list->toJson();
@@ -110,7 +109,28 @@ class UserController extends Controller
             $count = Arr::add($count, $batch->id, $unverified_count);
         }
 
-        return view('admin.dashboard', compact('facultyName','facultyCode','batches','count'));
+        //excel file details list
+        $excelfile_list = ExcelDetails::where('admin_id',auth()->user()->id)->get();
+
+        foreach($excelfile_list as $tmp_excelfile) {
+            $user = $tmp_excelfile->user()->firstOrfail();
+            $faculty = $tmp_excelfile->faculty()->firstOrfail();
+
+            $tmp_excelfile->username = $user->username;
+            $tmp_excelfile->faculty = $faculty->name;
+            $tmp_excelfile->imported = $tmp_excelfile->is_imported;
+            if($tmp_excelfile->usertype == env('STUDENT')) {
+                $tmp_excelfile->usertype = "Student";
+            } else if($tmp_excelfile->usertype == env('ACADEMIC_STAFF')) {
+                $tmp_excelfile->usertype = "Academic Staff";
+            } else if($tmp_excelfile->usertype == env('NON_ACADEMIC_STAFF')) {
+                $tmp_excelfile->usertype = "Non-Academic Staff";
+            }
+        }
+
+        $excelfile_list = $excelfile_list->toJson();
+
+        return view('admin.dashboard', compact('facultyName','facultyCode','batches','count','excelfile_list'));
     }
     
     //deleting a entry from a users table

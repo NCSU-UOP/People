@@ -53,12 +53,14 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
     private $faculty_id;
     private $batch_id;
     private $usertype;
+    private array $data = [];
 
-    public function __construct(int $faculty_id,int $batch_id,int $usertype) 
+    public function __construct(int $faculty_id,int $batch_id,int $usertype,array $data)
     {
         $this->faculty_id = $faculty_id;
         $this->batch_id = $batch_id;
         $this->usertype = $usertype;
+        $this->data = $data;
     }
     
 
@@ -76,13 +78,19 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
 
             $student = ([
                 'regNo' => $row['enrolment_no'],
-                'initial' => $row['name'],
-                'address' => $row['address'],
                 'batch_id' => $this->batch_id,
                 'faculty_id' => $this->faculty_id,
-            ]); 
+            ]);
+            if(in_array('address',$this->data))
+            {
+                $student['address'] = $row['address'];
+            }
+            if(in_array('initial',$this->data))
+            {
+                $student['initial'] = $row['name'];
+            }
             $student['id'] = User::where('username', $row['enrolment_no'])->firstOrFail()->id;
-
+            dd($student);
             Student::updateOrCreate(['regNo' => $row['enrolment_no']],$student);
         }
     }
