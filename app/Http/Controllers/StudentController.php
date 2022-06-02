@@ -31,6 +31,13 @@ class StudentController extends Controller
         'regex' => 'The :attribute format is invalid.',
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
+        'integer' => 'The :attribute should be an integer.',
+        'boolean' => 'The :attribute should be a boolean.',
+        'array' => 'The :attribute should be an array.',
+        'distinct' => 'The :attribute field has a duplicate value.',
+        'active_url' => 'The :attribute is not an active URL.',
+        'url' => 'The :attribute is not a valid URL.',
+
     ];
 
     /**
@@ -286,14 +293,14 @@ class StudentController extends Controller
     public function editSocialMedia($username)
     {
         $data = request()->validate([
-            'cv' => ['string', 'max: 200', 'nullable'],
-            'website' => ['string', 'max: 200', 'nullable'],
-            'facebook' => ['string', 'max: 200', 'nullable'],
-            'linkedin' => ['string', 'max: 200', 'nullable'],
-            'twitter' => ['string', 'max: 200', 'nullable'],
-            'instagram' => ['string', 'max: 200', 'nullable'],
-            'discord' => ['string', 'max: 200', 'nullable'],
-            'medium' => ['string', 'max: 200', 'nullable'],
+            'cv' => ['url','active_url', 'max: 200', 'nullable'],
+            'website' => ['url','active_url', 'max: 200', 'nullable'],
+            'facebook' => ['url','active_url', 'max: 200', 'nullable'],
+            'linkedin' => ['url','active_url', 'max: 200', 'nullable'],
+            'twitter' => ['url','active_url', 'max: 200', 'nullable'],
+            'instagram' => ['url','active_url', 'max: 200', 'nullable'],
+            'discord' => ['url','active_url', 'max: 200', 'nullable'],
+            'medium' => ['url','active_url', 'max: 200', 'nullable'],
         ], $this->messages);
 
         $user = \App\Models\User::where('username', $username)->firstOrfail();
