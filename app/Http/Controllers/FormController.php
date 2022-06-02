@@ -91,18 +91,18 @@ class FormController extends Controller
         return view('form.verification');
     }
 
-    //updating the password field 
-    public function updatePassword($username)
-    {
-        $data = request()->validate([
-            'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
-        ], $this->messages);
+    // //updating the password field 
+    // public function updatePassword($username)
+    // {
+    //     $data = request()->validate([
+    //         'password' => ['required', 'string', 'min:'.env("USERS_PASSWORD_MIN"), 'max:'.env("USERS_PASSWORD_MAX"), 'confirmed'],
+    //     ], $this->messages);
 
-        $data['password'] = Hash::make($data['password']);
-        User::where('username', $username)->update($data);
+    //     $data['password'] = Hash::make($data['password']);
+    //     User::where('username', $username)->update($data);
 
-        return redirect('/');
-    }
+    //     return redirect('/');
+    // }
 
     // Academic staff froum selection method. (TO BE DEVELOPED)
     public function academicForm()
@@ -160,8 +160,14 @@ class FormController extends Controller
         // Create the user
         User::create($user);
 
+        /**
+         * Retrive the created user in case we want to delete him at the end of the process.
+         * User will be deleted if system could not send a email
+         */
+        $createdUser = User::where('username', $user['username'])->firstOrFail();
+
         // Retrive the foreign key of students table
-        $student['id'] = User::where('username', $user['username'])->firstOrFail()->id;
+        $student['id'] = $createdUser->id;
         
         // Automatically activeate the account when user fill the form.
         $student['is_activated'] = true;
@@ -184,9 +190,15 @@ class FormController extends Controller
         }
 
         //Mail sending procedure
-        Mail::to($user['email'])->send(new FormVerificationMail($user["username"]));
+        try  {
+            Mail::to($user['email'])->send(new FormVerificationMail($user["username"]));
+        } catch(\Throwable $th) {
+            $createdUser->delete();
+            return redirect('/form/student')->with('message', 'Something went wrong. Please try again later!')->with('color', 'danger');
+        }
+        
 
-        return redirect('/form/student')->with('message', 'Form data entered Succesfully!!');
+        return redirect('/form/student')->with('message', 'Form data entered Succesfully!!')->with('color', 'success');
     }
 
     /**
@@ -389,7 +401,7 @@ class FormController extends Controller
         // Update the entry
         $previousStudentData->update($student);
 
-        return redirect('/')->with('message', 'Form data resubmitted Succesfully!!');
+        return redirect('/')->with('message', 'Form data resubmitted Succesfully!!')->with('color', 'success');
     }
 
     // first time login form data will be displayed for the user

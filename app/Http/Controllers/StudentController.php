@@ -88,7 +88,7 @@ class StudentController extends Controller
             $data['password_set'] = true;
             $user->update($data);
 
-            return redirect('/');
+            return redirect('/')->with('message', 'Password succesfully Updated!')->with('color', 'success');
         }
         
         abort(419);

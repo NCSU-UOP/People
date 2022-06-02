@@ -31,9 +31,9 @@
     @yield('css-header')
 
     <!-- favicon -->
-    <link rel="icon" href="img/favicon.png">
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
     <!-- apple touch icon -->
-    <link rel="apple-touch-icon" href="img/favicon.png">
+    <link rel="apple-touch-icon" href="{{ asset('img/favicon.ico') }}">
 </head>
     
 <body class="d-flex flex-column min-vh-100">
