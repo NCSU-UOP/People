@@ -150,7 +150,7 @@ class FormController extends Controller
             'department_id' => ['required','int', 'exists:departments,id'],
             'batch_id' => ['required','int','exists:batches,id'],
             'regNo' => ['required','string','unique:students', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
-            'image' => ['required','image'],
+            'image' => ['required','image','dimensions:min_width=410,min_height=410,max_width=1920,max_height=1080'],
         ], $this->messages);
 
         
@@ -347,7 +347,7 @@ class FormController extends Controller
             'department_id' => ['required','int', 'exists:departments,id'],
             'batch_id' => ['required','int','exists:batches,id'],
             'regNo' => ['required','string'],
-            'image' => ['image'],
+            'image' => ['image','dimensions:min_width=410,min_height=410,max_width=1920,max_height=1080'],
         ], $this->messages);
 
         // Process the registration number
@@ -454,7 +454,7 @@ class FormController extends Controller
             'city' => ['required','string', 'max:'.env("STUDENTS_CITY_MAX")],
             'province' => ['required','string', 'max:'.env("STUDENTS_PROVINCE_MAX")],
             'department_id' => ['required','int', 'exists:departments,id'],
-            'image' => ['image'],
+            'image' => ['image','dimensions:min_width=410,min_height=410,max_width=1920,max_height=1080'],
             'email' => ['required','email'],
         ], $this->messages);
         // dd($student);
@@ -495,6 +495,6 @@ class FormController extends Controller
         // Update the entry
         $importedStudentData->update($student);
 
-        return redirect('uop/student/profile/'.$username)->with('message', 'Form data resubmitted Succesfully!!');
+        return redirect('uop/student/profile/'.$username)->with('message', 'Form data submitted Succesfully!!');
     }
 }
