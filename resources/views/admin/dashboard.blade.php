@@ -76,7 +76,6 @@
                 <h2 class="text-center">Excel File Importation Details</h2>
             </div>
             @php $excelfilelist_array = json_decode($excelfile_list); @endphp
-            @php echo(count($excelfilelist_array)) @endphp
             <div class ="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -168,6 +167,9 @@
         @endsection
 
     @else
+        @section('navbar-item')
+            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
+        @endsection
         <main class="container">
         <h1>{{$facultyName}}</h1>
         <nav aria-label="breadcrumb">
@@ -197,6 +199,77 @@
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <div class="p-3 pb-3 rounded">
+                <h2 class="text-center">Excel File Importation Details</h2>
+            </div>
+            @php $excelfilelist_array = json_decode($excelfile_list); @endphp
+            <div class ="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Usertype</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Batch</th>
+                        <th scope="col">Uploaded by</th>
+                        <th scope="col">link</th>
+                        <th scope="col">Is_Imported</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    @if(count($excelfilelist_array)>0)
+                    <tbody>
+                    @foreach($excelfilelist_array as $excelfile)
+                        @if($excelfile->username == Auth::user()->username)
+                            <tr>
+                                <th scope="row">{{$excelfile->id}}</th>
+                                <td>{{$excelfile->excel_filename}}</td>
+                                <td>{{$excelfile->usertype}}</td>
+                                <td>{{$excelfile->faculty}}</td>
+                                <td>
+                                    @if($excelfile->batch_id == NULL)
+                                        N/A
+                                    @elseif($excelfile->imported == 0)
+                                        {{$excelfile->batch_id}}
+                                    @endif
+                                </td>
+                                <td>{{$excelfile->username}}</td>
+                                <td>{{$excelfile->attributes}}</td>
+                                <td>
+                                    @if($excelfile->imported == 1)
+                                        <i class="bi bi-check-circle-fill" style="color:#48BB78;"></i>
+                                    @elseif($excelfile->imported == 0)
+                                        <i class="bi bi-x-circle-fill" style="color:#ED8936;"></i>
+                                    @endif
+                                </td>
+                                <td><button type="button" class="btn btn-primary btn-sm" role="button" onclick="showPreview('{{$excelfile->excel_filename}}')">Preview</button></td>
+                                @if($excelfile->imported == 1)
+                                    <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">Import</a></td>
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">RollBack</a></td>
+                                    <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete" aria-disabled="true">Remove</a></td>
+                                @elseif($excelfile->imported == 0)
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">Import</a></td>
+                                    <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td>
+                                    <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td>
+                                @endif
+                            </tr>
+                        @endif
+                    @endforeach
+                    </tbody>
+                    @else
+                        <tbody>
+                            <tr>
+                                <td colspan="9" class="text-center">No data found</td>
+                            </tr>
+                        </tbody>
+                    @endif
+                </table>
+            </div>
+        </div>
+        
         @section('AdminCharts')
             <div class="container">
             <div class="pt-3 rounded">
@@ -234,7 +307,6 @@
 
 
 @section('admin-page-scripts')
-@if(Auth::user()->admins()->first()->is_admin === 1)
 @if(count($excelfilelist_array)>0)
 <script>
     function showPreview(title) {
@@ -256,7 +328,6 @@
         })();
     }
 </script>
-@endif
 @endif
 @endsection
 

@@ -18,7 +18,7 @@
   @endif
   
     <!-- ======= Hero Section ======= -->
-    <section id="hero" class="d-flex align-items-center">
+    <section id="hero" class="d-flex align-items-center" style="padding-bottom: 200px">
       <div
         class="container position-relative"
         data-aos="fade-up"
@@ -33,68 +33,10 @@
         <div class="text-center">
           <a href="#about" class="btn-get-started scrollto">Explore</a>
         </div>
-
-        <div class="row icon-boxes">
-          <div
-            class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
-            data-aos="zoom-in"
-            data-aos-delay="200"
-            style="justify-content: center;"
-          >
-            <div class="icon-box">
-              <div class="icon"><i class="ri-user-2-fill"></i></div>
-              <h4 class="title"><a href="">Academic Staff</a></h4>
-              <p class="description">
-                500+
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
-            data-aos="zoom-in"
-            data-aos-delay="300"
-            style="justify-content: center;"
-          >
-            <div class="icon-box">
-              <div class="icon"><i class="ri-team-fill"></i></div>
-              <h4 class="title"><a href="">Students</a></h4>
-              <p class="description">
-                10000+
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
-            data-aos="zoom-in"
-            data-aos-delay="400"
-            style="justify-content: center;"
-          >
-            <div class="icon-box">
-              <div class="icon"><i class="ri-user-star-fill"></i></div>
-              <h4 class="title"><a href="">Registered Graduates</a></h4>
-              <p class="description">
-                15000+
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0"
-            data-aos="zoom-in"
-            data-aos-delay="500"
-            style="justify-content: center;"
-          >
-            <div class="icon-box">
-              <div class="icon"><i class="ri-group-fill"></i></div>
-              <h4 class="title"><a href="">Non-Academic Staff</a></h4>
-              <p class="description">
-                1000+
-              </p>
-            </div>
-          </div>
-        </div>
+        <div style="position: relative; padding-top: 100px; height: 100px width: 100px"></div>
+      </div>
+      <div id="anim" class="containeranim animate-style">
+      <div id="anim1"></div>
       </div>
     </section>
     <!-- End Hero -->

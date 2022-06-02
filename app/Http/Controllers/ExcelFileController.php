@@ -92,7 +92,7 @@ class ExcelFileController extends Controller
             'faculty_id' => ['required','int','exists:faculties,id'],
             'batch_id' => ['int','exists:batches,id'],
             'excel_file' => ['required', 'file', 'mimes:xlsx', 'max:2048'],
-            'excelAttributes' => ['required', 'array'],
+            'excelAttributes' => ['array'],
         ], $this->messages);
 
         dd($Data);
