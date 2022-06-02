@@ -55,17 +55,26 @@ class LoginController extends Controller
             return $response;
         }
 
-        if (auth()->user()->usertype == env('ADMIN')) {
+        $user = auth()->user();
+
+        if ($user->usertype == env('ADMIN')) {
             return $request->wantsJson()
                     ? new JsonResponse([], 204)
                     : redirect()->intended($this->redirectPath());
         }
 
-        $username = auth()->user()->username;
+        // dd($user->students()->firstOrfail());
 
-        return $request->wantsJson()
-                    ? new JsonResponse([], 204)
-                    : redirect('uop/student/profile/'.$username);
+        if($user->students()->firstOrfail()->is_activated ==1){
+            return $request->wantsJson()
+                        ? new JsonResponse([], 204)
+                        : redirect('uop/student/profile/'.$user->username);
+        }
+        if($user->students()->firstOrfail()->is_activated ==0){
+            return $request->wantsJson()
+                        ? new JsonResponse([], 204)
+                        : redirect('uop/student/firstlogin/'.$user->username);
+        }
         
     }
 
