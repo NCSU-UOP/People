@@ -34,6 +34,7 @@ class FormController extends Controller
         'email' => 'Invalid email.',
         'string' => 'The :attribute should be a string.',
         'integer' => 'The :attribute field is required.',
+        'dimensions' => 'The :attribute has invalid image dimensions.',
     ];
 
     //form selection method
