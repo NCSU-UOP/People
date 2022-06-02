@@ -74,6 +74,8 @@ Route::prefix('uop')->group(function () {
     // student category
     Route::group(['middleware' => ['unverified']], function () {
         Route::get('/student/profile/{username}', [App\Http\Controllers\PeopleController::class, 'getProfileDetails'])->name('people.profile');
+        Route::get('/student/firstlogin/{username}', [App\Http\Controllers\FormController::class, 'get_firstlogin_StudentForm']);
+        Route::post('/student/firstlogin/{username}', [App\Http\Controllers\FormController::class, 'store_firstlogin_StudentForm']);
     });
 });
 

@@ -105,12 +105,12 @@
                         <div class="row mb-3">
                             <label class="col-md-4 col-form-label text-md-end">Attributes in Excel</label>    
                             <div class="col-md-6">
-                                <div class="form-check">
+                                <!-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="excelAttributes[]" value="fullname" id="flexCheckfullname">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     fullname
                                 </label>
-                                </div>
+                                </div> -->
                                 <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="excelAttributes[]" value="initial" id="flexCheckinitial">
                                 <label class="form-check-label" for="flexCheckChecked">
@@ -123,12 +123,12 @@
                                     address
                                 </label>
                                 </div>
-                                <div class="form-check">
+                                <!-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="excelAttributes[]" value="email" id="flexCheckemail">
                                 <label class="form-check-label" for="flexCheckChecked">
                                     email
                                 </label>
-                                </div>
+                                </div> -->
                                 <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="excelAttributes[]" value="telephone" id="flexChecktelephone">
                                 <label class="form-check-label" for="flexCheckChecked">

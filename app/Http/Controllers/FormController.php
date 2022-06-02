@@ -403,4 +403,110 @@ class FormController extends Controller
 
         return redirect('/')->with('message', 'Form data resubmitted Succesfully!!')->with('color', 'success');
     }
+
+    // first time login form data will be displayed for the user
+    public function get_firstlogin_StudentForm($username)
+    {
+        $Imported_UserData = User::where('username', $username)->firstOrfail();
+
+        $provinces = [
+            'Central Province',
+            'Eastern Province',
+            'North Central Province',
+            'Northern Province',
+            'North Western Province',
+            'Sabaragamuwa Province',
+            'Southern Province',
+            'Uva Province',
+            'Western Province'
+        ];
+
+        $departments = [];
+        // $faculties = Faculty::select('id', 'name')->orderBy('name')->get()->toArray();
+        // $facultyCodes = Faculty::select('code')->orderBy('name')->get()->toArray();
+
+        // Retrive user information to auto fill data fields
+        $student = $Imported_UserData->students()->firstOrfail();
+        $student->email = $Imported_UserData->email;
+        $student->username = $Imported_UserData->username;
+        $student->facultyname = Faculty::find($student->faculty_id)->name;
+
+        $departments = Faculty::find($student->faculty_id)->departments()->select('id', 'name')->get()->toArray();
+        
+        // if(Faculty::where('code', 'AHS')->exists()){
+        //     $departmentCodesAHS = Department::select('code')->where('faculty_id', Faculty::where('code', "AHS")->firstOrfail()->id)->get()->toArray();
+        // }
+        // $batches = Batch::select('id')->get()->toArray();
+
+        // To fill the registration number placeholder
+        $regNoArray = explode('/', $student->regNo);
+        $student->code = implode("/", explode('/', $student->regNo, -1));
+        $student->regNo = end($regNoArray);
+        // dd($student);
+        // $tempDepartment = Faculty::find($student['faculty_id'])->departments()->select('id', 'name')->get()->toArray();
+
+        return view('form.firstlogin')
+            ->with('student', $student->toArray())
+            ->with('departments', json_encode($departments))
+            ->with('provinces', $provinces);
+    }
+
+    // submit the one time form data
+    public function store_firstlogin_StudentForm($username)
+    {
+        // dd($username);
+        // $importedStudentData = User::where('username', $username)->firstOrfail()->students();
+        $importedStudentData = Student::where('id',User::select('id')->where('username', $username)->firstOrfail()->id)->firstOrfail();
+        // dd(Student::where('id',User::select('id')->where('username', $username)->firstOrfail()->id)->firstOrfail());
+        $student = request()->validate([
+            'preferedname' => ['required','string', 'max:'.env("STUDENTS_PREFEREDNAME_MAX")],
+            'fullname' => ['required','string', 'max:'.env("STUDENTS_FULLNAME_MAX")],
+            'initial' => ['required','string', 'max:'.env("STUDENTS_INITIAL_MAX")],
+            'address' => ['required','string', 'max:'.env("STUDENTS_ADDRESS_MAX")],
+            'city' => ['required','string', 'max:'.env("STUDENTS_CITY_MAX")],
+            'province' => ['required','string', 'max:'.env("STUDENTS_PROVINCE_MAX")],
+            'department_id' => ['required','int', 'exists:departments,id'],
+            'image' => ['image'],
+            'email' => ['required','email'],
+        ], $this->messages);
+        // dd($student);
+        // Process the registration number
+        // if(request()->has(['regNo', 'faculty_id', 'batch_id', 'department_id'])) {
+        //     $student['regNo'] = $this->createRegNo(request()->faculty_id, request()->batch_id, request()->department_id, request()->regNo);
+        // } else {
+        //     abort(400);
+        // }
+        
+        // Check the resubmitted registratino number is already in use by another student?
+        // $validator = Validator::make($student, [
+        //     'regNo' => ['unique:students,regNo', 'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'],
+        // ], $this->messages);
+
+        // if ($validator->fails() && !$previousStudentData->where('regNo', $student['regNo'])->exists()) {
+        //     return back()
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
+        // dd($importedStudentData);
+        // Retrive the faculty code
+        $facultyCode = Faculty::where('id', $importedStudentData['faculty_id'])->firstOrFail()->code;
+        
+        // Create the image directory if not exists
+        $paths = $this->createDirectory($facultyCode, 'Student', $importedStudentData['batch_id'], $importedStudentData['regNo']);
+
+        // Store the image in the respective directory
+        $path = $this->storeImage($paths, $importedStudentData['regNo'], $student['image']);
+
+        // Change the image path in the user data
+        $student['image'] = $path;
+
+        // To evaluate student's informatino again
+        $student['is_activated'] = 1;
+        $student['is_verified'] = 1;
+
+        // Update the entry
+        $importedStudentData->update($student);
+
+        return redirect('uop/student/profile/'.$username)->with('message', 'Form data resubmitted Succesfully!!');
+    }
 }
