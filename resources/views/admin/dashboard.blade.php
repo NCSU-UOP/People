@@ -247,11 +247,11 @@
                                 </td>
                                 <td><button type="button" class="btn btn-primary btn-sm" role="button" onclick="showPreview('{{$excelfile->excel_filename}}')">Preview</button></td>
                                 @if($excelfile->imported == 1)
-                                    <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">Imported</a></td>
+                                    <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" aria-disabled="true">Imported</a></td>
                                     <!-- <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete" aria-disabled="true">Remove</a></td> -->
                                 @elseif($excelfile->imported == 0)
-                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">Import</a></td>
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}">Import</a></td>
                                     <!-- <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td> -->
                                     @if($failures != null)
@@ -275,7 +275,7 @@
                                         @endforeach
                                     @endif
                                 @endif
-                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td>
+                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/remove/excelfile/{{$excelfile->id}}">Remove</a></td>
                             </tr>
                         @endif
                     @endforeach

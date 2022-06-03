@@ -34,6 +34,7 @@ class ExcelFileController extends Controller
     //function to import excel file, $id should be given from the route as a parameter
     public function importExcelFile($id)
     {   
+        dd("bulk function implimented!");
         $excel_details = ExcelDetails::where('id', $id)->first();
         $excel_filename = $excel_details->excel_filename;
         $excel_attributes = json_decode($excel_details->attributes);
@@ -70,12 +71,13 @@ class ExcelFileController extends Controller
     //finally remove the excel file from the public folder and corresponding entry is deleted from excel_details table 
     public function removeExcelFile($id)
     {   
+        dd("bulk function implimented!");
         $excel_details = ExcelDetails::where('id', $id)->first();
         $imported_user_list = User::where('imported_excel_id', $id)->get();
         $excel_filename = $excel_details->excel_filename;
         if(count($imported_user_list) > 0 && ($excel_details->is_imported)){
             foreach($imported_user_list as $user){
-                $user->delete_from_ad();  //!TODO impliment this function (do we need to remove them from AD or just delete them from the database allowing the entries to update when correct excel file imported?)
+                // delete_from_ad($user);  //!TODO impliment this function (do we need to remove them from AD or just delete them from the database allowing the entries to update when correct excel file imported?)
                 $user->delete();
             }
             $excel_details->delete();
