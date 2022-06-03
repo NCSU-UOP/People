@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
     <div class="col-md-8">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header text-center">
             <div class="container p-2 pb-2 rounded"><h1 class="font-weight-bold">Edit user details</h1></div>
         </div>
         <div class="card-body">
