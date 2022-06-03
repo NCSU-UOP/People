@@ -56,7 +56,7 @@
                                                     <b>1.5</b>
                                                     <span>
                                                         Columns for <b>address</b>, <b>telephone</b>, <b>city</b>, <b>province</b> are optional.
-                                                        If these columns are present in the excel file, please select them when you are uploading excel file. they will be imported. Please note column names are <b style="color: #DE1738;">case sensitive</b>. 
+                                                        If these columns, present in the excel file, please select them when you are uploading excel file. they will be imported. Please note: column names are <b style="color: #DE1738;">case sensitive</b>. 
                                                     </span>
                                                 </p>
                                             </li>
@@ -65,7 +65,7 @@
                                                     <b>1.6</b>
                                                     <span>
                                                         It is preferred that excel file <b>does not contain empty rows.</b> Empty rows are the rows which had data in the original file but deleted later.
-                                                        You need to delete the row too. <br> Please follow this <a href="https://www.groovypost.com/howto/find-and-delete-blank-rows-in-microsoft-excel/">tutorial</a> if you do not know how to delete empty rows in excel file.
+                                                        You need to delete the row too. <br> Please follow this <a href="https://www.groovypost.com/howto/find-and-delete-blank-rows-in-microsoft-excel/">tutorial</a> if you do not know how to delete empty rows in a excel file.
                                                     </span>
                                                 </p>
                                             </li>
