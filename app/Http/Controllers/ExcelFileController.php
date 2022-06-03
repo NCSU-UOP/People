@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ExcelDetails;
 use App\Models\Faculty;
 use App\Models\Batch;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class ExcelFileController extends Controller
     //function to import excel file, $id should be given from the route as a parameter
     public function importExcelFile($id)
     {   
-        dd("bulk function implimented!");
+        // dd("bulk function implimented!");
         $excel_details = ExcelDetails::where('id', $id)->first();
         $excel_filename = $excel_details->excel_filename;
         $excel_attributes = json_decode($excel_details->attributes);
@@ -43,10 +44,15 @@ class ExcelFileController extends Controller
         $batch_id = $excel_details->batch_id;
         // $department_id = $excel_details->department_id;
         $faculty_id = $excel_details->faculty_id;
+        $attributes = [];
+
+        if ($excel_attributes != null){
+            $attributes = $excel_attributes;
+        }
 
 
         try {
-            $import = new UsersImport($faculty_id,$batch_id,$usertype,$excel_attributes,$id);
+            $import = new UsersImport($faculty_id,$batch_id,$usertype,$attributes,$id);
             $import->import(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
             $excel_details->is_imported = true;
             $excel_details->save();
@@ -71,10 +77,11 @@ class ExcelFileController extends Controller
     //finally remove the excel file from the public folder and corresponding entry is deleted from excel_details table 
     public function removeExcelFile($id)
     {   
-        dd("bulk function implimented!");
+        // dd("bulk function implimented!");
         $excel_details = ExcelDetails::where('id', $id)->first();
         $imported_user_list = User::where('imported_excel_id', $id)->get();
         $excel_filename = $excel_details->excel_filename;
+        dd(count($imported_user_list));
         if(count($imported_user_list) > 0 && ($excel_details->is_imported)){
             foreach($imported_user_list as $user){
                 // delete_from_ad($user);  //!TODO impliment this function (do we need to remove them from AD or just delete them from the database allowing the entries to update when correct excel file imported?)
