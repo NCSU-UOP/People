@@ -98,6 +98,8 @@ Route::group(['middleware' => ['admin.users']], function () {
         // route: go to the excel file upload form and uploading excel file routes
         Route::get('add/excelfile', [App\Http\Controllers\ExcelFileController::class, 'addExcelFile']);
         Route::post('add/excelfile', [App\Http\Controllers\ExcelFileController::class, 'uploadExcelFile']);
+        Route::get('import/excelfile/{id}', [App\Http\Controllers\ExcelFileController::class, 'importExcelFile']);
+        Route::get('remove/excelfile/{id}', [App\Http\Controllers\ExcelFileController::class, 'removeExcelFile']);
 
         /**
          * Routes that can be only access by the super admins
