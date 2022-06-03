@@ -35,8 +35,8 @@ class ExcelFileController extends Controller
     public function importExcelFile($id)
     {   
         $excel_details = ExcelDetails::where('id', $id)->first();
-        $excel_file_attributes = $excel_details->attributes;
         $excel_filename = $excel_details->excel_filename;
+        $excel_attributes = json_decode($excel_details->attributes);
         $usertype = $excel_details->usertype;
         $admin_id = $excel_details->admin_id;
         $batch_id = $excel_details->batch_id;
@@ -45,7 +45,7 @@ class ExcelFileController extends Controller
 
 
         try {
-            $import = new UsersImport($faculty_id,$batch_id,$usertype,$id);
+            $import = new UsersImport($faculty_id,$batch_id,$usertype,$excel_attributes,$id);
             $import->import(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
             $excel_details->is_imported = true;
             $excel_details->save();
@@ -70,7 +70,23 @@ class ExcelFileController extends Controller
     //finally remove the excel file from the public folder and corresponding entry is deleted from excel_details table 
     public function removeExcelFile($id)
     {   
-
+        $excel_details = ExcelDetails::where('id', $id)->first();
+        $imported_user_list = User::where('imported_excel_id', $id)->get();
+        $excel_filename = $excel_details->excel_filename;
+        if(count($imported_user_list) > 0 && ($excel_details->is_imported)){
+            foreach($imported_user_list as $user){
+                $user->delete_from_ad();  //!TODO impliment this function (do we need to remove them from AD or just delete them from the database allowing the entries to update when correct excel file imported?)
+                $user->delete();
+            }
+            $excel_details->delete();
+            unlink(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
+            return redirect()->back()->with('success', 'Excel file removed, Database and AD cleared!');
+        }
+        elseif(!($excel_details->is_imported)){
+            $excel_details->delete();
+            unlink(public_path('/uploads/excelfiles/'.$excel_filename.'.xlsx'));
+            return redirect()->back()->with('success', 'Excel file removed!');
+        }
     }
 
     // (Super Admin) add excel file
@@ -97,6 +113,7 @@ class ExcelFileController extends Controller
 
         dd($Data);
         //!TODO should implement storing the excel file in public folder and storing the details in the database
+        //!important before storing excelattributes list do json_encode
         // dd($adminData);
 
         // return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
