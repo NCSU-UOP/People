@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Upload Excel File</div>
+                <div class="card-header text-center">Upload Excel File</div>
 
                 <div class="card-body">
                     <form method="POST" action="/dashboard/add/excelfile" enctype="multipart/form-data">
@@ -82,26 +82,6 @@
                             </div>
                         </div>
 
-                        <!-- <div class="row mb-3">
-                            <label class="col-md-4 col-form-label text-md-end">Type</label>
-                            
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault1" value=1>
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Super admin
-                                    </label>
-                                    </div>
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_admin" id="flexRadioDefault2" value=0 checked>
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        Admin
-                                    </label>
-                                </div>
-                            </div>
-                    
-                        </div> -->
-
                         <div class="row mb-3">
                             <label class="col-md-4 col-form-label text-md-end">Attributes in Excel</label>    
                             <div class="col-md-6">
@@ -169,6 +149,9 @@
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="card-footer text-center alert alert-primary" role="alert" style="margin-bottom: 0px;">
+                    Please follow <a href="/guidelines" class="alert-link">Guidelines</a>. Before uploading excel file.
                 </div>
             </div>
         </div>
