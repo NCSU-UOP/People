@@ -86,6 +86,11 @@ Route::group(['middleware' => ['admin.users']], function () {
     // route: change account visibility
     Route::put('/changeVisibility', [App\Http\Controllers\PeopleController::class, 'changeVisibility']);
 
+    // route: get guidelines
+    Route::get('/guidelines', function () {
+    return view('guidelines.adminGuidelines');
+    });
+
     // route: dashboard/
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('dashboard');

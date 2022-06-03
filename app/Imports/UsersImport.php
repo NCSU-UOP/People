@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\User;
 use App\Models\Student;
+use App\Models\Faculty;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -22,29 +23,8 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 
-
-
-
-// class UsersImport implements ToModel, WithHeadingRow, WithProgressBar, SkipsEmptyRows
-// {
-//     use Importable;
-//     /**
-//     * @param array $row
-//     *
-//     * @return \Illuminate\Database\Eloquent\Model|null
-//     */
-//     public function model(array $row)
-//     {
-//         // dd($row);
-        
-//         return new User([
-//             'username' => $row['enrolment_no'],
-//             'usertype' => $row['usertype'],
-//             'password' => $row['nic'],
-//         ]);
-//     }
-// }
 
 
 class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, SkipsEmptyRows, WithValidation
@@ -54,13 +34,16 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
     private $batch_id;
     private $usertype;
     private array $data = [];
+    private $excelfile_id;
 
-    public function __construct(int $faculty_id,int $batch_id,int $usertype,array $data)
+    public function __construct(int $faculty_id,int $batch_id,int $usertype,array $data,int $excelfile_id)
     {
         $this->faculty_id = $faculty_id;
         $this->batch_id = $batch_id;
         $this->usertype = $usertype;
         $this->data = $data;
+        $this->excelfile_id = $excelfile_id;
+
     }
     
 
@@ -69,17 +52,24 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
         foreach ($rows as $row) 
         {
             // dd($this->faculty_id);
+
             //creating a user in user table for each row in excel file
-            User::updateOrCreate(['username' => $row['enrolment_no'],'password' => $row['nic']],[
-                'username' => $row['enrolment_no'],
+            // withValidator();
+            $Username = str_replace(array('/'), '',$row['enrolment_no']);
+            $password = Hash::make($row['nic']);
+            // dd($removed);
+            User::updateOrCreate(['username' => $Username],[
+                'username' => $Username, 
                 'usertype' => $this->usertype,
-                'password' => $row['nic'],
+                'password' => $password,
+                'imported_excel_id' => $this->excelfile_id,
             ]);
 
             $student = ([
                 'regNo' => $row['enrolment_no'],
                 'batch_id' => $this->batch_id,
                 'faculty_id' => $this->faculty_id,
+                'fullname' => $row['full_name'],
             ]);
             if(in_array('address',$this->data))
             {
@@ -89,9 +79,11 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
             {
                 $student['initial'] = $row['name'];
             }
-            $student['id'] = User::where('username', $row['enrolment_no'])->firstOrFail()->id;
-            dd($student);
+            $student['id'] = User::where('username', $Username)->firstOrFail()->id;
+            // dd($student);
             Student::updateOrCreate(['regNo' => $row['enrolment_no']],$student);
+
+            //!TODO add each user to AD
         }
     }
 
@@ -102,7 +94,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
                 'required',
                 'string',
                 // 'unique:students,regNo', 
-                'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/'
+                'regex:/^([A-Z]{1,3}\/{1}+\d{2}?(\/{1}+[A-Z]{3})?\/{1}+\d{3})$/',
             ],
             'address' => [
                 'required',
@@ -129,5 +121,26 @@ class UsersImport implements ToCollection, WithHeadingRow, WithProgressBar, Skip
             'nic.regex' => 'The :attribute format is invalid.',
 
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->stopOnFirstFailure()->after(function ($validator) {
+            $enrolment_no_list = Arr::pluck($validator->getData(), 'enrolment_no');
+            // dd($enrolment_no_list);
+            $count = 0;
+            foreach ($enrolment_no_list as $enrolment_no) {
+                $regNoArray = explode('/', $enrolment_no);
+                $faccode = Faculty::where('id', $this->faculty_id)->firstOrFail()->code;
+                if ($regNoArray[0] != $faccode) {
+                    $validator->errors()->add( $count+1 , 'Faculty selection is wrong!');
+                }
+                if ($regNoArray[1] != $this->batch_id){
+                    $validator->errors()->add( $count+1 , 'Batch selection is wrong!');
+                }
+                $count++;
+            }
+            // dd($count);
+        });
     }
 }

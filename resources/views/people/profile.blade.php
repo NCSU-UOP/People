@@ -253,7 +253,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center text-center">
                         <img src="{{$student['image']}}" alt="image" style="border-radius: 10%" width="200">
-                        <div class="mt-2"><h4>{{$student['fullname']}}</h4></div>
+                        <div class="mt-2"><h4>{{$student['preferedname']}}</h4></div>
                         <h5 class="text-muted"> {{"@".$student['username']}}</h5>
                     </div>
                     <div class="d-flex flex-column border border-3 mt-3 p-3">
@@ -348,15 +348,6 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-3">
-                            <span class="mb-0" style="font-weight: 500">Name with Initials</span>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            {{$student['initial']}}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
                             <span class="mb-0" style="font-weight: 500">Faculty</span>
                         </div>
                         <div class="col-sm-9 text-secondary">
@@ -372,21 +363,12 @@
                             {{$student['regNo']}}
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <span class="mb-0" style="font-weight: 500">Department</span>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            {{$student['departmentName']}}
-                        </div>
-                    </div>
                 </div>    
             </div>
 
             <div class="card mb-3 pt-2">
                 <div class="card-header">
-                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i> Contact details</div>
+                    <div class="float-start" style="font-weight: 1000"><i class="bi bi-person-lines-fill"></i> Additional Details</div>
                     @auth
                         @if (Auth::user()->username == $student['username'] && $student['is_verified'])
                             <div class="float-end"><a type="button" data-bs-toggle="modal" data-bs-target="#contactstaticBackdrop" style="text-decoration: none; color:blue;"><i class="bi bi-pencil-square"></i> edit</a></div>
@@ -394,6 +376,24 @@
                     @endauth
                 </div>
             <div class="card-body">
+                <div class="row">
+                        <div class="col-sm-3">
+                            <span class="mb-0" style="font-weight: 500">Name with Initials</span>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{$student['initial']}}
+                        </div>
+                </div>
+                <hr>
+                <div class="row">
+                        <div class="col-sm-3">
+                            <span class="mb-0" style="font-weight: 500">Department</span>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{$student['departmentName']}}
+                        </div>
+                </div>
+                <hr>
                 <div class="row">
                     <div class="col-sm-3">
                         <span class="mb-0" style="font-weight: 500">Email</span>
