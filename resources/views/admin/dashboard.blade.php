@@ -7,6 +7,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session()->has('Error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session()->get('Error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     @if(Auth::user()->admins()->first()->is_admin === 1)
         @section('navbar-item')
@@ -117,14 +129,36 @@
                             </td>
                             <td><button type="button" class="btn btn-primary btn-sm" role="button" onclick="showPreview('{{$excelfile->excel_filename}}')">Preview</button></td>
                             @if($excelfile->imported == 1)
-                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">Import</a></td>
-                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">RollBack</a></td>
-                                <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete/{{$admin->id}}" aria-disabled="true">Remove</a></td>
-                            @elseif($excelfile->imported == 0)
-                                <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit/{{$admin->id}}">Import</a></td>
-                                <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit/{{$admin->id}}" aria-disabled="true">RollBack</a></td>
-                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete/{{$admin->id}}">Remove</a></td>
-                            @endif
+                                    <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" aria-disabled="true">Imported</a></td>
+                                    <!-- <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">RollBack</a></td> -->
+                                    <!-- <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete" aria-disabled="true">Remove</a></td> -->
+                                @elseif($excelfile->imported == 0)
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}">Import</a></td>
+                                    <!-- <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td> -->
+                                    <!-- <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td> -->
+                                    @if(session()->has('failures'))
+                                        @php $failures = session()->get('failures') @endphp
+                                        @foreach($failures as $failure)
+                                            <div class="alert alert-danger" role="alert">
+                                            @if($failure->attribute != null)
+                                            <h4 class="alert-heading">Error {{$failure->attribute()}}:{{$failure->errors()}}</h4>
+                                            @else
+                                            <h4 class="alert-heading">Error:{{$failure->errors()}}</h4>
+                                            @endif
+                                            <h3 class="alert-heading">@Row No:{{$failure->row()}}</h3>
+                                            @if($failure->values != null)
+                                            <hr>
+                                            <p class="mb-0">{{$failure->values()}}</p>
+                                            </div>
+                                            @else
+                                            <hr>
+                                            <p class="mb-0">We see that batch or faculty you entered doesn't match with the data in excel file. please check whether the excelfile is the correct one & try again. contact ncsu if you think you done it correctly!</p>
+                                            </div>
+                                            @endif   
+                                        @endforeach
+                                    @endif
+                                @endif
+                                <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/remove/excelfile/{{$excelfile->id}}">Remove</a></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -254,7 +288,8 @@
                                     <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}">Import</a></td>
                                     <!-- <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td> -->
-                                    @if($failures != null)
+                                    @if(session()->has('failures'))
+                                        @php $failures = session()->get('failures') @endphp
                                         @foreach($failures as $failure)
                                             <div class="alert alert-danger" role="alert">
                                             @if($failure->attribute != null)
