@@ -59,14 +59,16 @@ class ExcelFileController extends Controller
             return redirect()->back()->with('success', 'Excel file imported!');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
-            
+            // dd(gettype($failures));
             foreach ($failures as $failure) {
                 $failure->row(); // row that went wrong
                 $failure->attribute(); // either heading key (if using heading row concern) or column index
                 $failure->errors(); // Actual error messages from Laravel validator
                 $failure->values(); // The values of the row that has failed.
             }
-            return redirect()->back()->with('Error', 'Excel file import terminated!')->with('failures',$failures);
+            // dd($failures);
+            session(['failures' => $failures]);
+            return redirect()->back()->with('Error', 'Excel file import terminated!');
         }
 
     }
