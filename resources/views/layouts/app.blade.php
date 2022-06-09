@@ -12,12 +12,12 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
-    <script src="/js/particleWave.js" defer></script>
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @yield('profile-page-js')
     @yield('admin-page-js')
     @yield('excelupload-page-js')
+    @yield('landing-page-js')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

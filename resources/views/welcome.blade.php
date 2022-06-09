@@ -9,6 +9,11 @@
     <link href="{{ asset('css/landingpage.css') }}" rel="stylesheet" />
 @endsection
 
+@section('landing-page-js')
+    <!-- Landing page particle style JS File -->
+    <script src="/js/particleWave.js" defer></script>
+@endsection
+
 @section('content')
   @if(session()->has('message'))
   <div class="alert alert-{{session()->get('color')}} alert-dismissible fade show" role="alert">
