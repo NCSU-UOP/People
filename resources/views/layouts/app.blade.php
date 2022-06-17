@@ -70,9 +70,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/people" style="color: white;">People</a>
                         </li>
-                        <li class="nav-item">
+                        @if(Auth::user()->usertype == env('ADMIN'))
+                            <li class="nav-item">
+                            <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
                             <a class="nav-link" href="/form" style="color: white;">Form</a>
-                        </li>
+                            </li>
+                        @endif
 
                         <!-- Authentication Links -->
                         @guest
