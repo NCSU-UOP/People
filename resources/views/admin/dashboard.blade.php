@@ -114,7 +114,7 @@
                             <td>
                                 @if($excelfile->batch_id == NULL)
                                     N/A
-                                @elseif($excelfile->imported == 0)
+                                @else
                                     {{$excelfile->batch_id}}
                                 @endif
                             </td>
@@ -291,7 +291,7 @@
                                 <td>
                                     @if($excelfile->batch_id == NULL)
                                         N/A
-                                    @elseif($excelfile->imported == 0)
+                                    @else
                                         {{$excelfile->batch_id}}
                                     @endif
                                 </td>
