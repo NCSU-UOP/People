@@ -24,7 +24,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'searchStudents']);
 
-Route::get('/creaters', function () {
+// route: to get import status(further development needed)
+Route::get('/import-status/{id}', [App\Http\Controllers\ExcelFileController::class, 'status']);
+
+Route::get('/developers', function () {
     return view('people.team');
 });
 
