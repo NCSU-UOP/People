@@ -89,7 +89,7 @@
                         <th scope="col">Faculty</th>
                         <th scope="col">Batch</th>
                         <th scope="col">Uploaded by</th>
-                        <th scope="col">link</th>
+                        <th scope="col">Attributes</th>
                         <th scope="col">Is_Imported</th>
                         <th scope="col">Action</th>
                         </tr>
@@ -200,9 +200,9 @@
         <!-- Chart's container -->
         <div id="chart" style="height: 300px;"></div>
         <!-- Charting library -->
-        <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+        <script src="{{ asset('js/echarts.min.js') }}"></script>
         <!-- Chartisan -->
-        <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+        <script src="{{ asset('js/chartisan_echarts.js') }}"></script>
         <!-- Your application script -->
         <script>
         const chart = new Chartisan({
@@ -265,7 +265,7 @@
                         <th scope="col">Faculty</th>
                         <th scope="col">Batch</th>
                         <th scope="col">Uploaded by</th>
-                        <th scope="col">link</th>
+                        <th scope="col">Attributes</th>
                         <th scope="col">Is_Imported</th>
                         <th scope="col">Action</th>
                         </tr>
@@ -377,9 +377,9 @@
             <!-- Chart's container -->
             <div id="chart2" style="height: 300px;"></div>
             <!-- Charting library -->
-            <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+            <script src="{{ asset('js/echarts.min.js') }}"></script>
             <!-- Chartisan -->
-            <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+            <script src="{{ asset('js/chartisan_echarts.js') }}"></script>
             <!-- Your application script -->
             <script>
                 const chart = new Chartisan({
