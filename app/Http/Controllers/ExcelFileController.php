@@ -34,8 +34,12 @@ class ExcelFileController extends Controller
 
     //function to import excel file, $id should be given from the route as a parameter
     public function importExcelFile($id)
-    {   
-        // dd("bulk function implimented!");
+    {    
+        session()->forget('failures');
+        session()->forget('success');
+        session()->forget('error');
+        // session([ 'import' => $id ]);
+        // dd(session()->has('import'));
         $excel_details = ExcelDetails::where('id', $id)->first();
         $excel_filename = $excel_details->excel_filename;
         $excel_attributes = json_decode($excel_details->attributes);
@@ -128,5 +132,19 @@ class ExcelFileController extends Controller
         // dd($adminData);
 
         // return redirect('/dashboard')->with('message', 'User has been created Succesfully 👍');
+    }
+
+    // to get import status
+    public function status($id)
+    {
+        // $id = session('import');
+        // dd($id);
+
+        return response([
+            'started' => filled(cache("start_date_$id")),
+            'finished' => filled(cache("end_date_$id")),
+            'current_row' => (int) cache("current_row_$id"),
+            'total_rows' => (int) cache("total_rows_$id"),
+        ]);
     }
 }

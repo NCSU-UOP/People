@@ -19065,7 +19065,6 @@ function init() {
     container = document.createElement("div");
     const currentDiv = document.getElementById("anim1");
     const parentDiv = document.getElementById("anim");
-    console.log("hello");
     parentDiv.insertBefore(container, currentDiv);
 
     camera = new THREE.PerspectiveCamera(
