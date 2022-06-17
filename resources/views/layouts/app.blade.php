@@ -74,6 +74,10 @@
                             <li class="nav-item">
                             <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
                             </li>
+                        @elseif(Auth::user()->usertype == env('STUDENT'))
+                            <li class="nav-item">
+                            <a class="nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}" style="color: white;">Profile</a>
+                            </li>
                         @else
                             <li class="nav-item">
                             <a class="nav-link" href="/form" style="color: white;">Form</a>
@@ -100,19 +104,20 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    @if(Auth::user()->usertype == env('ADMIN'))
-                                    <a href="/dashboard" class="dropdown-item">Dashboard</a>
-
-                                    @elseif(Auth::user()->usertype == env('STUDENT'))
-                                    <a href="{{route('people.profile', ['username' => Auth::user()->username])}}" class="dropdown-item">Profile</a>
-                                    @endif
-
 
                                     @yield('navbar-item')
+                                    @if(Auth::user()->admins()->first()->is_admin === 1)
+                                        <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
+                                        <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
+                                        <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
+                                        <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
+                                        <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
+                                        <a href="/activity" class="dropdown-item">View site activity</a>
+                                    @endif
                                     
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 

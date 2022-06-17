@@ -21,15 +21,6 @@
     @endif
 
     @if(Auth::user()->admins()->first()->is_admin === 1)
-        @section('navbar-item')
-            <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
-            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
-            <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
-            <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
-            <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
-            <a href="/activity" class="dropdown-item">View site activity</a>
-        @endsection
-
         <div class="p-3 pb-3 rounded">
             <h1 class="text-center font-weight-bold">Super-Admin Dashboard</h1>
         </div>
