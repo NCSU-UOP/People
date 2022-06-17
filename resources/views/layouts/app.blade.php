@@ -28,6 +28,7 @@
     <link href="{{ asset('css/preloader.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet" />
     @yield('landing-page-css')
+    @yield('admin-page-css')
     @yield('css-header')
 
     <!-- favicon -->
@@ -156,6 +157,7 @@
 @yield('scripts-footer')
 @yield('search-script')
 @yield('admin-page-scripts')
+@yield('admin-page-scripts2')
 @yield('excel-preview-script')
 </body>
 </html>
