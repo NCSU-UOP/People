@@ -87,9 +87,10 @@ class ExcelFileController extends Controller
         $excel_details = ExcelDetails::where('id', $id)->first();
         $imported_user_list = User::where('imported_excel_id', $id)->get();
         $excel_filename = $excel_details->excel_filename;
-        dd(count($imported_user_list));
+        // dd(count($imported_user_list));
         if(count($imported_user_list) > 0 && ($excel_details->is_imported)){
             foreach($imported_user_list as $user){
+                
                 // delete_from_ad($user);  //!TODO impliment this function (do we need to remove them from AD or just delete them from the database allowing the entries to update when correct excel file imported?)
                 $user->delete();
             }
