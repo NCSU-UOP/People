@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'usertype',
         'password_set',
+        'imported_excel_id',
     ];
 
     /**
