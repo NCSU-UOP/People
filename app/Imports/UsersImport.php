@@ -33,6 +33,7 @@ use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Illuminate\Support\Facades\Cache;
+use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
 
 
@@ -40,6 +41,7 @@ class UsersImport implements OnEachRow, WithHeadingRow, WithProgressBar, SkipsEm
 {
     use Importable;
     use RemembersRowNumber;
+    use RegistersEventListeners;
     private $faculty_id;
     private $batch_id;
     private $usertype;
@@ -60,8 +62,8 @@ class UsersImport implements OnEachRow, WithHeadingRow, WithProgressBar, SkipsEm
     {
         $rowIndex = $row->getIndex();
         $row      = array_map('trim', $row->toArray());
-        cache()->forever("current_row_", $rowIndex);
-        dd(cache()->get("current_row_"));
+        cache()->put("current_row_{$this->excelfile_id}", $rowIndex);
+        // dd(cache()->get("current_row_"));
         // dd(now()->unix());
         // dd(session('hello'));
 
@@ -159,14 +161,16 @@ class UsersImport implements OnEachRow, WithHeadingRow, WithProgressBar, SkipsEm
         return [
             BeforeImport::class => function (BeforeImport $event) {
                 $totalRows = $event->getReader()->getTotalRows();
-
+                // dd(array_values($totalRows)[0]);
                 if (filled($totalRows)) {
-                    cache()->forever("total_rows_{$this->excelfile_id}", array_values($totalRows)[0]);
-                    cache()->forever("start_date_{$this->excelfile_id}", now()->unix());
+                    cache()->forget("end_date_{$this->excelfile_id}");
+                    cache()->put("total_rows_{$this->excelfile_id}", array_values($totalRows)[0]);
+                    cache()->put("start_date_{$this->excelfile_id}", now()->unix());
                 }
             },
             AfterImport::class => function (AfterImport $event) {
                 cache(["end_date_{$this->excelfile_id}" => now()], now()->addMinute());
+                // dd(now()->addMinute());
                 cache()->forget("total_rows_{$this->excelfile_id}");
                 cache()->forget("start_date_{$this->excelfile_id}");
                 cache()->forget("current_row_{$this->excelfile_id}");
