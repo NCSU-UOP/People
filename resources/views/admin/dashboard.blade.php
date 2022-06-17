@@ -133,7 +133,8 @@
                                     <!-- <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete" aria-disabled="true">Remove</a></td> -->
                                 @elseif($excelfile->imported == 0)
-                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}">Import</a></td>
+                                    <!-- <td><button type="button" class="btn btn-warning btn-sm" role="button" onclick="importExcel('{{$excelfile->id}}')">Import</button></td> -->
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}" onclick="javascript:importprogress(); return true;">Import</a></td>
                                     <!-- <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td> -->
                                 @endif
@@ -150,6 +151,9 @@
                     @endif
                 </table>
             </div>
+
+            <!-- <div id="progressbar" style="margin: 20px;width: 400px;height: 8px;position: relative;"></div> -->
+            <div id="importingAnimation"></div>
 
             @if(session()->has('failures'))
                 <div class="p-3 pb-3 rounded">
@@ -306,7 +310,7 @@
                                     <!-- <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/edit">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-outline-danger btn-sm disabled" role="button" href="/dashboard/delete" aria-disabled="true">Remove</a></td> -->
                                 @elseif($excelfile->imported == 0)
-                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}">Import</a></td>
+                                    <td><a type="button" class="btn btn-warning btn-sm" role="button" href="/dashboard/import/excelfile/{{$excelfile->id}}" onclick="javascript:importprogress(); return true;">Import</a></td>
                                     <!-- <td><a type="button" class="btn btn-outline-secondary btn-sm disabled" role="button" href="/dashboard/edit" aria-disabled="true">RollBack</a></td> -->
                                     <!-- <td><a type="button" class="btn btn-danger btn-sm" role="button" href="/dashboard/delete">Remove</a></td> -->
                                 @endif
@@ -324,6 +328,8 @@
                     @endif
                 </table>
             </div>
+
+            <div id="importingAnimation"></div>
 
             @if(session()->has('failures'))
                 <div class="p-3 pb-3 rounded">
@@ -396,11 +402,52 @@
             </script>
         @endsection        
     @endif
+
+    <!-- Modal -->
+    <div class="modal fade" id="importmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title fw-bold text-danger w-100"><<< DO NOT CLOSE THIS TAB >>></h5>
+            </div>
+            <div class="modal-body">
+                <div class="container pt-5">
+                    <div class="wrapper pt-5">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div id="import">
+                            <div>G</div>
+                            <div>N</div>
+                            <div>I</div>
+                            <div>T</div>
+                            <div>R</div>
+                            <div>O</div>
+                            <div>P</div>
+                            <div>M</div>
+                            <div>I</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <p class="font-monospace text-secondary w-100">Be patient! This process may take a while to finish</p>
+            </div>
+        </div>
+    </div>
+    </div>
 @endsection
 
 
 @section('admin-page-js')
 <script src="/js/xlsx.full.min.js"></script>
+@endsection
+
+@section('admin-page-css')
+<link href="{{ asset('css/importloader.css') }}" rel="stylesheet">
 @endsection
 
 
@@ -427,5 +474,99 @@
     }
 </script>
 @endif
+@endsection
+
+@section('admin-page-scripts2')
+<script>
+var current_row = 0;
+var total_rows = 0;
+var progress = 0;
+var count = 0;
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+// function importExcel(id){
+//     $.ajax({
+//         url: '/dashboard/import/excelfile/' + id,
+//         type: "GET",
+//         async: true,
+//         success:function(data) {
+//             console.log('success1');
+//             document.location.reload(true);
+//         },
+//         error:function(data) {
+//             console.log('error1');
+//         },
+//         complete:function(data){
+//             console.log('hi');
+//         },
+//     });
+// }
+
+function getStatus(id) {
+    sleep(1000);
+    console.log('/import-status/' + id);
+    count = count + 1;
+    $.ajax({
+        url: '/import-status/' + id,
+        type: "GET",
+        dataType: "json",
+        async: false,
+        cashe: false,
+        success:function(data) {
+            // console.log(data);
+            if(data)
+            {
+                console.log(data);
+                
+                if (data.finished) {
+                console.log('fuck2');
+                current_row = total_rows;
+                progress = 1;
+                document.location.reload(true);
+                return;
+                };
+
+                total_rows = data.total_rows;
+                current_row = data.current_row;
+                progress = Math.ceil(data.current_row / data.total_rows);
+                console.log(progress);
+                sleep(10);
+            }
+            else
+            {
+                $('#progressbar').empty();
+                console.log('fuck');
+            }
+        },
+        error:function(data) {
+            console.log('error');
+        },
+        complete:function(){
+            console.log('complete');
+            if(count<30){
+                console.log(count);
+                getStatus(id);}
+            // sleep(100000);
+            // getStatus(id);
+        }
+    });
+}
+
+function importprogress(){
+    // document.getElementById('importingAnimation').innerHTML = '<div class="container"><div class="wrapper"><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div><div id="load"><div>G</div><div>N</div><div>I</div><div>T</div><div>R</div><div>O</div><div>P</div><div>M</div><div>I</div></div></div></div>';
+    // return true;
+    $('#importmodal').modal('show');
+    return true;
+}
+</script>
+
 @endsection
 
