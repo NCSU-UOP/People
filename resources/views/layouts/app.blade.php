@@ -70,14 +70,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/people" style="color: white;">People</a>
                         </li>
-                        @if(Auth::user()->usertype == env('ADMIN'))
-                            <li class="nav-item">
-                            <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
-                            </li>
-                        @elseif(Auth::user()->usertype == env('STUDENT'))
-                            <li class="nav-item">
-                            <a class="nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}" style="color: white;">Profile</a>
-                            </li>
+                        @if(Auth::user())
+                            @if(Auth::user()->usertype == env('ADMIN'))
+                                <li class="nav-item">
+                                <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
+                                </li>
+                            @elseif(Auth::user()->usertype == env('STUDENT'))
+                                <li class="nav-item">
+                                <a class="nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}" style="color: white;">Profile</a>
+                                </li>
+                            @endif
                         @else
                             <li class="nav-item">
                             <a class="nav-link" href="/form" style="color: white;">Form</a>
