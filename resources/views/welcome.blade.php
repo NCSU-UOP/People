@@ -11,7 +11,7 @@
 
 @section('landing-page-js')
     <!-- Landing page particle style JS File -->
-    <script src="/js/particleWave.js" defer></script>
+    <script src="/minifiedjs/particleWave.min.js" defer></script>
 @endsection
 
 @section('content')
@@ -30,13 +30,19 @@
         data-aos-delay="100"
       >
         <div class="row justify-content-center">
-          <div class="col-xl-7 col-lg-9 text-center">
+          <div class="col-xl-7 col-lg-9 text-center" style="user-select: none;">
             <h1>Data Aquisition Project</h1>
             <h2>University-wide Verified Data Collection of University Personnel</h2>
           </div>
         </div>
         <div class="text-center">
-          <a href="#about" class="btn-get-started scrollto">Explore</a>
+          <!-- <button class="ctrl-standard typ-subhed fx-bubbleUp">EXPLORE</button> -->
+          <div id="buttonContainer">
+            <div class="button" id="button-style">
+            <div id="circle"></div>
+            <a href="#" style="font-weight: bold;">EXPLORE</a>
+            </div>
+          </div>
         </div>
         <div style="position: relative; padding-top: 100px; height: 100px width: 100px"></div>
       </div>
@@ -48,7 +54,7 @@
 
     <!-- ======= About Section ======= -->
       <section id="about" class="about">
-        <div class="container">
+        <div class="container" style="user-select: none;">
           <div class="section-title" data-aos="fade-up">
             <h2>About</h2>
             <p>
@@ -104,7 +110,7 @@
 
 @section('footer')
   <div class="block">
-    <div class="container" >
+    <div class="container" style="user-select: none;">
       <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
         <p class="col-md-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
 
