@@ -144,9 +144,10 @@
     @yield('AdminCharts')
     <div class="block mt-auto" id='app-footer'>
         <div class="container" >
-            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
-            <p class="col-md-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
-            <p class="col-md-0 mb-0 text-muted">All rights reserved.</p>
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top mt-auto">
+            <p class="col-sm-4 mb-0 text-muted">© 2022 University of Peradeniya</p>
+            <a href="https://www.pdn.ac.lk/ncsu/"><img class="col-sm-4 d-flex justify-content-between" src="/img/ncsuicon.png" alt="ncsu icon" style="width: 130px; height: 40px;"/></a>
+            <p class="col-sm-4 mb-0 text-muted d-flex justify-content-end">All rights reserved.</p>
             </footer>
         </div>
     </div>
