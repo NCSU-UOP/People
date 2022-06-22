@@ -67,24 +67,24 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/" style="color: white;">Home</a>
+                            <a class="underline nav-link" href="/">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/people" style="color: white;">People</a>
+                            <a class="underline nav-link" href="/people">People</a>
                         </li>
                         @if(Auth::user())
                             @if(Auth::user()->usertype == env('ADMIN'))
                                 <li class="nav-item">
-                                <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
+                                <a class="underline nav-link" href="/dashboard">Dashboard</a>
                                 </li>
                             @elseif(Auth::user()->usertype == env('STUDENT'))
                                 <li class="nav-item">
-                                <a class="nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}" style="color: white;">Profile</a>
+                                <a class="underline nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}">Profile</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item">
-                            <a class="nav-link" href="/form" style="color: white;">Form</a>
+                            <a class="underline nav-link" href="/form">Form</a>
                             </li>
                         @endif
 
@@ -92,18 +92,18 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}" style="color: white;">{{ __('Login') }}</a>
+                                    <a class="underline nav-link" href="{{ route('login') }}" >{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}" style="color: white;">{{ __('Register') }}</a>
+                                    <a class="underline nav-link" href="{{ route('register') }}" >{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="color: white;">
+                                <a id="navbarDropdown" class="underline nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre >
                                     {{ Auth::user()->username }}
                                 </a>
 
