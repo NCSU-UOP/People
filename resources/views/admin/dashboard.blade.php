@@ -21,15 +21,6 @@
     @endif
 
     @if(Auth::user()->admins()->first()->is_admin === 1)
-        @section('navbar-item')
-            <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
-            <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
-            <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
-            <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
-            <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
-            <a href="/activity" class="dropdown-item">View site activity</a>
-        @endsection
-
         <div class="p-3 pb-3 rounded">
             <h1 class="text-center font-weight-bold">Super-Admin Dashboard</h1>
         </div>
@@ -98,7 +89,7 @@
                         <th scope="col">Faculty</th>
                         <th scope="col">Batch</th>
                         <th scope="col">Uploaded by</th>
-                        <th scope="col">link</th>
+                        <th scope="col">Attributes</th>
                         <th scope="col">Is_Imported</th>
                         <th scope="col">Action</th>
                         </tr>
@@ -209,9 +200,9 @@
         <!-- Chart's container -->
         <div id="chart" style="height: 300px;"></div>
         <!-- Charting library -->
-        <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+        <script src="{{ asset('js/echarts.min.js') }}"></script>
         <!-- Chartisan -->
-        <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+        <script src="{{ asset('js/chartisan_echarts.js') }}"></script>
         <!-- Your application script -->
         <script>
         const chart = new Chartisan({
@@ -274,7 +265,7 @@
                         <th scope="col">Faculty</th>
                         <th scope="col">Batch</th>
                         <th scope="col">Uploaded by</th>
-                        <th scope="col">link</th>
+                        <th scope="col">Attributes</th>
                         <th scope="col">Is_Imported</th>
                         <th scope="col">Action</th>
                         </tr>
@@ -386,9 +377,9 @@
             <!-- Chart's container -->
             <div id="chart2" style="height: 300px;"></div>
             <!-- Charting library -->
-            <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+            <script src="{{ asset('js/echarts.min.js') }}"></script>
             <!-- Chartisan -->
-            <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+            <script src="{{ asset('js/chartisan_echarts.js') }}"></script>
             <!-- Your application script -->
             <script>
                 const chart = new Chartisan({

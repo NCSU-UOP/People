@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="University-wide Verified Data Collection of University Personnel">
+    <meta name="theme-color" content="#8a0008"/>
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,10 +12,10 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('minifiedjs/app.min.js') }}" defer></script>
     <script src="/js/index.js" defer></script>
     <script src="{{ asset('vendor/aos/aos.js') }}" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
     @yield('profile-page-js')
     @yield('admin-page-js')
     @yield('excelupload-page-js')
@@ -21,7 +23,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -70,9 +72,21 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/people" style="color: white;">People</a>
                         </li>
-                        <li class="nav-item">
+                        @if(Auth::user())
+                            @if(Auth::user()->usertype == env('ADMIN'))
+                                <li class="nav-item">
+                                <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
+                                </li>
+                            @elseif(Auth::user()->usertype == env('STUDENT'))
+                                <li class="nav-item">
+                                <a class="nav-link" href="{{route('people.profile', ['username' => Auth::user()->username])}}" style="color: white;">Profile</a>
+                                </li>
+                            @endif
+                        @else
+                            <li class="nav-item">
                             <a class="nav-link" href="/form" style="color: white;">Form</a>
-                        </li>
+                            </li>
+                        @endif
 
                         <!-- Authentication Links -->
                         @guest
@@ -94,19 +108,20 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    @if(Auth::user()->usertype == env('ADMIN'))
-                                    <a href="/dashboard" class="dropdown-item">Dashboard</a>
-
-                                    @elseif(Auth::user()->usertype == env('STUDENT'))
-                                    <a href="{{route('people.profile', ['username' => Auth::user()->username])}}" class="dropdown-item">Profile</a>
-                                    @endif
-
 
                                     @yield('navbar-item')
+                                    @if(Auth::user()->admins()->first()->is_admin === 1)
+                                        <a href="/dashboard/add/user" class="dropdown-item">Add new user</a>
+                                        <a href="/dashboard/add/excelfile" class="dropdown-item">Add new excel file</a>
+                                        <a href="/dashboard/add/faculty" class="dropdown-item">Add/Edit faculty details</a>
+                                        <a href="/dashboard/add/batch" class="dropdown-item">Add/Edit batch details</a>
+                                        <a href="/dashboard/add/department" class="dropdown-item">Add Department</a>
+                                        <a href="/activity" class="dropdown-item">View site activity</a>
+                                    @endif
                                     
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
