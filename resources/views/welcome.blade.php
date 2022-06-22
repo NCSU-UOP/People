@@ -40,7 +40,7 @@
           <div id="buttonContainer">
             <div class="button" id="button-style">
             <div id="circle"></div>
-            <a href="#" style="font-weight: bold;">EXPLORE</a>
+            <a href="/people" style="font-weight: bold; letter-spacing: 1.5px;">EXPLORE</a>
             </div>
           </div>
         </div>
