@@ -11,7 +11,7 @@
 !/public/uploads/thumbs/default.png
 
 /storage/*.key
-/vendor
+
 .env
 .env.server
 .env.backup
